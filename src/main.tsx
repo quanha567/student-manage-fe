@@ -2,12 +2,14 @@ import React from 'react';
 
 import ReactDOM from 'react-dom/client';
 
-import App from './App.tsx';
+import { RouterProvider, ThemeConfigProvider } from '@/providers';
 
-import './index.css';
+import '@/index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <ThemeConfigProvider>
+      <RouterProvider />
+    </ThemeConfigProvider>
   </React.StrictMode>,
 );
