@@ -1,102 +1,112 @@
 module.exports = {
-  root: true,
-  env: { browser: true, es2020: true },
-  extends: [
-    'eslint:recommended',
-    'plugin:react-hooks/recommended',
-    'plugin:@typescript-eslint/strict-type-checked',
-    'plugin:@typescript-eslint/stylistic-type-checked',
-  ],
-  ignorePatterns: [
-    'dist',
-    '.eslintrc.cjs',
-    'node_modules',
-    'main.tsx',
-    'tailwind.config.js',
-    'postcss.config.js',
-  ],
-  parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh', 'perfectionist'],
-  rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
+    root: true,
+    env: { browser: true, es2020: true },
+    extends: [
+        'eslint:recommended',
+        'plugin:react-hooks/recommended',
+        'plugin:@typescript-eslint/strict-type-checked',
+        'plugin:@typescript-eslint/stylistic-type-checked',
     ],
-    'perfectionist/sort-enums': [
-      'error',
-      {
-        type: 'natural',
-        order: 'asc',
-      },
+    ignorePatterns: [
+        'dist',
+        '.eslintrc.cjs',
+        'node_modules',
+        'main.tsx',
+        'tailwind.config.js',
+        'postcss.config.js',
     ],
-    'perfectionist/sort-exports': [
-      'error',
-      {
-        type: 'natural',
-        order: 'asc',
-      },
-    ],
-    'perfectionist/sort-imports': [
-      'error',
-      {
-        type: 'natural',
-        order: 'asc',
-        groups: [
-          'type',
-          'react',
-          'nanostores',
-          ['builtin', 'external'],
-          'antd',
-          'internal-type',
-          'internal',
-          ['parent-type', 'sibling-type', 'index-type'],
-          ['parent', 'sibling', 'index'],
-          'side-effect',
-          'style',
-          'object',
-          'unknown',
+    parser: '@typescript-eslint/parser',
+    plugins: ['react-refresh', 'perfectionist'],
+    rules: {
+        'react-refresh/only-export-components': [
+            'warn',
+            { allowConstantExport: true },
         ],
-        'custom-groups': {
-          value: {
-            react: ['react', 'react-*'],
-            nanostores: '@nanostores/**',
-            antd: ['antd'],
-          },
-          type: {
-            react: 'react',
-          },
-        },
-        'newlines-between': 'always',
-        'internal-pattern': ['@/**'],
-      },
-    ],
-    'perfectionist/sort-interfaces': [
-      'error',
-      {
-        type: 'natural',
-        order: 'asc',
-      },
-    ],
-    'perfectionist/sort-named-exports': [
-      'error',
-      {
-        type: 'natural',
-        order: 'asc',
-      },
-    ],
-    'perfectionist/sort-named-imports': [
-      'error',
-      {
-        type: 'natural',
-        order: 'asc',
-      },
-    ],
-    // 'no-console': 'off',
-  },
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-};
+        'perfectionist/sort-enums': [
+            'error',
+            {
+                type: 'natural',
+                order: 'asc',
+            },
+        ],
+        'perfectionist/sort-exports': [
+            'error',
+            {
+                type: 'natural',
+                order: 'asc',
+            },
+        ],
+        'perfectionist/sort-imports': [
+            'error',
+            {
+                type: 'natural',
+                order: 'asc',
+                groups: [
+                    'type',
+                    'react',
+                    'nanostores',
+                    ['builtin', 'external'],
+                    'antd',
+                    'internal-type',
+                    'internal',
+                    ['parent-type', 'sibling-type', 'index-type'],
+                    ['parent', 'sibling', 'index'],
+                    'side-effect',
+                    'style',
+                    'object',
+                    'unknown',
+                ],
+                'custom-groups': {
+                    value: {
+                        react: ['react', 'react-*'],
+                        nanostores: '@nanostores/**',
+                        antd: ['antd'],
+                    },
+                    type: {
+                        react: 'react',
+                    },
+                },
+                'newlines-between': 'always',
+                'internal-pattern': ['@/**'],
+            },
+        ],
+        'perfectionist/sort-interfaces': [
+            'error',
+            {
+                type: 'natural',
+                order: 'asc',
+            },
+        ],
+        'perfectionist/sort-named-exports': [
+            'error',
+            {
+                type: 'natural',
+                order: 'asc',
+            },
+        ],
+        'perfectionist/sort-named-imports': [
+            'error',
+            {
+                type: 'natural',
+                order: 'asc',
+            },
+        ],
+        '@typescript-eslint/no-misused-promises': [
+            'error',
+            {
+                checksVoidReturn: false,
+            },
+        ],
+        // 'no-console': 'off',
+    },
+    parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: [
+            './tsconfig.json',
+            './tsconfig.node.json',
+            './tsconfig.app.json',
+        ],
+        tsconfigRootDir: __dirname,
+    },
+}

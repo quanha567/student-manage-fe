@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import App from '@/App';
 import { PAGE_PATHS } from '@/constants';
-import { DashboardPage, StudentPage } from '@/pages';
+import { DashboardPage, LoginPage, StudentPage } from '@/pages';
 
 export const privateRouters = createBrowserRouter([
   {
@@ -18,5 +18,9 @@ export const privateRouters = createBrowserRouter([
         element: <StudentPage />,
       },
     ],
+  },
+  {
+    path: PAGE_PATHS.LOGIN,
+    element: <LoginPage />,
   },
 ]);
