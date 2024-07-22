@@ -59,8 +59,8 @@ module.exports = {
                 'custom-groups': {
                     value: {
                         react: ['react', 'react-*'],
+                        antd: ['antd', 'antd/**', '@ant-**'],
                         nanostores: '@nanostores/**',
-                        antd: ['antd'],
                     },
                     type: {
                         react: 'react',
@@ -97,6 +97,8 @@ module.exports = {
                 checksVoidReturn: false,
             },
         ],
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
         // 'no-console': 'off',
     },
     parserOptions: {

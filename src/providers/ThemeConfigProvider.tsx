@@ -1,8 +1,7 @@
 import { ReactNode } from 'react'
 
-import viVN from 'antd/locale/vi_VN'
-
 import { App, ConfigProvider } from 'antd'
+import viVN from 'antd/locale/vi_VN'
 
 interface ThemeConfigProviderProps {
     children: ReactNode
@@ -11,6 +10,7 @@ interface ThemeConfigProviderProps {
 export const ThemeConfigProvider = ({ children }: ThemeConfigProviderProps) => {
     return (
         <ConfigProvider
+            wave={{ disabled: true }}
             locale={viVN}
             theme={{
                 token: {
@@ -30,7 +30,8 @@ export const ThemeConfigProvider = ({ children }: ThemeConfigProviderProps) => {
                         algorithm: true,
                     },
                 },
-            }}>
+            }}
+        >
             <App>{children}</App>
         </ConfigProvider>
     )

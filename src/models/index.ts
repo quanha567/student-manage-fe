@@ -1,3 +1,5 @@
 export * from './authModel'
 export * from './baseModel'
+export * from './departmentModel'
+export * from './studentModel'
 export * from './userModel'

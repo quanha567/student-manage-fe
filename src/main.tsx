@@ -1,15 +1,21 @@
-import React from 'react';
+import React from 'react'
 
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom/client'
 
-import { RouterProvider, ThemeConfigProvider } from '@/providers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-import '@/index.css';
+import { RouterProvider, ThemeConfigProvider } from '@/providers'
+
+import '@/index.css'
+
+export const queryClient: QueryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <ThemeConfigProvider>
-      <RouterProvider />
-    </ThemeConfigProvider>
-  </React.StrictMode>,
-);
+    <React.StrictMode>
+        <ThemeConfigProvider>
+            <QueryClientProvider client={queryClient}>
+                <RouterProvider />
+            </QueryClientProvider>
+        </ThemeConfigProvider>
+    </React.StrictMode>,
+)

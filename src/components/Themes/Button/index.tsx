@@ -9,7 +9,7 @@ export const Button = (props: ButtonProps) => {
             size="large"
             type="primary"
             {...props}
-            className={twMerge('py-[22px] font-bold', props.className)}
+            className={twMerge('font-bold', props.className)}
         />
     )
 }

@@ -1,5 +1,3 @@
-import { lazy } from 'react'
-
-export const Icon = lazy(() => import('./Icon'))
+export * from './Breadcrumb'
 export * from './Forms'
 export * from './Themes'

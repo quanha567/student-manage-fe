@@ -1,5 +1,6 @@
 export interface BaseModel {
+    createBy: string
     createdAt: string
-    id: number | string
+    updateBy: string
     updatedAt: string
 }
