@@ -7,29 +7,35 @@ import { HttpStatusCode, isAxiosError } from 'axios'
 import { App } from 'antd'
 
 import { LOCAL_STORAGES, PAGE_PATHS } from '@/constants'
-import { LoginRequestModel } from '@/models'
-import { authService } from '@/services'
+import { useAppDispatch } from '@/hooks'
+import { StudentLoginRequestModel } from '@/models'
+import { setUser } from '@/redux'
+import { studentService } from '@/services/studentService'
 
-const formDefaultValues: LoginRequestModel = {
-    identifier: 'admin',
+const formDefaultValues: StudentLoginRequestModel = {
+    email: 'admin',
     password: '123456',
 }
 
 export const useFormLogin = () => {
     const navigate = useNavigate()
+
     const { notification } = App.useApp()
-    const formMethods = useForm<LoginRequestModel>({
+    const dispatch = useAppDispatch()
+
+    const formMethods = useForm<StudentLoginRequestModel>({
         defaultValues: formDefaultValues,
     })
 
     const { handleSubmit } = formMethods
 
     const handleLogin = useCallback(
-        async (data: LoginRequestModel) => {
+        async (data: StudentLoginRequestModel) => {
             try {
-                const { jwt } = await authService.login(data)
+                const { jwt, user } = await studentService.login(data)
 
                 localStorage.setItem(LOCAL_STORAGES.ACCESS_TOKEN, jwt)
+                dispatch(setUser(user))
                 navigate(PAGE_PATHS.DASHBOARD)
                 notification.success({
                     message: 'Đăng nhập thành công!',
@@ -46,7 +52,7 @@ export const useFormLogin = () => {
                 })
             }
         },
-        [notification, navigate],
+        [notification, navigate, dispatch],
     )
 
     return {

@@ -12,7 +12,7 @@ export const LoginForm = () => {
             <div className="mt-6 space-y-4">
                 <FormInput
                     label="Tài khoản"
-                    name="identifier"
+                    name="email"
                     placeholder="Email hoặc số điện thoại"
                 />
                 <FormInput
@@ -23,7 +23,8 @@ export const LoginForm = () => {
                 <Button
                     onClick={login}
                     className="w-full"
-                    loading={formMethods.formState.isSubmitting}>
+                    loading={formMethods.formState.isSubmitting}
+                >
                     Đăng nhập
                 </Button>
             </div>

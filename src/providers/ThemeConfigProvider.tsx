@@ -32,7 +32,16 @@ export const ThemeConfigProvider = ({ children }: ThemeConfigProviderProps) => {
                 },
             }}
         >
-            <App>{children}</App>
+            <App
+                notification={{
+                    placement: 'bottomRight',
+                    showProgress: true,
+                    pauseOnHover: true,
+                    stack: true,
+                }}
+            >
+                {children}
+            </App>
         </ConfigProvider>
     )
 }

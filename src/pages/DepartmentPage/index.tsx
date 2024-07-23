@@ -123,7 +123,6 @@ const DepartmentPage = () => {
                 rowSelection={{
                     type: 'checkbox',
                 }}
-                size="middle"
                 loading={isLoadingDepartments}
                 className="overflow-hidden rounded-lg border-none bg-white drop-shadow"
                 rowKey="id"
