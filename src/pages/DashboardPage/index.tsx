@@ -1,11 +1,17 @@
-import { Spin } from 'antd';
+import { DepartmentChart, NumberReport } from './components'
 
 const DashboardPage = () => {
-  return (
-    <div className="bg-red-100">
-      <Spin size="large" />
-    </div>
-  );
-};
+    return (
+        <div className="">
+            <NumberReport />
+            <div className="mt-4 grid grid-cols-2 gap-4">
+                <DepartmentChart />
+                <DepartmentChart />
+                <DepartmentChart />
+                <DepartmentChart />
+            </div>
+        </div>
+    )
+}
 
-export default DashboardPage;
+export default DashboardPage

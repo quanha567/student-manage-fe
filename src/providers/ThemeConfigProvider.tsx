@@ -14,7 +14,7 @@ export const ThemeConfigProvider = ({ children }: ThemeConfigProviderProps) => {
             locale={viVN}
             theme={{
                 token: {
-                    colorPrimary: '#093',
+                    colorPrimary: '#d72134',
                     colorInfo: '#0f67b1',
                     colorSuccess: '#399918',
                     colorWarning: '#ff7f3e',

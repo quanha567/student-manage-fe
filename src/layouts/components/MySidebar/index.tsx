@@ -2,7 +2,17 @@ import { ReactNode } from 'react'
 import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar'
 import { Link, useLocation } from 'react-router-dom'
 
-import { PieChartFilled, UsergroupDeleteOutlined } from '@ant-design/icons'
+import { AiFillProduct } from 'react-icons/ai'
+import { FaBook, FaListCheck, FaNoteSticky } from 'react-icons/fa6'
+import { GiPieChart } from 'react-icons/gi'
+import { HiRectangleGroup } from 'react-icons/hi2'
+import { IoDocumentText } from 'react-icons/io5'
+import { MdClass } from 'react-icons/md'
+import {
+    PiChalkboardTeacherFill,
+    PiExamFill,
+    PiStudentFill,
+} from 'react-icons/pi'
 
 import { PAGE_PATHS } from '@/constants'
 
@@ -16,45 +26,51 @@ interface MenuItemType {
 const sideBarMenus: MenuItemType[] = [
     {
         label: 'Tổng quan',
-        icon: <PieChartFilled />,
+        icon: <GiPieChart className="size-6" />,
+        path: PAGE_PATHS.DASHBOARD,
     },
     {
         label: 'Khoa',
-        icon: <UsergroupDeleteOutlined />,
+        icon: <AiFillProduct className="size-6" />,
         path: PAGE_PATHS.DEPARTMENT_LIST,
     },
     {
         label: 'Lớp học',
-        icon: <UsergroupDeleteOutlined />,
+        icon: <MdClass className="size-6" />,
+    },
+    {
+        label: 'Giáo viên',
+        icon: <PiChalkboardTeacherFill className="size-6" />,
+        path: PAGE_PATHS.STUDENT_LIST,
     },
     {
         label: 'Sinh viên',
-        icon: <UsergroupDeleteOutlined />,
+        icon: <PiStudentFill className="size-6" />,
         path: PAGE_PATHS.STUDENT_LIST,
     },
     {
         label: 'Môn học',
-        icon: <UsergroupDeleteOutlined />,
+        icon: <FaBook className="size-5" />,
     },
     {
         label: 'Đề cương',
-        icon: <UsergroupDeleteOutlined />,
+        icon: <IoDocumentText className="size-6" />,
     },
     {
         label: 'Học phần',
-        icon: <UsergroupDeleteOutlined />,
+        icon: <HiRectangleGroup className="size-6" />,
     },
     {
         label: 'Ghi danh',
-        icon: <UsergroupDeleteOutlined />,
+        icon: <FaListCheck className="size-6" />,
     },
     {
         label: 'Kiểm tra',
-        icon: <UsergroupDeleteOutlined />,
+        icon: <FaNoteSticky className="size-6" />,
     },
     {
         label: 'Kết quả thi',
-        icon: <UsergroupDeleteOutlined />,
+        icon: <PiExamFill className="size-6" />,
     },
 ]
 
@@ -72,7 +88,7 @@ export const MySidebar = () => {
                             icon={icon}
                             component={path ? <Link to={path} /> : undefined}
                             active={isActive}
-                            className={`text-base font-medium transition-all ${isActive ? 'rounded-full bg-primary text-white' : ''}`}
+                            className={`select-none text-base font-bold transition-all ${isActive ? 'bg-primary text-white' : ''}`}
                         >
                             {label}
                         </MenuItem>

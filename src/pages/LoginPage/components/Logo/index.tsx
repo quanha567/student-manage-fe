@@ -8,9 +8,7 @@ export const Logo = () => {
                 alt="logo"
                 className="size-32 object-contain"
             />
-            <span className="text-3xl font-bold">
-                Đại học tài nguyên và môi trường
-            </span>
+            <span className="text-3xl font-bold">Trường Đại học Văn Lang</span>
         </div>
     )
 }

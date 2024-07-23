@@ -34,7 +34,7 @@ export const Header = () => {
                     className="size-10 object-contain"
                 />
                 <span className="text-xl font-black">
-                    Đại học tài nguyên và môi trường
+                    Trường Đại học Văn Lang
                 </span>
             </div>
             <div>

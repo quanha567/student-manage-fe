@@ -1,7 +1,4 @@
-import { useState } from 'react'
-
 import {
-    DeleteFilled,
     EditFilled,
     ExclamationOutlined,
     SettingFilled,
@@ -23,7 +20,7 @@ import { DepartmentFormModal } from './components'
 const DepartmentPage = () => {
     const { isOpen, toggleOpen, id } = useDisclosure()
 
-    const [modalDelete, setModalDelete] = useState()
+    // const [modalDelete, setModalDelete] = useState()
 
     const { data: departments, isLoading: isLoadingDepartments } = useQuery({
         queryKey: [QUERY_KEYS.DEPARTMENTS],
@@ -67,7 +64,7 @@ const DepartmentPage = () => {
                         </Radio.Button>
                     </Tooltip>
                     <Tooltip title="Xóa" color="red">
-                        <Radio.Button
+                        {/* <Radio.Button
                             value={2}
                             onClick={() => {
                                 setModalDelete({
@@ -78,7 +75,7 @@ const DepartmentPage = () => {
                             className="text-red-500 hover:text-red-500"
                         >
                             <DeleteFilled />
-                        </Radio.Button>
+                        </Radio.Button> */}
                     </Tooltip>
                 </Radio.Group>
             ),
@@ -144,10 +141,10 @@ const DepartmentPage = () => {
             />
             <Modal
                 centered
-                open={modalDelete?.isOpen}
-                onCancel={() => {
-                    setModalDelete({})
-                }}
+                // open={modalDelete?.isOpen}
+                // onCancel={() => {
+                //     setModalDelete({})
+                // }}
                 classNames={{
                     body: 'flex flex-col items-center',
                 }}
