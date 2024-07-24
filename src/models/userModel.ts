@@ -1,16 +1,11 @@
-import { BaseModel, StudentModel } from '@/models'
+import { BaseModel, RoleModel, StudentModel } from '@/models'
 
 export interface UserModel extends BaseModel {
     blocked?: boolean
     confirmed?: boolean
     email?: string
     provider?: string
-    role?: UserRole
+    role?: RoleModel
     student?: StudentModel
     userName?: string
-}
-
-export enum UserRole {
-    STUDENT = 'STUDENT',
-    TEACHER = 'TEACHER',
 }

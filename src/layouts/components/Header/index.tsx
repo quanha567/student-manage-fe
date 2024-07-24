@@ -98,7 +98,10 @@ export const Header = () => {
                                 {student?.fullName}
                             </p>
                             <p className="mt-0.5 leading-none">
-                                {role ?? student?.email}
+                                {role?.name ??
+                                    student?.email ??
+                                    student?.phoneNumber ??
+                                    ''}
                             </p>
                         </div>
                     </div>

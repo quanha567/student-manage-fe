@@ -1,3 +1,5 @@
 export * from './Breadcrumb'
+export * from './CustomImage'
+export * from './CustomTable'
 export * from './Forms'
 export * from './Themes'

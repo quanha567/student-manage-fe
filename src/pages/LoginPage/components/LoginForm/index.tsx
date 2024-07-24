@@ -12,7 +12,7 @@ export const LoginForm = () => {
             <div className="mt-6 space-y-4">
                 <FormInput
                     label="Tài khoản"
-                    name="email"
+                    name="identifier"
                     placeholder="Email hoặc số điện thoại"
                 />
                 <FormInput

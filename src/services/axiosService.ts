@@ -1,7 +1,6 @@
 import axios, { AxiosInstance, HttpStatusCode, isAxiosError } from 'axios'
 
-import { ENV_CONFIGS } from '@/configs'
-import { LOCAL_STORAGES, PAGE_PATHS } from '@/constants'
+import { API_URL, LOCAL_STORAGES, PAGE_PATHS } from '@/constants'
 
 export const axiosService = (): AxiosInstance => {
     const accessToken = localStorage.getItem(LOCAL_STORAGES.ACCESS_TOKEN) ?? ''
@@ -11,7 +10,7 @@ export const axiosService = (): AxiosInstance => {
     }
 
     const axiosOptions = axios.create({
-        baseURL: ENV_CONFIGS.BASE_URL,
+        baseURL: API_URL.BASE,
         headers: {
             'content-type': 'application/json',
             Authorization: 'Bearer ' + accessToken,
@@ -20,20 +19,20 @@ export const axiosService = (): AxiosInstance => {
 
     // Truoc khi gui server
     axiosOptions.interceptors.request.use(
-        config => {
+        (config) => {
             return config
         },
 
-        error => {
+        (error) => {
             throw error
         },
     )
     // Sau khi gui server
     axiosOptions.interceptors.response.use(
-        response => {
+        (response) => {
             return response
         },
-        errors => {
+        (errors) => {
             if (
                 isAxiosError(errors) &&
                 errors.status === HttpStatusCode.Unauthorized

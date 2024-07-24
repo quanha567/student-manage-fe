@@ -8,12 +8,12 @@ import { App } from 'antd'
 
 import { LOCAL_STORAGES, PAGE_PATHS } from '@/constants'
 import { useAppDispatch } from '@/hooks'
-import { StudentLoginRequestModel } from '@/models'
+import { LoginRequestModel } from '@/models'
 import { setUser } from '@/redux'
-import { studentService } from '@/services/studentService'
+import { authService, userService } from '@/services'
 
-const formDefaultValues: StudentLoginRequestModel = {
-    email: 'admin',
+const formDefaultValues: LoginRequestModel = {
+    identifier: 'admin',
     password: '123456',
 }
 
@@ -23,22 +23,26 @@ export const useFormLogin = () => {
     const { notification } = App.useApp()
     const dispatch = useAppDispatch()
 
-    const formMethods = useForm<StudentLoginRequestModel>({
+    const formMethods = useForm<LoginRequestModel>({
         defaultValues: formDefaultValues,
     })
 
     const { handleSubmit } = formMethods
 
     const handleLogin = useCallback(
-        async (data: StudentLoginRequestModel) => {
+        async (data: LoginRequestModel) => {
             try {
-                const { jwt, user } = await studentService.login(data)
+                const { jwt } = await authService.login(data)
 
                 localStorage.setItem(LOCAL_STORAGES.ACCESS_TOKEN, jwt)
-                dispatch(setUser(user))
+
+                const userInfo = await userService.getInfo()
+
+                dispatch(setUser(userInfo))
                 navigate(PAGE_PATHS.DASHBOARD)
                 notification.success({
                     message: 'Đăng nhập thành công!',
+                    description: `Xin chào ${userInfo.student?.fullName ?? ''}! Chào mừng bạn trở lại.`,
                 })
             } catch (err: unknown) {
                 console.log('err', err)

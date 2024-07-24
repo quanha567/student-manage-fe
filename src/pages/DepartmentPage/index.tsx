@@ -1,85 +1,148 @@
-import {
-    EditFilled,
-    ExclamationOutlined,
-    SettingFilled,
-} from '@ant-design/icons'
+import { useState } from 'react'
+
+import { ExclamationOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 
-import { Input, Modal, Pagination, Popover, Radio, Table, Tooltip } from 'antd'
-import { ColumnType } from 'antd/es/table'
+import { Modal } from 'antd'
 
-import { Breadcrumb, Button } from '@/components'
+import {
+    Breadcrumb,
+    Button,
+    CustomImage,
+    CustomTable,
+    CustomTableColumnType,
+} from '@/components'
 import { QUERY_KEYS } from '@/constants'
-import { useDisclosure } from '@/hooks'
+import { useDisclosure, useSearch } from '@/hooks'
 import { DepartmentModel } from '@/models'
 import { departmentService } from '@/services'
-import { ResponseData } from '@/types'
+import { Data } from '@/types'
+import { formatDateTime } from '@/utils'
 
 import { DepartmentFormModal } from './components'
 
 const DepartmentPage = () => {
     const { isOpen, toggleOpen, id } = useDisclosure()
 
-    // const [modalDelete, setModalDelete] = useState()
+    const [modalDelete, setModalDelete] = useState()
 
-    const { data: departments, isLoading: isLoadingDepartments } = useQuery({
-        queryKey: [QUERY_KEYS.DEPARTMENTS],
+    const [params] = useSearch()
+    const {
+        pageSize,
+        pageIndex,
+        sortBy = 'createdAt',
+        asc = 'desc',
+        searchText,
+    } = params
+
+    console.log(searchText)
+
+    const {
+        data: departments,
+        isLoading: isLoadingDepartments,
+        isPlaceholderData: isPlaceholderDepartments,
+    } = useQuery({
+        queryKey: [
+            QUERY_KEYS.DEPARTMENTS,
+            pageIndex,
+            pageSize,
+            sortBy,
+            asc,
+            searchText,
+        ],
         queryFn: async () =>
             await departmentService.search({
-                'pagination[pageSize]': 10,
-                'pagination[page]': 2,
+                'pagination[pageSize]': pageSize,
+                'pagination[page]': pageIndex,
+                'sort[0]': `${String(sortBy)}:${asc === 'ascend' ? 'asc' : 'desc'}`,
+                populate: '*',
+                'filters[departmentName][$containsi]': searchText ?? '',
             }),
     })
 
-    const columns: ColumnType<ResponseData<DepartmentModel>>[] = [
+    const columns: CustomTableColumnType<DepartmentModel> = [
         {
             title: 'ID',
             dataIndex: 'id',
+            key: 'id',
             width: 100,
             align: 'center',
             sorter: true,
         },
         {
+            title: 'Hình ảnh',
+            dataIndex: 'attributes',
+            key: 'avatar',
+            width: 100,
+            render: ({ avatar }: DepartmentModel) =>
+                avatar?.data ? (
+                    <CustomImage
+                        src={avatar}
+                        className="aspect-square object-cover"
+                        size="thumbnail"
+                    />
+                ) : (
+                    <></>
+                ),
+        },
+        {
             title: 'Tên khoa',
             dataIndex: 'attributes',
+            key: 'departmentName',
             render: ({ departmentName }: DepartmentModel) => departmentName,
             sorter: true,
         },
         {
-            title: 'Hành động',
-            width: 160,
+            title: 'Thời gian tạo',
             dataIndex: 'attributes',
-            align: 'center',
-            render: (id: string) => (
-                <Radio.Group value="">
-                    <Tooltip title="Chỉnh sửa">
-                        <Radio.Button
-                            value={2}
-                            onClick={() => {
-                                toggleOpen(id)
-                            }}
-                            className="text-zinc-500 hover:text-zinc-500"
-                        >
-                            <EditFilled />
-                        </Radio.Button>
-                    </Tooltip>
-                    <Tooltip title="Xóa" color="red">
-                        {/* <Radio.Button
-                            value={2}
-                            onClick={() => {
-                                setModalDelete({
-                                    isOpen: true,
-                                    id,
-                                })
-                            }}
-                            className="text-red-500 hover:text-red-500"
-                        >
-                            <DeleteFilled />
-                        </Radio.Button> */}
-                    </Tooltip>
-                </Radio.Group>
-            ),
+            key: 'createdAt',
+            render: ({ createdAt }: DepartmentModel) =>
+                createdAt ? formatDateTime(createdAt) : '___',
+            sorter: true,
         },
+        {
+            title: 'Giời gian cập nhật',
+            dataIndex: 'attributes',
+            key: 'updatedAt',
+            render: ({ updatedAt }: DepartmentModel) =>
+                updatedAt ? formatDateTime(updatedAt) : '___',
+            sorter: true,
+        },
+        // {
+        //     title: 'Hành động',
+        //     width: 160,
+        //     dataIndex: 'attributes',
+        //     align: 'center',
+        //     render: (id: string) => (
+        //         <Radio.Group value="">
+        //             <Tooltip title="Chỉnh sửa">
+        //                 <Radio.Button
+        //                     value={2}
+        //                     onClick={() => {
+        //                         toggleOpen(id)
+        //                     }}
+        //                     className="text-zinc-500 hover:text-zinc-500"
+        //                 >
+        //                     <EditFilled />
+        //                 </Radio.Button>
+        //             </Tooltip>
+        //             <Tooltip title="Xóa" color="red">
+        //                 <Radio.Button
+        //                     value={2}
+        //                     onClick={() => {
+        //                         setModalDelete({
+        //                             isOpen: true,
+        //                             id,
+        //                         })
+        //                     }}
+        //                     className="text-red-500 hover:text-red-500"
+        //                 >
+        //                     <DeleteFilled />
+        //                 </Radio.Button>
+        //             </Tooltip>
+        //         </Radio.Group>
+        //     ),
+        // },
     ]
 
     return (
@@ -94,45 +157,14 @@ const DepartmentPage = () => {
             >
                 Thêm khoa mới
             </Button>
-            <Table
-                title={() => (
-                    <div className="flex justify-between">
-                        <Input.Search
-                            className="max-w-[300px]"
-                            placeholder="Tìm kiếm tên khoa..."
-                        />
-                        <Popover
-                            trigger="click"
-                            placement="leftTop"
-                            title={<div>Click me</div>}
-                        >
-                            <Button size="middle" type="text">
-                                <SettingFilled className="text-xl" />
-                            </Button>
-                        </Popover>
-                    </div>
-                )}
-                onChange={(pagination, filter, sorter) => {
-                    console.log('pagination', pagination)
-                    console.log('filter', filter)
-                    console.log('sorter', sorter)
-                }}
-                rowSelection={{
-                    type: 'checkbox',
-                }}
-                loading={isLoadingDepartments}
-                className="overflow-hidden rounded-lg border-none bg-white drop-shadow"
-                rowKey="id"
+
+            <CustomTable<Data<DepartmentModel>>
                 columns={columns}
                 dataSource={departments?.data}
-                pagination={{
-                    total: 20,
-                }}
-            />
-            <Pagination
-                align="end"
-                className="mt-4"
-                total={departments?.meta?.pagination?.total}
+                loading={isLoadingDepartments || isPlaceholderDepartments}
+                tableName="khoa"
+                isPagination
+                totalElement={departments?.meta?.pagination?.total}
             />
             <DepartmentFormModal
                 id={id}
@@ -141,10 +173,10 @@ const DepartmentPage = () => {
             />
             <Modal
                 centered
-                // open={modalDelete?.isOpen}
-                // onCancel={() => {
-                //     setModalDelete({})
-                // }}
+                open={modalDelete?.isOpen}
+                onCancel={() => {
+                    setModalDelete({})
+                }}
                 classNames={{
                     body: 'flex flex-col items-center',
                 }}

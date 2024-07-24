@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form'
 
 import { App } from 'antd'
 
+import { QUERY_KEYS } from '@/constants'
+import { queryClient } from '@/main'
 import { DepartmentModel } from '@/models'
 import { departmentService } from '@/services'
 
@@ -19,9 +21,9 @@ export const useDepartmentForm = (departmentId?: string) => {
                 if (departmentId)
                     await departmentService.update(departmentId, data)
                 else await departmentService.create(data)
-                // await queryClient.refetchQueries({
-                //     queryKey: [QUERY_KEYS.DEPARTMENTS],
-                // })
+                await queryClient.refetchQueries({
+                    queryKey: [QUERY_KEYS.DEPARTMENTS],
+                })
                 notification.success({
                     message: 'Thêm khoa mới thành công!',
                 })

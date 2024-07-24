@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import App from '@/App'
 import { PAGE_PATHS } from '@/constants'
+import { AuthGuard } from '@/guards'
 import {
     DashboardPage,
     DepartmentPage,
@@ -13,7 +14,11 @@ import {
 export const privateRouters = createBrowserRouter([
     {
         path: PAGE_PATHS.DASHBOARD,
-        element: <App />,
+        element: (
+            <AuthGuard>
+                <App />
+            </AuthGuard>
+        ),
         children: [
             {
                 path: PAGE_PATHS.DASHBOARD,

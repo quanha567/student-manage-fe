@@ -48,7 +48,7 @@ export const NumberReport = () => {
     return (
         <div className="grid grid-cols-4 gap-4">
             {reportData.map((data) => (
-                <Spin spinning={isLoading}>
+                <Spin key={data.label} spinning={isLoading}>
                     <Card>
                         <p className="flex items-center gap-2 text-xl font-medium">
                             {data.icon}

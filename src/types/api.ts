@@ -17,13 +17,13 @@ export interface Pagination {
     }
 }
 
-export interface ResponseData<T> {
+export interface Data<T> {
     attributes: T
     id: number
 }
 
 export type ListResponse<T> = Pagination & {
-    data: ResponseData<T>[]
+    data: Data<T>[]
 }
 
 export interface CreateResponse<T> {
