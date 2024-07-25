@@ -1,8 +1,10 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
+import { yupResolver } from '@hookform/resolvers/yup'
 import { HttpStatusCode, isAxiosError } from 'axios'
+import { ObjectSchema, object, string } from 'yup'
 
 import { App } from 'antd'
 
@@ -17,6 +19,11 @@ const formDefaultValues: LoginRequestModel = {
     password: '123456',
 }
 
+const formLoginValidate: ObjectSchema<LoginRequestModel> = object().shape({
+    identifier: string().required('Vui lòng nhập tên tài khoản!'),
+    password: string().required('Vui lòng nhập mật khẩu của bạn!'),
+})
+
 export const useFormLogin = () => {
     const navigate = useNavigate()
 
@@ -25,9 +32,15 @@ export const useFormLogin = () => {
 
     const formMethods = useForm<LoginRequestModel>({
         defaultValues: formDefaultValues,
+        resolver: yupResolver(formLoginValidate),
     })
 
-    const { handleSubmit } = formMethods
+    const {
+        handleSubmit,
+        formState: { isSubmitting },
+        getValues,
+        setFocus,
+    } = formMethods
 
     const handleLogin = useCallback(
         async (data: LoginRequestModel) => {
@@ -58,6 +71,29 @@ export const useFormLogin = () => {
         },
         [notification, navigate, dispatch],
     )
+
+    useEffect(() => {
+        const handleCatchEventKeyEnter = (e: KeyboardEvent) => {
+            if (e.key === 'Enter' && !isSubmitting) {
+                const formData = getValues()
+
+                if (formData.identifier && formData.password) {
+                    void handleSubmit(handleLogin)()
+
+                    return
+                }
+
+                setFocus(!formData.identifier ? 'identifier' : 'password')
+            }
+        }
+
+        window.addEventListener('keydown', handleCatchEventKeyEnter)
+
+        return () => {
+            window.removeEventListener('keydown', handleCatchEventKeyEnter)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return {
         ...formMethods,
