@@ -22,6 +22,7 @@ export const LoginForm = () => {
                 />
                 <Button
                     onClick={login}
+                    size="large"
                     className="w-full"
                     loading={formMethods.formState.isSubmitting}
                 >

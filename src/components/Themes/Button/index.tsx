@@ -3,13 +3,21 @@ import { twMerge } from 'tailwind-merge'
 import { Button as AntdButton, ButtonProps as AntdButtonProps } from 'antd'
 type ButtonProps = AntdButtonProps
 
-export const Button = (props: ButtonProps) => {
+export const Button = ({
+    type = 'primary',
+    className,
+    ...restProps
+}: ButtonProps) => {
     return (
         <AntdButton
-            size="large"
+            size="middle"
             type="primary"
-            {...props}
-            className={twMerge('font-bold', props.className)}
+            {...restProps}
+            className={twMerge(
+                'font-bold',
+                type === 'primary' ? 'drop-shadow-primary drop-shadow' : '',
+                className,
+            )}
         />
     )
 }

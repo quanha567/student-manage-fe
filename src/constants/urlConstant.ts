@@ -20,7 +20,12 @@ export const API_URL = {
 
     // Department Api url
     DEPARTMENTS: '/departments',
+    departmentWithId: (id: number) => `/departments/${String(id)}`,
 
     // Student api url
     STUDENT_LOGIN: createApiURL('students/login'),
+
+    // Upload api url
+
+    UPLOAD: '/upload',
 }

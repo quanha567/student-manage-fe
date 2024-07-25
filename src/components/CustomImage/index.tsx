@@ -33,7 +33,8 @@ export const CustomImage = ({
                 src.data.attributes[0].formats?.large ??
                 src.data.attributes[0].formats?.medium ??
                 src.data.attributes[0].formats?.small ??
-                src.data.attributes[0].formats?.thumbnail
+                src.data.attributes[0].formats?.thumbnail ??
+                src.data.attributes
             return [
                 src.data.attributes[0].formats?.[size] ?? remainDataSrcFallback,
                 remainDataSrcFallback,
@@ -43,7 +44,8 @@ export const CustomImage = ({
                 src.data.attributes.formats?.large ??
                 src.data.attributes.formats?.medium ??
                 src.data.attributes.formats?.small ??
-                src.data.attributes.formats?.thumbnail
+                src.data.attributes.formats?.thumbnail ??
+                src.data.attributes
 
             return [
                 src.data.attributes.formats?.[size] ?? remainDataSrcFallback,
@@ -56,19 +58,19 @@ export const CustomImage = ({
         <Image
             src={
                 typeof imageSrc !== 'string'
-                    ? `${ENV_CONFIGS.BASE_URL}${imageSrc?.url ?? ''}`
+                    ? `${ENV_CONFIGS.BASE_URL}${imageSrc.url ?? ''}`
                     : ''
             }
             alt={
                 typeof imageSrc !== 'string'
-                    ? `${ENV_CONFIGS.BASE_URL}${imageSrc?.url ?? ''}`
+                    ? `${ENV_CONFIGS.BASE_URL}${imageSrc.url ?? ''}`
                     : ''
             }
             fallback={errorImageData}
             preview={{
                 src:
                     typeof previewSrc !== 'string'
-                        ? `${ENV_CONFIGS.BASE_URL}${previewSrc?.url ?? ''}`
+                        ? `${ENV_CONFIGS.BASE_URL}${previewSrc.url ?? ''}`
                         : '',
             }}
             {...imageProps}

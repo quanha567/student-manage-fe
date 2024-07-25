@@ -78,3 +78,16 @@ html {
     font-weight: bold !important;
     font-size: 15px;
 }
+
+.ant-pagination {
+    padding: 0 10px;
+}
+
+.ant-pagination.ant-pagination-mini {
+    display: flex !important;
+    gap: 4px !important;
+}
+
+.form-upload-container:hover .form-upload-action {
+    display: flex;
+}

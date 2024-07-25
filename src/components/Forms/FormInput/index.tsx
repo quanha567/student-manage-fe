@@ -62,7 +62,7 @@ export const FormInput = ({
                                     )}
                                 />
                             )}
-                            <span className="text-danger text-xs">
+                            <span className="pl-2 text-xs text-red-500">
                                 {error?.message}
                             </span>
                         </div>

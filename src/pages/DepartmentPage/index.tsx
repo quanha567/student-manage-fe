@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useCallback } from 'react'
 
-import { ExclamationOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
+import { IoMdAdd } from 'react-icons/io'
 
-import { Modal } from 'antd'
+import { App } from 'antd'
 
 import {
     Breadcrumb,
@@ -21,10 +21,65 @@ import { formatDateTime } from '@/utils'
 
 import { DepartmentFormModal } from './components'
 
+const columns: CustomTableColumnType<Data<DepartmentModel>> = [
+    {
+        title: 'ID',
+        dataIndex: 'id',
+        key: 'id',
+        width: 80,
+        align: 'center',
+        sorter: true,
+        display: true,
+    },
+    {
+        title: 'Hình ảnh',
+        dataIndex: 'attributes',
+        key: 'avatar',
+        width: 80,
+        render: ({ avatar }: DepartmentModel) =>
+            avatar?.data ? (
+                <CustomImage
+                    src={avatar}
+                    className="aspect-square object-cover"
+                    size="thumbnail"
+                />
+            ) : (
+                <></>
+            ),
+        display: true,
+    },
+    {
+        title: 'Tên khoa',
+        dataIndex: 'attributes',
+        key: 'departmentName',
+        render: ({ departmentName }: DepartmentModel) => departmentName,
+        sorter: true,
+        display: true,
+    },
+    {
+        title: 'Thời gian tạo',
+        dataIndex: 'attributes',
+        key: 'createdAt',
+        render: ({ createdAt }: DepartmentModel) =>
+            createdAt ? formatDateTime(createdAt) : '___',
+        sorter: true,
+        display: true,
+    },
+    {
+        title: 'Thời gian cập nhật',
+        dataIndex: 'attributes',
+        key: 'updatedAt',
+        render: ({ updatedAt }: DepartmentModel) =>
+            updatedAt ? formatDateTime(updatedAt) : '___',
+        sorter: true,
+        display: true,
+    },
+]
+
 const DepartmentPage = () => {
     const { isOpen, toggleOpen, id } = useDisclosure()
 
-    const [modalDelete, setModalDelete] = useState()
+    const { notification } = App.useApp()
 
     const [params] = useSearch()
     const {
@@ -35,15 +90,14 @@ const DepartmentPage = () => {
         searchText,
     } = params
 
-    console.log(searchText)
-
     const {
         data: departments,
         isLoading: isLoadingDepartments,
         isPlaceholderData: isPlaceholderDepartments,
+        refetch: refetchDepartments,
     } = useQuery({
         queryKey: [
-            QUERY_KEYS.DEPARTMENTS,
+            QUERY_KEYS.DEPARTMENT_LIST,
             pageIndex,
             pageSize,
             sortBy,
@@ -52,158 +106,78 @@ const DepartmentPage = () => {
         ],
         queryFn: async () =>
             await departmentService.search({
-                'pagination[pageSize]': pageSize,
-                'pagination[page]': pageIndex,
-                'sort[0]': `${String(sortBy)}:${asc === 'ascend' ? 'asc' : 'desc'}`,
                 populate: '*',
+                'pagination[page]': pageIndex,
+                'pagination[pageSize]': pageSize,
                 'filters[departmentName][$containsi]': searchText ?? '',
+                'sort[0]': `${String(sortBy)}:${asc === 'ascend' ? 'asc' : 'desc'}`,
             }),
     })
 
-    const columns: CustomTableColumnType<DepartmentModel> = [
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
-            width: 100,
-            align: 'center',
-            sorter: true,
+    const handleDeleteDepartment = useCallback(
+        async (deleteIds: number[]) => {
+            const firstId = deleteIds[0]
+            if (!firstId) return
+
+            try {
+                const departmentDeleted =
+                    await departmentService.delete(firstId)
+                await refetchDepartments()
+                notification.success({
+                    message: `Xóa khoa ${departmentDeleted.data?.attributes.departmentName ?? ''} thành công!`,
+                })
+            } catch (err: unknown) {
+                console.log('Department delete', err)
+            }
         },
-        {
-            title: 'Hình ảnh',
-            dataIndex: 'attributes',
-            key: 'avatar',
-            width: 100,
-            render: ({ avatar }: DepartmentModel) =>
-                avatar?.data ? (
-                    <CustomImage
-                        src={avatar}
-                        className="aspect-square object-cover"
-                        size="thumbnail"
-                    />
-                ) : (
-                    <></>
-                ),
-        },
-        {
-            title: 'Tên khoa',
-            dataIndex: 'attributes',
-            key: 'departmentName',
-            render: ({ departmentName }: DepartmentModel) => departmentName,
-            sorter: true,
-        },
-        {
-            title: 'Thời gian tạo',
-            dataIndex: 'attributes',
-            key: 'createdAt',
-            render: ({ createdAt }: DepartmentModel) =>
-                createdAt ? formatDateTime(createdAt) : '___',
-            sorter: true,
-        },
-        {
-            title: 'Giời gian cập nhật',
-            dataIndex: 'attributes',
-            key: 'updatedAt',
-            render: ({ updatedAt }: DepartmentModel) =>
-                updatedAt ? formatDateTime(updatedAt) : '___',
-            sorter: true,
-        },
-        // {
-        //     title: 'Hành động',
-        //     width: 160,
-        //     dataIndex: 'attributes',
-        //     align: 'center',
-        //     render: (id: string) => (
-        //         <Radio.Group value="">
-        //             <Tooltip title="Chỉnh sửa">
-        //                 <Radio.Button
-        //                     value={2}
-        //                     onClick={() => {
-        //                         toggleOpen(id)
-        //                     }}
-        //                     className="text-zinc-500 hover:text-zinc-500"
-        //                 >
-        //                     <EditFilled />
-        //                 </Radio.Button>
-        //             </Tooltip>
-        //             <Tooltip title="Xóa" color="red">
-        //                 <Radio.Button
-        //                     value={2}
-        //                     onClick={() => {
-        //                         setModalDelete({
-        //                             isOpen: true,
-        //                             id,
-        //                         })
-        //                     }}
-        //                     className="text-red-500 hover:text-red-500"
-        //                 >
-        //                     <DeleteFilled />
-        //                 </Radio.Button>
-        //             </Tooltip>
-        //         </Radio.Group>
-        //     ),
-        // },
-    ]
+        [notification, refetchDepartments],
+    )
 
     return (
         <div>
-            <Breadcrumb pageName="Danh sách khoa" />
-            <Button
-                size="middle"
-                className="drop-shadow-primary mb-4 ml-auto block drop-shadow"
-                onClick={() => {
-                    toggleOpen()
-                }}
-            >
-                Thêm khoa mới
-            </Button>
+            <Breadcrumb
+                pageName="Danh sách khoa"
+                renderRight={
+                    <Button
+                        size="middle"
+                        className="drop-shadow-primary ml-auto flex items-center drop-shadow"
+                        onClick={() => toggleOpen()}
+                    >
+                        <IoMdAdd />
+                        Thêm
+                    </Button>
+                }
+            />
 
-            <CustomTable<Data<DepartmentModel>>
+            <CustomTable
                 columns={columns}
                 dataSource={departments?.data}
                 loading={isLoadingDepartments || isPlaceholderDepartments}
                 tableName="khoa"
                 isPagination
                 totalElement={departments?.meta?.pagination?.total}
+                bordered
+                searchInputProps={{
+                    isDisplay: true,
+                    placeholder: 'Tìm kiếm tên khoa...',
+                }}
+                actionButtons={{
+                    editProps: {
+                        isDisplay: true,
+                        onClick: (record: Data<DepartmentModel>) =>
+                            record.id && toggleOpen(String(record.id)),
+                    },
+                    deleteProps: {
+                        isDisplay: true,
+                    },
+                }}
+                onDelete={handleDeleteDepartment}
             />
             <DepartmentFormModal
                 id={id}
                 isOpen={isOpen}
                 toggleOpen={toggleOpen}
             />
-            <Modal
-                centered
-                open={modalDelete?.isOpen}
-                onCancel={() => {
-                    setModalDelete({})
-                }}
-                classNames={{
-                    body: 'flex flex-col items-center',
-                }}
-                footer={false}
-            >
-                <div className="flex size-28 items-center justify-center rounded-full bg-red-200">
-                    <div className="flex size-20 items-center justify-center rounded-full bg-red-500">
-                        <ExclamationOutlined className="text-4xl text-white" />
-                    </div>
-                </div>
-                <p className="mt-2 text-xl font-bold">Xác nhận xóa</p>
-                <p className="mt-2 text-pretty text-center text-base">
-                    Bạn có chắc muốn xóa dữ liệu đã chọn? Sau khi xóa dữ liệu sẽ
-                    không thể khôi phục.
-                </p>
-                <div className="mt-4 grid w-full grid-cols-2 gap-4 px-6">
-                    <Button
-                        className="w-full hover:!border-transparent hover:!bg-zinc-500 hover:!text-white"
-                        type="default"
-                    >
-                        Hủy
-                    </Button>
-                    <Button className="w-full bg-red-500 hover:!bg-red-600">
-                        Đồng ý
-                    </Button>
-                </div>
-            </Modal>
         </div>
     )
 }
