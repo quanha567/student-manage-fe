@@ -1,5 +1,6 @@
 export * from './authModel'
 export * from './baseModel'
+export * from './classModel'
 export * from './departmentModel'
 export * from './imageModel'
 export * from './roleModel'

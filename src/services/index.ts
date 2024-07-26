@@ -1,4 +1,5 @@
 export * from './authService'
+export * from './classService'
 export * from './departmentService'
 export * from './fileService'
 export * from './userService'

@@ -20,21 +20,26 @@ interface PaginationMeta {
 }
 
 export interface Data<T> {
-    attributes: T
-    id: number
+    attributes?: T
+    id?: number
 }
 
-export interface SingleData<T> {
+export interface SingleMetaData<T> {
     data?: Data<T>
     meta?: PaginationMeta
 }
-
-export type ListResponse<T> = Pagination & {
-    data: Data<T>[]
+export interface SingleData<T> {
+    data?: Data<T>
 }
 
+export interface ListData<T> {
+    data?: Data<T>[]
+}
+
+export type ListResponse<T> = Pagination & ListData<T>
+
 export interface CreateResponse<T> {
-    data: T
+    data?: T
 }
 
 export interface CreateRequest<T> {

@@ -7,19 +7,20 @@ import { App } from 'antd'
 import {
     Breadcrumb,
     Button,
-    CustomImage,
     CustomTable,
     CustomTableColumnType,
 } from '@/components'
 import { QUERY_KEYS } from '@/constants'
-import { useDisclosure, useGetDepartments, useSearch } from '@/hooks'
-import { DepartmentModel } from '@/models'
+import { useDisclosure, useGetClasses, useSearch } from '@/hooks'
+import { ClassModel, DepartmentModel } from '@/models'
 import { queryClient } from '@/providers'
 import { departmentService } from '@/services'
 import { Data } from '@/types'
 import { formatDateTime } from '@/utils'
 
-import { DepartmentFormModal } from './components'
+import { ClassFormModal } from './components'
+
+const PageName = 'lớp học'
 
 const columns: CustomTableColumnType<Data<ClassModel>> = [
     {
@@ -31,36 +32,44 @@ const columns: CustomTableColumnType<Data<ClassModel>> = [
         sorter: true,
         display: true,
     },
+    // {
+    //     title: 'Hình ảnh',
+    //     dataIndex: 'attributes',
+    //     key: 'avatar',
+    //     width: 80,
+    //     render: ({ avatar }: ClassModel) =>
+    //         typeof avatar !== 'string' ? (
+    //             <CustomImage
+    //                 src={avatar}
+    //                 className="aspect-square object-cover"
+    //                 size="thumbnail"
+    //             />
+    //         ) : (
+    //             <></>
+    //         ),
+    //     display: true,
+    // },
     {
-        title: 'Hình ảnh',
+        title: `Tên ${PageName}`,
         dataIndex: 'attributes',
-        key: 'avatar',
-        width: 80,
-        render: ({ avatar }: DepartmentModel) =>
-            typeof avatar !== 'string' ? (
-                <CustomImage
-                    src={avatar}
-                    className="aspect-square object-cover"
-                    size="thumbnail"
-                />
-            ) : (
-                <></>
-            ),
+        key: 'className',
+        render: ({ className }: ClassModel) => className,
+        sorter: true,
         display: true,
     },
     {
-        title: 'Tên khoa',
+        title: 'Khoa',
         dataIndex: 'attributes',
         key: 'departmentName',
-        render: ({ departmentName }: DepartmentModel) => departmentName,
-        sorter: true,
+        render: ({ department }: ClassModel) =>
+            department?.data?.attributes?.departmentName ?? '___',
         display: true,
     },
     {
         title: 'Thời gian tạo',
         dataIndex: 'attributes',
         key: 'createdAt',
-        render: ({ createdAt }: DepartmentModel) =>
+        render: ({ createdAt }: ClassModel) =>
             createdAt ? formatDateTime(createdAt) : '___',
         sorter: true,
         display: true,
@@ -69,14 +78,14 @@ const columns: CustomTableColumnType<Data<ClassModel>> = [
         title: 'Thời gian cập nhật',
         dataIndex: 'attributes',
         key: 'updatedAt',
-        render: ({ updatedAt }: DepartmentModel) =>
+        render: ({ updatedAt }: ClassModel) =>
             updatedAt ? formatDateTime(updatedAt) : '___',
         sorter: true,
         display: true,
     },
 ]
 
-const DepartmentPage = () => {
+const ClassPage = () => {
     const { isOpen, toggleOpen, id } = useDisclosure()
 
     const { notification } = App.useApp()
@@ -94,7 +103,7 @@ const DepartmentPage = () => {
         data: departments,
         isLoading: isLoadingDepartments,
         isPlaceholderData: isPlaceholderDepartments,
-    } = useGetDepartments({
+    } = useGetClasses({
         pageIndex: Number(pageIndex),
         pageSize: Number(pageSize),
         asc: String(asc),
@@ -114,7 +123,7 @@ const DepartmentPage = () => {
                     queryKey: [QUERY_KEYS.DEPARTMENT_LIST],
                 })
                 notification.success({
-                    message: `Xóa khoa ${departmentDeleted.data?.attributes.departmentName ?? ''} thành công!`,
+                    message: `Xóa ${PageName} ${departmentDeleted.data?.attributes?.departmentName ?? ''} thành công!`,
                 })
             } catch (err: unknown) {
                 console.log('Department delete', err)
@@ -126,10 +135,10 @@ const DepartmentPage = () => {
     return (
         <div>
             <Breadcrumb
-                pageName="Danh sách khoa"
+                pageName="Danh sách lớp học"
                 items={[
                     {
-                        title: 'Danh sách khoa',
+                        title: 'Danh sách lớp học',
                     },
                 ]}
                 renderRight={
@@ -144,16 +153,16 @@ const DepartmentPage = () => {
             />
 
             <CustomTable
+                isPagination
+                tableName={PageName}
                 columns={columns}
                 dataSource={departments?.data}
                 loading={isLoadingDepartments || isPlaceholderDepartments}
-                tableName="khoa"
-                isPagination
                 totalElement={departments?.meta?.pagination?.total}
                 bordered
                 searchInputProps={{
                     isDisplay: true,
-                    placeholder: 'Tìm kiếm tên khoa...',
+                    placeholder: `Tìm kiếm tên ${PageName}...`,
                 }}
                 actionButtons={{
                     editProps: {
@@ -167,13 +176,9 @@ const DepartmentPage = () => {
                 }}
                 onDelete={handleDeleteDepartment}
             />
-            <DepartmentFormModal
-                id={id}
-                isOpen={isOpen}
-                toggleOpen={toggleOpen}
-            />
+            <ClassFormModal id={id} isOpen={isOpen} toggleOpen={toggleOpen} />
         </div>
     )
 }
 
-export default DepartmentPage
+export default ClassPage

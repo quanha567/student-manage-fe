@@ -2,6 +2,7 @@ import { ENV_CONFIGS } from '@/configs'
 import { createApiURL } from '@/utils'
 
 export enum PAGE_PATHS {
+    CLASS_LIST = '/classes',
     DASHBOARD = '/',
     DEPARTMENT_LIST = '/departments',
     LOGIN = '/login',
@@ -22,10 +23,13 @@ export const API_URL = {
     DEPARTMENTS: '/departments',
     departmentWithId: (id: number) => `/departments/${String(id)}`,
 
+    // Department Api url
+    CLASSES: '/classes',
+    classWithId: (id: number) => `/classes/${String(id)}`,
+
     // Student api url
     STUDENT_LOGIN: createApiURL('students/login'),
 
     // Upload api url
-
     UPLOAD: '/upload',
 }

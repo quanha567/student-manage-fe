@@ -34,7 +34,6 @@ import { ColumnType } from 'antd/es/table'
 import { ColumnGroupType, SorterResult } from 'antd/es/table/interface'
 
 import { useSearch } from '@/hooks'
-import { Data } from '@/types'
 
 import { TableSearchInput, TableSearchInputProps } from '../TableSearchInput'
 
@@ -45,7 +44,7 @@ interface TableOptionType {
 
 interface ActionButtonProps<T> {
     isDisplay?: boolean
-    onClick?: (data: Data<T>) => void
+    onClick?: (data: T) => void
 }
 
 const tableSizeOptions: TableOptionType[] = [
@@ -75,19 +74,21 @@ interface SearchParamsType {
     sortBy?: string
 }
 
-type CustomTableProps<T> = Omit<TableProps<T>, 'columns'> & {
+type CustomTableProps<T> = TableProps<T> & {
     tableName: string
     isPagination?: boolean
     totalElement?: number
     searchInputProps?: TableSearchInputProps
-    columns?: CustomTableColumnType<T>
+    // columns?: CustomTableColumnType<T>
     actionButtons?: ActionButton<T>
     onDelete?: (ids: number[]) => Promise<void>
 }
 
-export type CustomTableColumnType<T> = (ColumnType<Data<T>> & {
+type TableColumnType<T> = ColumnType<T> & {
     display?: boolean
-})[]
+}
+
+export type CustomTableColumnType<T> = TableColumnType<T>[]
 
 interface ModelDeleteType {
     isOpen?: boolean
@@ -119,7 +120,9 @@ export const CustomTable = <T extends AnyObject>({
         const displayColumnKeys =
             Array.isArray(columns) && columns.length > 0
                 ? columns
-                      .filter((column) => column.display)
+                      .filter(
+                          (column) => (column as TableColumnType<T>).display,
+                      )
                       .map((column) => column.key)
                       .filter(Boolean)
                 : []
@@ -146,7 +149,7 @@ export const CustomTable = <T extends AnyObject>({
                     title: 'Hành động',
                     dataIndex: 'attributes',
                     align: 'center',
-                    render: (_, record: Data<T>) => (
+                    render: (_, record: T) => (
                         <Radio.Group value="" size={tableSize}>
                             {editProps?.isDisplay && (
                                 <Tooltip title="Chỉnh sửa" color="blue">

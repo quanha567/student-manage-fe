@@ -37,11 +37,11 @@ const sideBarMenus: MenuItemType[] = [
     {
         label: 'Lớp học',
         icon: <MdClass className="size-6" />,
+        path: PAGE_PATHS.CLASS_LIST,
     },
     {
         label: 'Giáo viên',
         icon: <PiChalkboardTeacherFill className="size-6" />,
-        path: PAGE_PATHS.STUDENT_LIST,
     },
     {
         label: 'Sinh viên',

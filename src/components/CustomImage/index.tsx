@@ -9,7 +9,7 @@ type ImageSize = 'thumbnail' | 'small' | 'medium' | 'large'
 
 interface CustomImageProps extends Omit<ImageProps, 'src'> {
     size?: ImageSize
-    src?: ImageModel
+    src?: ImageModel | null
 }
 
 const errorImageData =
@@ -34,7 +34,7 @@ export const CustomImage = ({
                 src.data.attributes[0].formats?.medium ??
                 src.data.attributes[0].formats?.small ??
                 src.data.attributes[0].formats?.thumbnail ??
-                src.data.attributes
+                src.data.attributes[0]
             return [
                 src.data.attributes[0].formats?.[size] ?? remainDataSrcFallback,
                 remainDataSrcFallback,

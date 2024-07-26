@@ -5,14 +5,14 @@ import {
     CreateResponse,
     ListResponse,
     SearchParams,
-    SingleData,
+    SingleMetaData,
 } from '@/types'
 
 import { axiosService } from './axiosService'
 
-type DepartmentListResponse = ListResponse<DepartmentModel>
 type DepartmentCreateResponse = CreateResponse<DepartmentModel>
-export type DepartmentDetailResponse = SingleData<DepartmentModel>
+export type DepartmentListResponse = ListResponse<DepartmentModel>
+export type DepartmentDetailResponse = SingleMetaData<DepartmentModel>
 export type DepartmentCreateRequest = CreateRequest<DepartmentModel>
 
 export const departmentService = {

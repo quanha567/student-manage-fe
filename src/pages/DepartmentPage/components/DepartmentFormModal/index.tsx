@@ -28,7 +28,7 @@ export const DepartmentFormModal = ({
     } = formMethods
 
     const { data: departmentDetail, isLoading: isLoadingDepartment } =
-        useGetDepartmentDetail(departmentId)
+        useGetDepartmentDetail(Number(departmentId))
 
     useEffect(() => {
         if (departmentId && departmentDetail) {

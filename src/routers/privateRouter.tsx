@@ -4,6 +4,7 @@ import App from '@/App'
 import { PAGE_PATHS } from '@/constants'
 import { AuthGuard } from '@/guards'
 import {
+    ClassPage,
     DashboardPage,
     DepartmentPage,
     LoginPage,
@@ -27,6 +28,10 @@ export const privateRouters = createBrowserRouter([
             {
                 path: PAGE_PATHS.DEPARTMENT_LIST,
                 element: <DepartmentPage />,
+            },
+            {
+                path: PAGE_PATHS.CLASS_LIST,
+                element: <ClassPage />,
             },
             {
                 path: PAGE_PATHS.STUDENT_LIST,

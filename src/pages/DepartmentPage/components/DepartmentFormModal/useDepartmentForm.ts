@@ -24,7 +24,6 @@ export const useDepartmentForm = (
     closeModel?: () => void,
 ) => {
     const formMethods = useForm<CreateRequest<DepartmentModel>>({
-        mode: 'all',
         resolver: yupResolver(formDepartmentValidate),
     })
 
@@ -62,7 +61,7 @@ export const useDepartmentForm = (
                 } else {
                     await departmentService.create(dataSubmit)
                 }
-                await queryClient.refetchQueries({
+                await queryClient.invalidateQueries({
                     queryKey: [QUERY_KEYS.DEPARTMENT_LIST],
                 })
                 notification.success({

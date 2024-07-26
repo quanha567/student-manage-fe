@@ -23,7 +23,7 @@ export const MyProfileForm = () => {
         <FormProvider {...formMethods}>
             <Card>
                 <div className="grid grid-cols-2 gap-4">
-                    <FormInput label="Họ và tên" name="fullName" />
+                    <FormInput label="Họ và tên" name="fullName" readOnly />
                     <FormInput label="Email" name="email" />
                     <FormInput label="Số điện thoại" name="phoneNumber" />
                     <FormInput label="Giới tính" name="gender" />

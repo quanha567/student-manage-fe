@@ -5,12 +5,22 @@ import { Breadcrumb as AntdBreadcrumb } from 'antd'
 
 import { PAGE_PATHS } from '@/constants'
 
+interface BreadcrumbItem {
+    path?: string
+    title: string
+}
+
 interface BreadcrumbProps {
+    items?: BreadcrumbItem[]
     pageName: string
     renderRight?: ReactNode
 }
 
-export const Breadcrumb = ({ pageName, renderRight }: BreadcrumbProps) => {
+export const Breadcrumb = ({
+    pageName,
+    renderRight,
+    items,
+}: BreadcrumbProps) => {
     const navigate = useNavigate()
     return (
         <div className="mb-4 flex items-end justify-between">
@@ -20,13 +30,14 @@ export const Breadcrumb = ({ pageName, renderRight }: BreadcrumbProps) => {
                     items={[
                         {
                             title: 'Trang chủ',
-                            onClick: () => {
-                                navigate(PAGE_PATHS.DASHBOARD)
-                            },
+                            onClick: () => navigate(PAGE_PATHS.DASHBOARD),
+                            className: 'cursor-pointer ',
                         },
-                        {
-                            title: 'Danh sách khoa',
-                        },
+                        ...(items ?? []).map((item) => ({
+                            title: item.title,
+                            onClick: () => item.path && navigate(item.path),
+                            className: item.path ? 'cursor-pointer' : '',
+                        })),
                     ]}
                 />
             </div>
