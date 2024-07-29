@@ -3,9 +3,8 @@ import { FormProvider } from 'react-hook-form'
 
 import { Modal } from 'antd'
 
-import { FormInput, FormSingleUpload } from '@/components'
-import { useGetDepartmentDetail } from '@/hooks'
-import { ImageModel } from '@/models'
+import { FormInput, FormSelect, FormSingleUpload } from '@/components'
+import { useClassOptions, useGetDepartmentDetail } from '@/hooks'
 import { DisclosureType } from '@/types'
 import { getPreviewUrl } from '@/utils'
 
@@ -30,19 +29,35 @@ export const DepartmentFormModal = ({
     const { data: departmentDetail, isLoading: isLoadingDepartment } =
         useGetDepartmentDetail(Number(departmentId))
 
+    const {
+        classOptions,
+        classSearchText,
+        isLoadingClassOptions,
+        loadMoreClassOptions,
+        setClassSearchText,
+    } = useClassOptions()
+
     useEffect(() => {
         if (departmentId && departmentDetail) {
+            const classIds =
+                departmentDetail.data?.attributes?.classes?.data?.map(
+                    (classInfo) => classInfo.id,
+                )
             reset({
                 data: {
                     ...departmentDetail.data?.attributes,
                     avatar: getPreviewUrl(
-                        departmentDetail.data?.attributes.avatar as ImageModel,
+                        departmentDetail.data?.attributes?.avatar,
                     ),
+                    classes: classIds,
                 },
             })
         } else {
             reset({
-                data: { departmentName: '', avatar: undefined },
+                data: {
+                    departmentName: '',
+                    avatar: undefined,
+                },
             })
         }
     }, [departmentDetail, departmentId, reset])
@@ -79,6 +94,18 @@ export const DepartmentFormModal = ({
                     required
                     label="Tên khoa"
                     name="data.departmentName"
+                    placeholder="Nhập tên khoa"
+                />
+                <FormSelect
+                    allowClear
+                    label="Lớp học"
+                    mode="multiple"
+                    name="data.classes"
+                    options={classOptions}
+                    searchValue={classSearchText}
+                    onSearch={setClassSearchText}
+                    loading={isLoadingClassOptions}
+                    onPopupScroll={loadMoreClassOptions}
                     placeholder="Nhập tên khoa"
                 />
             </FormProvider>

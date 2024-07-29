@@ -41,14 +41,14 @@ export const CustomImage = ({
             ]
         } else {
             const remainDataSrcFallback =
-                src.data.attributes.formats?.large ??
-                src.data.attributes.formats?.medium ??
-                src.data.attributes.formats?.small ??
-                src.data.attributes.formats?.thumbnail ??
+                src.data.attributes?.formats?.large ??
+                src.data.attributes?.formats?.medium ??
+                src.data.attributes?.formats?.small ??
+                src.data.attributes?.formats?.thumbnail ??
                 src.data.attributes
 
             return [
-                src.data.attributes.formats?.[size] ?? remainDataSrcFallback,
+                src.data.attributes?.formats?.[size] ?? remainDataSrcFallback,
                 remainDataSrcFallback,
             ]
         }
@@ -58,19 +58,19 @@ export const CustomImage = ({
         <Image
             src={
                 typeof imageSrc !== 'string'
-                    ? `${ENV_CONFIGS.BASE_URL}${imageSrc.url ?? ''}`
+                    ? `${ENV_CONFIGS.BASE_URL}${imageSrc?.url ?? ''}`
                     : ''
             }
             alt={
                 typeof imageSrc !== 'string'
-                    ? `${ENV_CONFIGS.BASE_URL}${imageSrc.url ?? ''}`
+                    ? `${ENV_CONFIGS.BASE_URL}${imageSrc?.url ?? ''}`
                     : ''
             }
             fallback={errorImageData}
             preview={{
                 src:
                     typeof previewSrc !== 'string'
-                        ? `${ENV_CONFIGS.BASE_URL}${previewSrc.url ?? ''}`
+                        ? `${ENV_CONFIGS.BASE_URL}${previewSrc?.url ?? ''}`
                         : '',
             }}
             {...imageProps}

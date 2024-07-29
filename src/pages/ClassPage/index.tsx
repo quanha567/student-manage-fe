@@ -135,10 +135,10 @@ const ClassPage = () => {
     return (
         <div>
             <Breadcrumb
-                pageName="Danh sách lớp học"
+                pageName={`Danh sách ${PageName}`}
                 items={[
                     {
-                        title: 'Danh sách lớp học',
+                        title: `Danh sách ${PageName}`,
                     },
                 ]}
                 renderRight={

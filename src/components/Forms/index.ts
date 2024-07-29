@@ -1,4 +1,5 @@
 export * from './FormField'
 export * from './FormInput'
+export * from './FormSelect'
 export * from './FormSingleUpload'
 export * from './FormTextArea'

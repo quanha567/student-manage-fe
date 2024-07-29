@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
 
+import { HiMiniPhoto } from 'react-icons/hi2'
 import { IoMdAdd } from 'react-icons/io'
 
-import { App } from 'antd'
+import { App, Avatar } from 'antd'
 
 import {
     Breadcrumb,
@@ -21,7 +22,7 @@ import { formatDateTime } from '@/utils'
 
 import { DepartmentFormModal } from './components'
 
-const columns: CustomTableColumnType<Data<ClassModel>> = [
+const columns: CustomTableColumnType<Data<DepartmentModel>> = [
     {
         title: 'ID',
         dataIndex: 'id',
@@ -32,19 +33,27 @@ const columns: CustomTableColumnType<Data<ClassModel>> = [
         display: true,
     },
     {
-        title: 'Hình ảnh',
+        title: <HiMiniPhoto className="mx-auto size-6" />,
         dataIndex: 'attributes',
         key: 'avatar',
-        width: 80,
-        render: ({ avatar }: DepartmentModel) =>
-            typeof avatar !== 'string' ? (
+        width: 50,
+        render: ({ avatar, departmentName }: DepartmentModel) =>
+            typeof avatar !== 'string' && avatar?.data ? (
                 <CustomImage
                     src={avatar}
                     className="aspect-square object-cover"
                     size="thumbnail"
                 />
             ) : (
-                <></>
+                <Avatar
+                    shape="square"
+                    style={{
+                        borderRadius: 0,
+                    }}
+                    size={40}
+                >
+                    {departmentName?.charAt(0).toLocaleUpperCase()}
+                </Avatar>
             ),
         display: true,
     },
@@ -53,6 +62,25 @@ const columns: CustomTableColumnType<Data<ClassModel>> = [
         dataIndex: 'attributes',
         key: 'departmentName',
         render: ({ departmentName }: DepartmentModel) => departmentName,
+        sorter: true,
+        display: true,
+    },
+    {
+        title: 'Tên khoa',
+        dataIndex: 'attributes',
+        key: 'classes',
+        render: ({ classes }: DepartmentModel) => (
+            <div className="flex max-w-sm items-center gap-1">
+                {classes?.data?.map((classInfo) => (
+                    <div
+                        key={classInfo.id}
+                        className="rounded-lg bg-zinc-200 px-2 py-1 text-xs"
+                    >
+                        {classInfo.attributes?.className}
+                    </div>
+                ))}
+            </div>
+        ),
         sorter: true,
         display: true,
     },
@@ -114,7 +142,7 @@ const DepartmentPage = () => {
                     queryKey: [QUERY_KEYS.DEPARTMENT_LIST],
                 })
                 notification.success({
-                    message: `Xóa khoa ${departmentDeleted.data?.attributes.departmentName ?? ''} thành công!`,
+                    message: `Xóa khoa ${departmentDeleted.data?.attributes?.departmentName ?? ''} thành công!`,
                 })
             } catch (err: unknown) {
                 console.log('Department delete', err)

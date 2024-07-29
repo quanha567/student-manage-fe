@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants'
-import { DepartmentModel } from '@/models'
+import { DepartmentModel, DepartmentRequestModel } from '@/models'
 import {
     CreateRequest,
     CreateResponse,
@@ -13,7 +13,7 @@ import { axiosService } from './axiosService'
 type DepartmentCreateResponse = CreateResponse<DepartmentModel>
 export type DepartmentListResponse = ListResponse<DepartmentModel>
 export type DepartmentDetailResponse = SingleMetaData<DepartmentModel>
-export type DepartmentCreateRequest = CreateRequest<DepartmentModel>
+export type DepartmentCreateRequest = CreateRequest<DepartmentRequestModel>
 
 export const departmentService = {
     search: (params?: SearchParams): Promise<DepartmentListResponse> => {

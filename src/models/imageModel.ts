@@ -12,7 +12,7 @@ export interface ImageData {
     formats?: ImageFormat
     hash?: string
     height?: number
-    id?: string
+    id?: number
     mime?: string
     name?: string
     previewUrl?: string

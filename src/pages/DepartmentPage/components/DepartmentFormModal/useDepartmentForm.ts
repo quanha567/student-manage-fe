@@ -7,12 +7,14 @@ import { ObjectSchema, object, string } from 'yup'
 import { App } from 'antd'
 
 import { QUERY_KEYS } from '@/constants'
-import { DepartmentModel } from '@/models'
 import { queryClient } from '@/providers'
-import { departmentService, fileService } from '@/services'
-import { CreateRequest } from '@/types'
+import {
+    DepartmentCreateRequest,
+    departmentService,
+    fileService,
+} from '@/services'
 
-const formDepartmentValidate: ObjectSchema<CreateRequest<DepartmentModel>> =
+const formDepartmentValidate: ObjectSchema<DepartmentCreateRequest> =
     object().shape({
         data: object({
             departmentName: string().required('Vui lòng nhập tên khoa!'),
@@ -23,7 +25,7 @@ export const useDepartmentForm = (
     departmentId?: string,
     closeModel?: () => void,
 ) => {
-    const formMethods = useForm<CreateRequest<DepartmentModel>>({
+    const formMethods = useForm<DepartmentCreateRequest>({
         resolver: yupResolver(formDepartmentValidate),
     })
 
@@ -32,7 +34,7 @@ export const useDepartmentForm = (
     const { handleSubmit } = formMethods
 
     const handleCreateOrUpdateDepartment = useCallback(
-        async (data: CreateRequest<DepartmentModel>) => {
+        async (data: DepartmentCreateRequest) => {
             try {
                 let dataSubmit = { ...data }
 
