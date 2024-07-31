@@ -1,3 +1,5 @@
 export enum DATE_TIME_FORMAT {
+    DATE_ONLY = 'DD/MM/YYYY',
+    DATE_ONLY_REVERSE_HYPHEN = 'YYYY-MM-DD',
     FULL_DATE_TIME = 'DD/MM/YYYY HH:mm:ss',
 }

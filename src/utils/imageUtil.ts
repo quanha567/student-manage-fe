@@ -15,10 +15,10 @@ export const getPreviewUrl = (imageModel?: ImageModel): string => {
     const { thumbnail, small, medium, large } = formats ?? {}
 
     return `${ENV_CONFIGS.BASE_URL}${
-        thumbnail?.url ??
-        small?.url ??
-        medium?.url ??
         large?.url ??
+        medium?.url ??
+        small?.url ??
+        thumbnail?.url ??
         attributes.previewUrl ??
         attributes.url ??
         ''

@@ -1,16 +1,30 @@
-import { BaseModel, UserModel } from '@/models'
+import { Dayjs } from 'dayjs'
+
+import { BaseModel, ClassModel, ImageModel, UserModel } from '@/models'
+import { SingleData } from '@/types'
 
 export interface StudentModel extends BaseModel {
     address?: string
-    classId?: string
-    dateOfBirth?: string
+    avatar?: ImageModel
+    class?: SingleData<ClassModel>
+    dateOfBirth?: string | Dayjs
     email?: string
     enrollments?: unknown
     examResults?: unknown
     fullName?: string
     gender?: Gender
+    id?: number
+    note?: string
     phoneNumber?: string
     studentId?: string
+    user?: UserModel
+}
+
+export type StudentRequestModel = Omit<StudentModel, 'avatar' | 'class'> & {
+    avatar?: unknown
+    classId?: number
+    class?: number
+    user?: number
 }
 
 export enum Gender {

@@ -55,7 +55,7 @@ export const useClassForm = (classId?: string, closeModel?: () => void) => {
                 } else {
                     await classService.create(dataSubmit)
                 }
-                await queryClient.invalidateQueries({
+                await queryClient.refetchQueries({
                     queryKey: [QUERY_KEYS.CLASS_LIST],
                 })
                 notification.success({

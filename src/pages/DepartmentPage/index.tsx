@@ -66,11 +66,11 @@ const columns: CustomTableColumnType<Data<DepartmentModel>> = [
         display: true,
     },
     {
-        title: 'Tên khoa',
+        title: 'Danh sách lớp',
         dataIndex: 'attributes',
         key: 'classes',
         render: ({ classes }: DepartmentModel) => (
-            <div className="flex max-w-sm items-center gap-1">
+            <div className="flex max-w-sm flex-wrap items-center gap-1">
                 {classes?.data?.map((classInfo) => (
                     <div
                         key={classInfo.id}
@@ -132,20 +132,21 @@ const DepartmentPage = () => {
 
     const handleDeleteDepartment = useCallback(
         async (deleteIds: number[]) => {
-            const firstId = deleteIds[0]
-            if (!firstId) return
-
             try {
-                const departmentDeleted =
-                    await departmentService.delete(firstId)
-                await queryClient.invalidateQueries({
+                const dataDeleted = await Promise.all(
+                    deleteIds.map((id) => departmentService.delete(id)),
+                )
+                await queryClient.refetchQueries({
                     queryKey: [QUERY_KEYS.DEPARTMENT_LIST],
                 })
                 notification.success({
-                    message: `Xóa khoa ${departmentDeleted.data?.attributes?.departmentName ?? ''} thành công!`,
+                    message: `Đã xóa thành công ${String(dataDeleted.length)} dòng dữ liệu!`,
                 })
             } catch (err: unknown) {
                 console.log('Department delete', err)
+                notification.error({
+                    message: `Có lỗi xảy ra vui lòng thử lại sau!`,
+                })
             }
         },
         [notification],

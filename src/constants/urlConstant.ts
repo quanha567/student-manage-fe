@@ -14,6 +14,7 @@ export const API_URL = {
     BASE: `${ENV_CONFIGS.BASE_URL}/api`,
     // Auth Api Url
     LOGIN: createApiURL('auth/local'),
+    REGISTER: 'auth/local/register',
 
     // User Api Url
     USERS: '/users',
@@ -22,6 +23,7 @@ export const API_URL = {
     // Department Api url
     DEPARTMENTS: '/departments',
     departmentWithId: (id: number) => `/departments/${String(id)}`,
+    DELETE_DEPARTMENTS: 'departments/delete-multiple',
 
     // Department Api url
     CLASSES: '/classes',
@@ -29,6 +31,8 @@ export const API_URL = {
 
     // Student api url
     STUDENT_LOGIN: createApiURL('students/login'),
+    STUDENTS: 'students',
+    studentWithId: (id: number) => `students/${String(id)}`,
 
     // Upload api url
     UPLOAD: '/upload',

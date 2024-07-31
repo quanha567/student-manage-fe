@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants'
-import { UserModel } from '@/models'
+import { UserCreateRequestModel, UserModel } from '@/models'
 
 import { axiosService } from './axiosService'
 
@@ -9,8 +9,18 @@ export const userService = {
             baseURL: API_URL.USER_INFO,
             method: 'GET',
             params: {
-                populate: '*',
+                populate: 'deep,4',
             },
+        })
+            .then((res) => res.data)
+            .catch((err: unknown) => {
+                throw err
+            }),
+    create: (data: UserCreateRequestModel): Promise<UserModel> =>
+        axiosService()<UserModel>({
+            url: 'users',
+            method: 'POST',
+            data,
         })
             .then((res) => res.data)
             .catch((err: unknown) => {

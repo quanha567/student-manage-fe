@@ -30,6 +30,7 @@ export const FormTextArea = ({
     rules,
     label,
     required,
+    size = 'large',
     showNumberOfCharacter,
     ...restProps
 }: FormTextAreaProps) => {
@@ -47,8 +48,9 @@ export const FormTextArea = ({
                     render={({ field, fieldState: { error } }) => (
                         <div>
                             <TextArea
-                                {...field}
+                                size={size}
                                 status={error ? 'error' : ''}
+                                {...field}
                                 {...restProps}
                             />
                             <div className="mt-0.5 flex items-center justify-between">

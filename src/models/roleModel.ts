@@ -8,7 +8,8 @@ export interface RoleModel {
 }
 
 export enum UserRole {
-    ADMIN = 'Admin',
-    STUDENT = 'Student',
-    TEACHER = 'Teacher',
+    AUTHENTICATED = 'authenticated',
+    PUBLIC = 'public',
+    STUDENT = 'student',
+    TEACHER = 'teacher',
 }

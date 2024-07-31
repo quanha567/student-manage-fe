@@ -12,7 +12,7 @@ import { LOCAL_STORAGES, PAGE_PATHS } from '@/constants'
 import { useAppDispatch } from '@/hooks'
 import { LoginRequestModel } from '@/models'
 import { setUser } from '@/redux'
-import { authService, userService } from '@/services'
+import { authService, studentService, userService } from '@/services'
 
 const formDefaultValues: LoginRequestModel = {
     identifier: 'admin',
@@ -49,7 +49,17 @@ export const useFormLogin = () => {
 
                 localStorage.setItem(LOCAL_STORAGES.ACCESS_TOKEN, jwt)
 
-                const userInfo = await userService.getInfo()
+                let userInfo = await userService.getInfo()
+                if (userInfo.student?.id) {
+                    const studentInfo = await studentService.get(
+                        userInfo.student.id,
+                    )
+
+                    userInfo = {
+                        ...userInfo,
+                        student: studentInfo.data?.attributes,
+                    }
+                }
 
                 dispatch(setUser(userInfo))
                 navigate(PAGE_PATHS.DASHBOARD)

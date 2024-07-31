@@ -8,6 +8,7 @@ import { IoLogOut } from 'react-icons/io5'
 import { Avatar, Popover } from 'antd'
 
 import { LogoImage } from '@/assets'
+import { CustomImage } from '@/components'
 import { LOCAL_STORAGES, PAGE_PATHS } from '@/constants'
 import { useAppSelector } from '@/hooks'
 import { selectCurrentUser } from '@/redux/slices'
@@ -90,9 +91,15 @@ export const Header = () => {
                     }
                 >
                     <div className="flex cursor-pointer flex-row-reverse items-center gap-1 rounded-lg px-3 py-1 hover:bg-zinc-100">
-                        <Avatar size="large" className="bg-primary">
-                            {student?.fullName?.charAt(0)}
-                        </Avatar>
+                        <CustomImage
+                            src={student?.avatar}
+                            alt={student?.fullName}
+                            className="aspect-square object-cover"
+                            containerClass="overflow-hidden rounded-full"
+                            size="thumbnail"
+                            imgSize={40}
+                            preview={false}
+                        />
                         <div className="flex flex-col items-end">
                             <p className="font-bold leading-none">
                                 {student?.fullName}

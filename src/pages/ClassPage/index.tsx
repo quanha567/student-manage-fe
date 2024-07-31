@@ -119,7 +119,7 @@ const ClassPage = () => {
             try {
                 const departmentDeleted =
                     await departmentService.delete(firstId)
-                await queryClient.invalidateQueries({
+                await queryClient.refetchQueries({
                     queryKey: [QUERY_KEYS.DEPARTMENT_LIST],
                 })
                 notification.success({

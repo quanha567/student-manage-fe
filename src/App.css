@@ -12,14 +12,6 @@ html {
     --primary-color: #d72134;
 }
 
-#input-password::placeholder {
-    color: #52525b;
-}
-
-#input-password:focus::placeholder {
-    color: #a1a1aa;
-}
-
 .ant-pagination-item,
 .ant-pagination-item-ellipsis,
 .ant-pagination-item-link {

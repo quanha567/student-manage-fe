@@ -63,7 +63,7 @@ export const useDepartmentForm = (
                 } else {
                     await departmentService.create(dataSubmit)
                 }
-                await queryClient.invalidateQueries({
+                await queryClient.refetchQueries({
                     queryKey: [QUERY_KEYS.DEPARTMENT_LIST],
                 })
                 notification.success({

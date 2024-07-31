@@ -27,8 +27,7 @@ export const getUserInfo = createAsyncThunk(
             return
 
         try {
-            const userInfo = await userService.getInfo()
-            dispatch(setUser(userInfo))
+            dispatch(setUser(await userService.getInfo()))
         } catch (err) {
             console.log(err)
         }

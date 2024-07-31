@@ -1,13 +1,16 @@
 import { useMemo } from 'react'
 
-import { Image, ImageProps } from 'antd'
+import { Avatar, Image, ImageProps } from 'antd'
 
 import { ENV_CONFIGS } from '@/configs'
+import { vietnameseAlphabetColorMap } from '@/constants/colorConstant'
 import { ImageModel } from '@/models'
 
 type ImageSize = 'thumbnail' | 'small' | 'medium' | 'large'
 
 interface CustomImageProps extends Omit<ImageProps, 'src'> {
+    containerClass?: string
+    imgSize?: number
     size?: ImageSize
     src?: ImageModel | null
 }
@@ -18,9 +21,27 @@ const errorImageData =
 export const CustomImage = ({
     src,
     size = 'small',
+    imgSize = 60,
+    alt,
+    containerClass,
     ...imageProps
 }: CustomImageProps) => {
+    const upperCaseCharacter = alt?.charAt(0).toUpperCase()
     const [imageSrc, previewSrc] = useMemo(() => {
+        if (src?.id) {
+            const remainDataSrcFallback =
+                src.formats?.large ??
+                src.formats?.medium ??
+                src.formats?.small ??
+                src.formats?.thumbnail ??
+                src
+
+            return [
+                src.formats?.[size] ?? remainDataSrcFallback,
+                remainDataSrcFallback,
+            ]
+        }
+
         if (
             !src?.data ||
             (Array.isArray(src.data.attributes) &&
@@ -55,25 +76,54 @@ export const CustomImage = ({
     }, [src, size])
 
     return (
-        <Image
-            src={
-                typeof imageSrc !== 'string'
-                    ? `${ENV_CONFIGS.BASE_URL}${imageSrc?.url ?? ''}`
-                    : ''
-            }
-            alt={
-                typeof imageSrc !== 'string'
-                    ? `${ENV_CONFIGS.BASE_URL}${imageSrc?.url ?? ''}`
-                    : ''
-            }
-            fallback={errorImageData}
-            preview={{
-                src:
-                    typeof previewSrc !== 'string'
-                        ? `${ENV_CONFIGS.BASE_URL}${previewSrc?.url ?? ''}`
-                        : '',
+        <div
+            style={{
+                width: imgSize,
+                height: imgSize,
             }}
-            {...imageProps}
-        />
+            className={containerClass}
+        >
+            {imageSrc ? (
+                <Image
+                    src={
+                        typeof imageSrc !== 'string'
+                            ? `${ENV_CONFIGS.BASE_URL}${imageSrc.url ?? ''}`
+                            : ''
+                    }
+                    alt={
+                        alt ??
+                        (typeof imageSrc !== 'string'
+                            ? `${ENV_CONFIGS.BASE_URL}${imageSrc.url ?? ''}`
+                            : '')
+                    }
+                    fallback={errorImageData}
+                    preview={{
+                        src:
+                            typeof previewSrc !== 'string'
+                                ? `${ENV_CONFIGS.BASE_URL}${previewSrc?.url ?? ''}`
+                                : '',
+                    }}
+                    style={{
+                        width: imgSize,
+                        height: imgSize,
+                    }}
+                    {...imageProps}
+                />
+            ) : (
+                <Avatar
+                    size={imgSize}
+                    className={imageProps.className}
+                    style={{
+                        borderRadius: 0,
+                        backgroundColor: upperCaseCharacter
+                            ? (vietnameseAlphabetColorMap[upperCaseCharacter] ??
+                              vietnameseAlphabetColorMap.default)
+                            : vietnameseAlphabetColorMap.default,
+                    }}
+                >
+                    {upperCaseCharacter}
+                </Avatar>
+            )}
+        </div>
     )
 }

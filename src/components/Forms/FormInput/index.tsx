@@ -42,12 +42,6 @@ export const FormInput = ({
                                     {...field}
                                     {...restProps}
                                     className="px-4 py-2.5"
-                                    classNames={{
-                                        input: twMerge(
-                                            'placeholder:text-zinc-600 focus:placeholder:text-zinc-400',
-                                            restProps.classNames?.input,
-                                        ),
-                                    }}
                                 />
                             ) : (
                                 <Input
@@ -57,7 +51,7 @@ export const FormInput = ({
                                     {...field}
                                     {...restProps}
                                     className={twMerge(
-                                        'px-4 py-2.5 placeholder:text-zinc-600 focus:placeholder:text-zinc-400',
+                                        'px-4 py-2.5',
                                         restProps.className,
                                     )}
                                 />
