@@ -22,16 +22,14 @@ import { formatDateTime } from '@/utils'
 
 import { ClassFormModal } from './components'
 
-import '@cyntler/react-doc-viewer/dist/index.css'
 const PageName = 'học sinh'
 
 const columns: CustomTableColumnType<Data<StudentModel>> = [
     {
-        title: 'ID',
-        dataIndex: 'id',
-        key: 'id',
-        width: 80,
-        align: 'center',
+        title: `Tên ${PageName}`,
+        dataIndex: 'attributes',
+        key: 'studentCode',
+        render: ({ studentCode }: StudentModel) => studentCode,
         sorter: true,
         display: true,
     },
@@ -53,7 +51,7 @@ const columns: CustomTableColumnType<Data<StudentModel>> = [
     {
         title: `Tên ${PageName}`,
         dataIndex: 'attributes',
-        key: 'className',
+        key: 'fullName',
         render: ({ fullName }: StudentModel) => fullName,
         sorter: true,
         display: true,
@@ -164,7 +162,6 @@ const StudentPage = () => {
                     </Button>
                 }
             />
-
             <CustomTable
                 isPagination
                 tableName={PageName}

@@ -16,6 +16,7 @@ export interface StudentModel extends BaseModel {
     id?: number
     note?: string
     phoneNumber?: string
+    studentCode?: string
     studentId?: string
     user?: UserModel
 }

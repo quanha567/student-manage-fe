@@ -112,13 +112,15 @@ export const ClassFormModal = ({
                         name="data.fullName"
                         placeholder="Nhập họ và tên"
                     />
-                    <FormInput
-                        required
-                        label="Email"
-                        name="data.email"
-                        type="email"
-                        placeholder="example@gmail.com"
-                    />
+                    {studentId && (
+                        <FormInput
+                            required
+                            label="Email"
+                            name="data.email"
+                            type="email"
+                            placeholder="example@gmail.com"
+                        />
+                    )}
                     <FormInput
                         label="Số điện thoại"
                         name="data.phoneNumber"

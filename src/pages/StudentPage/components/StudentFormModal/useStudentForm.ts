@@ -10,20 +10,12 @@ import { App } from 'antd'
 
 import { DATE_TIME_FORMAT, QUERY_KEYS } from '@/constants'
 import { queryClient } from '@/providers'
-import {
-    StudentCreateRequest,
-    fileService,
-    studentService,
-    userService,
-} from '@/services'
+import { StudentCreateRequest, fileService, studentService } from '@/services'
 
 const formStudentValidate: ObjectSchema<StudentCreateRequest> = object().shape({
     data: object({
         fullName: string().required('Vui lòng nhập tên học sinh!'),
         classId: number().required('Vui lòng chọn lớp học!'),
-        email: string()
-            .required('Vui lòng nhập email!')
-            .email('Email không đúng định dạng!'),
     }),
 })
 
@@ -38,24 +30,22 @@ export const useStudentForm = (studentId?: string, closeModel?: () => void) => {
 
     const handleCreateOrUpdateStudent = useCallback(
         async (data: StudentCreateRequest) => {
-            if (!data.data?.email) return
-
             try {
                 let dataSubmit: StudentCreateRequest = {
                     data: {
                         ...data.data,
-                        class: data.data.classId,
+                        class: data.data?.classId,
                         dateOfBirth:
-                            data.data.dateOfBirth &&
+                            data.data?.dateOfBirth &&
                             isDayjs(data.data.dateOfBirth)
                                 ? data.data.dateOfBirth.format(
                                       DATE_TIME_FORMAT.DATE_ONLY_REVERSE_HYPHEN,
                                   )
-                                : '',
+                                : undefined,
                     },
                 }
 
-                if (data.data.avatar instanceof Blob) {
+                if (data.data?.avatar instanceof Blob) {
                     const formData = new FormData()
 
                     formData.append('files', data.data.avatar)
@@ -71,25 +61,10 @@ export const useStudentForm = (studentId?: string, closeModel?: () => void) => {
                     delete dataSubmit.data?.avatar
                 }
 
-                if (studentId) {
+                if (studentId)
                     await studentService.update(Number(studentId), dataSubmit)
-                } else {
-                    // create account for this student
-                    const userResponse = await userService.create({
-                        email: data.data.email,
-                        username: data.data.email,
-                        password: '000000', // this is default password
-                        role: 4,
-                    })
+                else await studentService.create(dataSubmit)
 
-                    dataSubmit = {
-                        data: {
-                            ...dataSubmit.data,
-                            user: userResponse.id,
-                        },
-                    }
-                    await studentService.create(dataSubmit)
-                }
                 await queryClient.refetchQueries({
                     queryKey: [QUERY_KEYS.STUDENT_LIST],
                 })
