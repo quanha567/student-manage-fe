@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 
-import { HiMiniPhoto } from 'react-icons/hi2'
 import { IoMdAdd } from 'react-icons/io'
 
 import { App } from 'antd'
@@ -8,83 +7,44 @@ import { App } from 'antd'
 import {
     Breadcrumb,
     Button,
-    CustomImage,
     CustomTable,
     CustomTableColumnType,
 } from '@/components'
-import { GENDERS, QUERY_KEYS } from '@/constants'
+import { QUERY_KEYS } from '@/constants'
 import { useDisclosure, useSearch } from '@/hooks'
-import { DepartmentModel, StudentModel } from '@/models'
+import { SyllabusModel } from '@/models'
 import { queryClient } from '@/providers'
-import { useGetStudents } from '@/queries'
-import { studentService } from '@/services'
+import { useGetSyllabuses } from '@/queries'
+import { subjectService } from '@/services'
 import { Data } from '@/types'
 import { formatDateTime } from '@/utils'
 
-import { ClassFormModal } from './components'
+import { SyllabusFormModal } from './components'
 
-const PageName = 'sinh viên'
-
-const columns: CustomTableColumnType<Data<StudentModel>> = [
+const columns: CustomTableColumnType<Data<SyllabusModel>> = [
     {
-        title: `Mã ${PageName}`,
-        dataIndex: 'attributes',
-        key: 'studentCode',
-        render: ({ studentCode }: StudentModel) => studentCode,
-        sorter: true,
-        display: true,
-    },
-    {
-        title: <HiMiniPhoto className="mx-auto size-6" />,
-        dataIndex: 'attributes',
-        key: 'avatar',
+        title: 'ID',
+        dataIndex: 'id',
+        key: 'id',
         width: 80,
-        render: ({ avatar, fullName }: StudentModel) => (
-            <CustomImage
-                src={avatar}
-                alt={fullName}
-                className="aspect-square object-cover"
-                size="thumbnail"
-            />
-        ),
-        display: true,
-    },
-    {
-        title: `Tên ${PageName}`,
-        dataIndex: 'attributes',
-        key: 'fullName',
-        render: ({ fullName }: StudentModel) => fullName,
+        align: 'center',
         sorter: true,
         display: true,
     },
     {
-        title: 'Lớp',
+        title: 'Tên đề cương',
         dataIndex: 'attributes',
-        key: 'className',
-        render: ({ class: classInfo }: StudentModel) =>
-            classInfo?.data?.attributes?.className ?? '___',
+        key: 'name',
+        render: ({ name }: SyllabusModel) => name,
+        sorter: true,
         display: true,
     },
-    {
-        title: 'Số điện thoại',
-        dataIndex: 'attributes',
-        key: 'phoneNumber',
-        render: ({ phoneNumber }: StudentModel) => phoneNumber ?? '___',
-        display: true,
-    },
-    {
-        title: 'Giới tính',
-        dataIndex: 'attributes',
-        key: 'departmentName',
-        render: ({ gender }: StudentModel) =>
-            gender ? GENDERS[gender] || '___' : '___',
-        display: true,
-    },
+
     {
         title: 'Thời gian tạo',
         dataIndex: 'attributes',
         key: 'createdAt',
-        render: ({ createdAt }: StudentModel) =>
+        render: ({ createdAt }: SyllabusModel) =>
             createdAt ? formatDateTime(createdAt) : '___',
         sorter: true,
         display: true,
@@ -93,14 +53,14 @@ const columns: CustomTableColumnType<Data<StudentModel>> = [
         title: 'Thời gian cập nhật',
         dataIndex: 'attributes',
         key: 'updatedAt',
-        render: ({ updatedAt }: StudentModel) =>
+        render: ({ updatedAt }: SyllabusModel) =>
             updatedAt ? formatDateTime(updatedAt) : '___',
         sorter: true,
         display: true,
     },
 ]
 
-const StudentPage = () => {
+const SyllabusPage = () => {
     const { isOpen, toggleOpen, id } = useDisclosure()
 
     const { notification } = App.useApp()
@@ -114,28 +74,30 @@ const StudentPage = () => {
         searchText = '',
     } = params
 
-    const { data, isLoading, isPlaceholderData, isFetching } = useGetStudents({
-        pageIndex: Number(pageIndex),
-        pageSize: Number(pageSize),
-        asc: String(asc),
-        searchText: String(searchText),
-        sortBy: String(sortBy),
-    })
+    const { data, isLoading, isPlaceholderData, isFetching } = useGetSyllabuses(
+        {
+            pageIndex: Number(pageIndex),
+            pageSize: Number(pageSize),
+            asc: String(asc),
+            searchText: String(searchText),
+            sortBy: String(sortBy),
+        },
+    )
 
-    const handleDelete = useCallback(
+    const handleDeleteSyllabus = useCallback(
         async (deleteIds: number[]) => {
             try {
                 const dataDeleted = await Promise.all(
-                    deleteIds.map((id) => studentService.delete(id)),
+                    deleteIds.map((id) => subjectService.delete(id)),
                 )
                 await queryClient.refetchQueries({
-                    queryKey: [QUERY_KEYS.STUDENT_LIST],
+                    queryKey: [QUERY_KEYS.SUBJECT_LIST],
                 })
                 notification.success({
                     message: `Đã xóa thành công ${String(dataDeleted.length)} dòng dữ liệu!`,
                 })
             } catch (err: unknown) {
-                console.log('delete', err)
+                console.log('Syllabus delete', err)
                 notification.error({
                     message: `Có lỗi xảy ra vui lòng thử lại sau!`,
                 })
@@ -147,10 +109,10 @@ const StudentPage = () => {
     return (
         <div>
             <Breadcrumb
-                pageName={`Danh sách ${PageName}`}
+                pageName="Danh sách đề cương"
                 items={[
                     {
-                        title: `Danh sách ${PageName}`,
+                        title: 'Danh sách đề cương',
                     },
                 ]}
                 renderRight={
@@ -163,33 +125,38 @@ const StudentPage = () => {
                     </Button>
                 }
             />
+
             <CustomTable
-                isPagination
-                tableName={PageName}
                 columns={columns}
                 dataSource={data?.data}
-                loading={isLoading || (isPlaceholderData && isFetching)}
+                loading={isLoading || (isFetching && isPlaceholderData)}
+                tableName="đề cương"
+                isPagination
                 totalElement={data?.meta?.pagination?.total}
                 bordered
                 searchInputProps={{
                     isDisplay: true,
-                    placeholder: `Tìm kiếm tên ${PageName}...`,
+                    placeholder: 'Tìm kiếm tên đề cương...',
                 }}
                 actionButtons={{
                     editProps: {
                         isDisplay: true,
-                        onClick: (record: Data<DepartmentModel>) =>
+                        onClick: (record: Data<SyllabusModel>) =>
                             record.id && toggleOpen(String(record.id)),
                     },
                     deleteProps: {
                         isDisplay: true,
                     },
                 }}
-                onDelete={handleDelete}
+                onDelete={handleDeleteSyllabus}
             />
-            <ClassFormModal id={id} isOpen={isOpen} toggleOpen={toggleOpen} />
+            <SyllabusFormModal
+                id={id}
+                isOpen={isOpen}
+                toggleOpen={toggleOpen}
+            />
         </div>
     )
 }
 
-export default StudentPage
+export default SyllabusPage

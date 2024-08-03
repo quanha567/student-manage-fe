@@ -8,6 +8,8 @@ export enum PAGE_PATHS {
     LOGIN = '/login',
     MY_PROFILE = '/my-profile',
     STUDENT_LIST = '/students',
+    SUBJECT_LIST = '/subjects',
+    SYLLABUS_LIST = '/syllabuses',
 }
 
 export const API_URL = {
@@ -36,4 +38,12 @@ export const API_URL = {
 
     // Upload api url
     UPLOAD: '/upload',
+
+    // subject api url
+    SUBJECTS: 'subjects',
+    subjectWithId: (id: number) => `subjects/${String(id)}`,
+
+    // syllabus api url
+    SYLLABUS: 'syllabuses',
+    syllabusWithId: (id: number) => `syllabuses/${String(id)}`,
 }

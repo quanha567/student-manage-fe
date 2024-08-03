@@ -1,29 +1,27 @@
 import { useCallback } from 'react'
 
-import { HiMiniPhoto } from 'react-icons/hi2'
 import { IoMdAdd } from 'react-icons/io'
 
-import { App, Avatar } from 'antd'
+import { App } from 'antd'
 
 import {
     Breadcrumb,
     Button,
-    CustomImage,
     CustomTable,
     CustomTableColumnType,
 } from '@/components'
 import { QUERY_KEYS } from '@/constants'
 import { useDisclosure, useSearch } from '@/hooks'
-import { DepartmentModel } from '@/models'
+import { SubjectModel } from '@/models'
 import { queryClient } from '@/providers'
-import { useGetDepartments } from '@/queries'
-import { departmentService } from '@/services'
+import { useGetSubjects } from '@/queries'
+import { subjectService } from '@/services'
 import { Data } from '@/types'
 import { formatDateTime } from '@/utils'
 
-import { DepartmentFormModal } from './components'
+import { SubjectFormModal } from './components'
 
-const columns: CustomTableColumnType<Data<DepartmentModel>> = [
+const columns: CustomTableColumnType<Data<SubjectModel>> = [
     {
         title: 'ID',
         dataIndex: 'id',
@@ -33,63 +31,29 @@ const columns: CustomTableColumnType<Data<DepartmentModel>> = [
         sorter: true,
         display: true,
     },
+
     {
-        title: <HiMiniPhoto className="mx-auto size-6" />,
+        title: 'Mã môn học',
         dataIndex: 'attributes',
-        key: 'avatar',
-        width: 50,
-        render: ({ avatar, departmentName }: DepartmentModel) =>
-            typeof avatar !== 'string' && avatar?.data ? (
-                <CustomImage
-                    src={avatar}
-                    className="aspect-square object-cover"
-                    size="thumbnail"
-                />
-            ) : (
-                <Avatar
-                    shape="square"
-                    style={{
-                        borderRadius: 0,
-                    }}
-                    size={40}
-                >
-                    {departmentName?.charAt(0).toLocaleUpperCase()}
-                </Avatar>
-            ),
-        display: true,
-    },
-    {
-        title: 'Tên khoa',
-        dataIndex: 'attributes',
-        key: 'departmentName',
-        render: ({ departmentName }: DepartmentModel) => departmentName,
+        key: 'code',
+        render: ({ code }: SubjectModel) => code,
         sorter: true,
         display: true,
     },
     {
-        title: 'Danh sách lớp',
+        title: 'Tên môn học',
         dataIndex: 'attributes',
-        key: 'classes',
-        render: ({ classes }: DepartmentModel) => (
-            <div className="flex max-w-sm flex-wrap items-center gap-1">
-                {classes?.data?.map((classInfo) => (
-                    <div
-                        key={classInfo.id}
-                        className="rounded-lg bg-zinc-200 px-2 py-1 text-xs"
-                    >
-                        {classInfo.attributes?.className}
-                    </div>
-                ))}
-            </div>
-        ),
+        key: 'name',
+        render: ({ name }: SubjectModel) => name,
         sorter: true,
         display: true,
     },
+
     {
         title: 'Thời gian tạo',
         dataIndex: 'attributes',
         key: 'createdAt',
-        render: ({ createdAt }: DepartmentModel) =>
+        render: ({ createdAt }: SubjectModel) =>
             createdAt ? formatDateTime(createdAt) : '___',
         sorter: true,
         display: true,
@@ -98,14 +62,14 @@ const columns: CustomTableColumnType<Data<DepartmentModel>> = [
         title: 'Thời gian cập nhật',
         dataIndex: 'attributes',
         key: 'updatedAt',
-        render: ({ updatedAt }: DepartmentModel) =>
+        render: ({ updatedAt }: SubjectModel) =>
             updatedAt ? formatDateTime(updatedAt) : '___',
         sorter: true,
         display: true,
     },
 ]
 
-const DepartmentPage = () => {
+const SubjectPage = () => {
     const { isOpen, toggleOpen, id } = useDisclosure()
 
     const { notification } = App.useApp()
@@ -120,10 +84,10 @@ const DepartmentPage = () => {
     } = params
 
     const {
-        data: departments,
-        isLoading: isLoadingDepartments,
-        isPlaceholderData: isPlaceholderDepartments,
-    } = useGetDepartments({
+        data,
+        isLoading: isLoadingSubjects,
+        isPlaceholderData: isPlaceholderSubjects,
+    } = useGetSubjects({
         pageIndex: Number(pageIndex),
         pageSize: Number(pageSize),
         asc: String(asc),
@@ -131,20 +95,20 @@ const DepartmentPage = () => {
         sortBy: String(sortBy),
     })
 
-    const handleDeleteDepartment = useCallback(
+    const handleDeleteSubject = useCallback(
         async (deleteIds: number[]) => {
             try {
                 const dataDeleted = await Promise.all(
-                    deleteIds.map((id) => departmentService.delete(id)),
+                    deleteIds.map((id) => subjectService.delete(id)),
                 )
                 await queryClient.refetchQueries({
-                    queryKey: [QUERY_KEYS.DEPARTMENT_LIST],
+                    queryKey: [QUERY_KEYS.SUBJECT_LIST],
                 })
                 notification.success({
                     message: `Đã xóa thành công ${String(dataDeleted.length)} dòng dữ liệu!`,
                 })
             } catch (err: unknown) {
-                console.log('Department delete', err)
+                console.log('Subject delete', err)
                 notification.error({
                     message: `Có lỗi xảy ra vui lòng thử lại sau!`,
                 })
@@ -156,10 +120,10 @@ const DepartmentPage = () => {
     return (
         <div>
             <Breadcrumb
-                pageName="Danh sách khoa"
+                pageName="Danh sách môn học"
                 items={[
                     {
-                        title: 'Danh sách khoa',
+                        title: 'Danh sách môn học',
                     },
                 ]}
                 renderRight={
@@ -175,35 +139,31 @@ const DepartmentPage = () => {
 
             <CustomTable
                 columns={columns}
-                dataSource={departments?.data}
-                loading={isLoadingDepartments || isPlaceholderDepartments}
-                tableName="khoa"
+                dataSource={data?.data}
+                loading={isLoadingSubjects || isPlaceholderSubjects}
+                tableName="môn học"
                 isPagination
-                totalElement={departments?.meta?.pagination?.total}
+                totalElement={data?.meta?.pagination?.total}
                 bordered
                 searchInputProps={{
                     isDisplay: true,
-                    placeholder: 'Tìm kiếm tên khoa...',
+                    placeholder: 'Tìm kiếm tên môn học...',
                 }}
                 actionButtons={{
                     editProps: {
                         isDisplay: true,
-                        onClick: (record: Data<DepartmentModel>) =>
+                        onClick: (record: Data<SubjectModel>) =>
                             record.id && toggleOpen(String(record.id)),
                     },
                     deleteProps: {
                         isDisplay: true,
                     },
                 }}
-                onDelete={handleDeleteDepartment}
+                onDelete={handleDeleteSubject}
             />
-            <DepartmentFormModal
-                id={id}
-                isOpen={isOpen}
-                toggleOpen={toggleOpen}
-            />
+            <SubjectFormModal id={id} isOpen={isOpen} toggleOpen={toggleOpen} />
         </div>
     )
 }
 
-export default DepartmentPage
+export default SubjectPage

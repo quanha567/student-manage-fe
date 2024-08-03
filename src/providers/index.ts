@@ -7,7 +7,7 @@ export * from './ThemeConfigProvider'
 export const queryClient: QueryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            refetchOnWindowFocus: false,
+            // refetchOnWindowFocus: false,
             placeholderData: keepPreviousData,
         },
     },

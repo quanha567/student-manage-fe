@@ -11,9 +11,10 @@ import {
     CustomTableColumnType,
 } from '@/components'
 import { QUERY_KEYS } from '@/constants'
-import { useDisclosure, useGetClasses, useSearch } from '@/hooks'
+import { useDisclosure, useSearch } from '@/hooks'
 import { ClassModel, DepartmentModel } from '@/models'
 import { queryClient } from '@/providers'
+import { useGetClasses } from '@/queries'
 import { departmentService } from '@/services'
 import { Data } from '@/types'
 import { formatDateTime } from '@/utils'

@@ -5,7 +5,7 @@ import { FaChevronRight, FaUser } from 'react-icons/fa6'
 import { IoMdSettings } from 'react-icons/io'
 import { IoLogOut } from 'react-icons/io5'
 
-import { Avatar, Popover } from 'antd'
+import { Popover } from 'antd'
 
 import { LogoImage } from '@/assets'
 import { CustomImage } from '@/components'
@@ -22,17 +22,17 @@ export const Header = () => {
         navigate(PAGE_PATHS.LOGIN)
     }, [navigate])
 
-    const viewMyProfile = () => {
-        navigate(PAGE_PATHS.MY_PROFILE)
-    }
+    const viewMyProfile = () => navigate(PAGE_PATHS.MY_PROFILE)
+    const gotoDashboard = () => navigate(PAGE_PATHS.DASHBOARD)
 
     return (
         <header className="flex w-screen justify-between border-b border-zinc-200 bg-white px-4 py-2 drop-shadow-lg">
             <div className="flex items-center gap-2">
                 <img
-                    src={LogoImage}
                     alt="logo"
-                    className="size-10 object-contain"
+                    src={LogoImage}
+                    onClick={gotoDashboard}
+                    className="size-10 cursor-pointer object-contain"
                 />
                 <span className="text-xl font-black">
                     Trường Đại học Văn Lang
@@ -45,9 +45,15 @@ export const Header = () => {
                     title={
                         <div className="flex w-72 flex-col items-center">
                             <div className="flex w-full items-center gap-4 rounded-lg p-2 drop-shadow">
-                                <Avatar size="large" className="bg-primary">
-                                    {student?.fullName?.charAt(0)}
-                                </Avatar>
+                                <CustomImage
+                                    src={student?.avatar}
+                                    alt={student?.fullName}
+                                    className="aspect-square object-cover"
+                                    containerClass="overflow-hidden rounded-full"
+                                    size="thumbnail"
+                                    imgSize={40}
+                                    preview={false}
+                                />
                                 <div>
                                     <p className="text-base font-bold">
                                         {student?.fullName}

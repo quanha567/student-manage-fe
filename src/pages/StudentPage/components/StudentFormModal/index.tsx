@@ -13,7 +13,7 @@ import {
     FormTextArea,
 } from '@/components'
 import { GENDER_OPTIONS } from '@/constants'
-import { useClassOptions, useGetStudentDetail } from '@/hooks'
+import { useClassOptions, useGetStudentDetail } from '@/queries'
 import { DisclosureType } from '@/types'
 import { getPreviewUrl } from '@/utils'
 
@@ -115,6 +115,7 @@ export const ClassFormModal = ({
                     {studentId && (
                         <FormInput
                             required
+                            disabled
                             label="Email"
                             name="data.email"
                             type="email"
