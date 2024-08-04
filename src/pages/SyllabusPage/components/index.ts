@@ -1,1 +1,1 @@
-export * from './SubjectFormModal'
+export * from './SyllabusFormModal'

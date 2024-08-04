@@ -1,4 +1,5 @@
 export * from './classQueries'
+export * from './courseQueries'
 export * from './departmentQueries'
 export * from './studentQueries'
 export * from './subjectQueries'

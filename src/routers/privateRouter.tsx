@@ -5,6 +5,7 @@ import { PAGE_PATHS } from '@/constants'
 import { AuthGuard } from '@/guards'
 import {
     ClassPage,
+    CoursesPage,
     DashboardPage,
     DepartmentPage,
     LoginPage,
@@ -50,6 +51,10 @@ export const privateRouters = createBrowserRouter([
             {
                 path: PAGE_PATHS.SYLLABUS_LIST,
                 element: <SyllabusPage />,
+            },
+            {
+                path: PAGE_PATHS.COURSES_LIST,
+                element: <CoursesPage />,
             },
         ],
     },

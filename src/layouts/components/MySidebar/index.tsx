@@ -62,6 +62,7 @@ const sideBarMenus: MenuItemType[] = [
     {
         label: 'Học phần',
         icon: <HiRectangleGroup className="size-6" />,
+        path: PAGE_PATHS.COURSES_LIST,
     },
     {
         label: 'Ghi danh',

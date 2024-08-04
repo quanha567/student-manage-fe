@@ -3,6 +3,7 @@ import { createApiURL } from '@/utils'
 
 export enum PAGE_PATHS {
     CLASS_LIST = '/classes',
+    COURSES_LIST = '/courses',
     DASHBOARD = '/',
     DEPARTMENT_LIST = '/departments',
     LOGIN = '/login',
@@ -46,4 +47,8 @@ export const API_URL = {
     // syllabus api url
     SYLLABUS: 'syllabuses',
     syllabusWithId: (id: number) => `syllabuses/${String(id)}`,
+
+    // COURSE api url
+    COURSES: 'courses',
+    courseWithId: (id: number) => `courses/${String(id)}`,
 }
