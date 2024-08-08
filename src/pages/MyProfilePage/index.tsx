@@ -27,13 +27,7 @@ const MyProfilePage = () => {
                     <p>{student?.email}</p>
                     <div className="mt-4 w-full">
                         <p className="text-base font-bold">Giới thiệu:</p>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Laudantium laborum possimus, ad eius similique
-                            exercitationem fugiat nesciunt. Est doloremque
-                            labore cumque iste eaque eveniet, repudiandae
-                            praesentium eos, ratione voluptates id.
-                        </p>
+                        <p>{student?.note}</p>
                     </div>
                 </div>
             </Card>

@@ -43,6 +43,7 @@ const sideBarMenus: MenuItemType[] = [
     {
         label: 'Giáo viên',
         icon: <PiChalkboardTeacherFill className="size-6" />,
+        path: PAGE_PATHS.TEACHER_LIST,
     },
     {
         label: 'Sinh viên',

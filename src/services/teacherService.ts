@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants'
-import { CourseCreateRequestModel, CourseModel } from '@/models'
+import { TeacherModel, TeacherRequestModel } from '@/models'
 import {
     CreateRequest,
     CreateResponse,
@@ -10,15 +10,15 @@ import {
 
 import { axiosService } from './axiosService'
 
-type CourseCreateResponse = CreateResponse<CourseModel>
-export type CourseListResponse = ListResponse<CourseModel>
-export type CourseDetailResponse = SingleMetaData<CourseModel>
-export type CourseCreateRequest = CreateRequest<CourseCreateRequestModel>
+type TeacherCreateResponse = CreateResponse<TeacherModel>
+export type TeacherListResponse = ListResponse<TeacherModel>
+export type TeacherDetailResponse = SingleMetaData<TeacherModel>
+export type TeacherCreateRequest = CreateRequest<TeacherRequestModel>
 
-export const courseService = {
-    search: (params?: SearchParams): Promise<CourseListResponse> => {
-        return axiosService()<CourseListResponse>({
-            url: API_URL.COURSES,
+export const teacherService = {
+    search: (params?: SearchParams): Promise<TeacherListResponse> => {
+        return axiosService()<TeacherListResponse>({
+            url: API_URL.TEACHERS,
             method: 'GET',
             params,
         })
@@ -27,9 +27,9 @@ export const courseService = {
                 throw err
             })
     },
-    get: (id: number): Promise<CourseDetailResponse> => {
-        return axiosService()<CourseDetailResponse>({
-            url: API_URL.courseWithId(id),
+    get: (id: number): Promise<TeacherDetailResponse> => {
+        return axiosService()<TeacherDetailResponse>({
+            url: API_URL.teacherWithId(id),
             method: 'GET',
             params: {
                 populate: '*',
@@ -40,9 +40,9 @@ export const courseService = {
                 throw err
             })
     },
-    create: (data: CourseCreateRequest): Promise<CourseCreateResponse> => {
-        return axiosService()<CourseCreateResponse>({
-            url: API_URL.COURSES,
+    create: (data: TeacherCreateRequest): Promise<TeacherCreateResponse> => {
+        return axiosService()<TeacherCreateResponse>({
+            url: API_URL.TEACHERS,
             method: 'POST',
             data,
         })
@@ -53,10 +53,10 @@ export const courseService = {
     },
     update: (
         id: number,
-        data: CourseCreateRequest,
-    ): Promise<CourseCreateResponse> => {
-        return axiosService()<CourseCreateResponse>({
-            url: API_URL.courseWithId(id),
+        data: TeacherCreateRequest,
+    ): Promise<TeacherCreateResponse> => {
+        return axiosService()<TeacherCreateResponse>({
+            url: API_URL.teacherWithId(id),
             method: 'PUT',
             data,
         })
@@ -65,9 +65,9 @@ export const courseService = {
                 throw err
             })
     },
-    delete: (id: number): Promise<CourseDetailResponse> => {
-        return axiosService()<CourseDetailResponse>({
-            url: API_URL.courseWithId(id),
+    delete: (id: number): Promise<TeacherDetailResponse> => {
+        return axiosService()<TeacherDetailResponse>({
+            url: API_URL.teacherWithId(id),
             method: 'DELETE',
         })
             .then((res) => res.data)

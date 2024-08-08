@@ -13,29 +13,26 @@ import {
     FormTextArea,
 } from '@/components'
 import { GENDER_OPTIONS } from '@/constants'
-import { useClassOptions, useGetStudentDetail } from '@/queries'
+import { useClassOptions, useGetTeacherDetail } from '@/queries'
 import { DisclosureType } from '@/types'
 import { getPreviewUrl } from '@/utils'
 
-import { useStudentForm } from './useStudentForm'
+import { useTeacherForm } from './useTeacherForm'
 
-type ClassFormModalProps = DisclosureType
+type TeacherFormModalProps = DisclosureType
 
-export const ClassFormModal = ({
+export const TeacherFormModal = ({
     isOpen,
     toggleOpen,
-    id: studentId,
-}: ClassFormModalProps) => {
-    const { createOrUpdate, formMethods } = useStudentForm(
-        studentId,
-        toggleOpen,
-    )
+    id,
+}: TeacherFormModalProps) => {
+    const { createOrUpdate, formMethods } = useTeacherForm(id, toggleOpen)
     const {
         reset,
         formState: { isDirty },
     } = formMethods
 
-    const { data, isLoading } = useGetStudentDetail(Number(studentId))
+    const { data, isLoading } = useGetTeacherDetail(Number(id))
 
     const {
         classOptions,
@@ -46,22 +43,23 @@ export const ClassFormModal = ({
     } = useClassOptions()
 
     useEffect(() => {
-        if (studentId && data && isOpen) {
+        if (id && data && isOpen) {
             reset({
                 data: {
                     ...data.data?.attributes,
                     avatar: getPreviewUrl(data.data?.attributes?.avatar),
-                    classId: data.data?.attributes?.class?.data?.id,
                     dateOfBirth: data.data?.attributes?.dateOfBirth
                         ? dayjs(data.data.attributes.dateOfBirth)
                         : undefined,
-                    class: undefined,
+                    classes: data.data?.attributes?.classes?.data?.map(
+                        (classInfo) => classInfo.id,
+                    ),
                 },
             })
         } else {
             reset({})
         }
-    }, [data, studentId, reset, isOpen])
+    }, [data, id, reset, isOpen])
 
     return (
         <Modal
@@ -72,17 +70,17 @@ export const ClassFormModal = ({
             }}
             maskClosable
             closable
-            okText={studentId ? 'Lưu thay đổi' : 'Thêm mới'}
+            okText={id ? 'Lưu thay đổi' : 'Thêm mới'}
             okButtonProps={{
                 loading: formMethods.formState.isSubmitting,
                 onClick: createOrUpdate,
-                disabled: Boolean(!isDirty && studentId),
+                disabled: Boolean(!isDirty && id),
             }}
             title={
                 <p className="mb-4 text-center text-xl font-bold">
-                    {studentId
-                        ? 'Cập nhật thông tin sinh viên'
-                        : 'Thêm sinh viên mới'}
+                    {id
+                        ? 'Cập nhật thông tin giảng viên'
+                        : 'Thêm giảng viên mới'}
                 </p>
             }
             width={1200}
@@ -90,18 +88,18 @@ export const ClassFormModal = ({
                 header: 'text-2xl',
                 body: 'grid grid-cols-4 gap-4',
             }}
-            loading={Boolean(isLoading && studentId)}
+            loading={Boolean(isLoading && id)}
         >
             <FormProvider {...formMethods}>
                 <FormSingleUpload label="Avatar" name="data.avatar" isCircle />
                 <div className="col-span-3 grid grid-cols-2 gap-4">
                     <FormSelect
-                        required
                         showSearch
                         label="Lớp"
-                        name="data.classId"
+                        mode="multiple"
+                        name="data.classes"
                         loading={isLoadingClassOptions}
-                        placeholder="- Chọn lớp học -"
+                        placeholder="- Chọn lớp học giảng dạy -"
                         options={classOptions}
                         searchValue={classSearchText}
                         onSearch={setClassSearchText}
@@ -113,7 +111,7 @@ export const ClassFormModal = ({
                         name="data.fullName"
                         placeholder="Nhập họ và tên"
                     />
-                    {studentId && (
+                    {id && (
                         <FormInput
                             required
                             disabled
@@ -142,12 +140,12 @@ export const ClassFormModal = ({
                     <FormTextArea
                         label="Địa chỉ"
                         name="data.address"
-                        placeholder="Thêm địa chỉ nhà cho sinh viên này..."
+                        placeholder="Thêm địa chỉ nhà cho giảng viên này..."
                     />
                     <FormTextArea
                         label="Ghi chú"
                         name="data.note"
-                        placeholder="Thêm ghi chú cho sinh viên này..."
+                        placeholder="Thêm ghi chú cho giảng viên này..."
                     />
                 </div>
             </FormProvider>

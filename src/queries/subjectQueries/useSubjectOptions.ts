@@ -29,7 +29,7 @@ export const useSubjectOptions = () => {
                 'filters[name][$containsi]': subjectSearchText,
                 'sort[0]': `createdAt:desc`,
             }),
-        initialPageParam: INITIAL_QUERY.PAGE_SIZE,
+        initialPageParam: INITIAL_QUERY.PAGE_INDEX,
         getNextPageParam: (lastPage) =>
             lastPage.meta?.pagination?.page ===
             lastPage.meta?.pagination?.pageCount

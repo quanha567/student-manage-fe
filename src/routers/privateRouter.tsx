@@ -13,6 +13,7 @@ import {
     StudentPage,
     SubjectPage,
     SyllabusPage,
+    TeacherPage,
 } from '@/pages'
 
 export const privateRouters = createBrowserRouter([
@@ -55,6 +56,10 @@ export const privateRouters = createBrowserRouter([
             {
                 path: PAGE_PATHS.COURSES_LIST,
                 element: <CoursesPage />,
+            },
+            {
+                path: PAGE_PATHS.TEACHER_LIST,
+                element: <TeacherPage />,
             },
         ],
     },

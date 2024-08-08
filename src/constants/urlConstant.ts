@@ -11,6 +11,7 @@ export enum PAGE_PATHS {
     STUDENT_LIST = '/students',
     SUBJECT_LIST = '/subjects',
     SYLLABUS_LIST = '/syllabuses',
+    TEACHER_LIST = '/teachers',
 }
 
 export const API_URL = {
@@ -36,6 +37,10 @@ export const API_URL = {
     STUDENT_LOGIN: createApiURL('students/login'),
     STUDENTS: 'students',
     studentWithId: (id: number) => `students/${String(id)}`,
+
+    // Student api url
+    TEACHERS: 'teachers',
+    teacherWithId: (id: number) => `teachers/${String(id)}`,
 
     // Upload api url
     UPLOAD: '/upload',

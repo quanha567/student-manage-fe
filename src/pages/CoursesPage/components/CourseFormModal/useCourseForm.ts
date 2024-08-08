@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { ObjectSchema, object, string } from 'yup'
+import { ObjectSchema, number, object, string } from 'yup'
 
 import { App } from 'antd'
 
@@ -13,6 +13,7 @@ import { CourseCreateRequest, courseService } from '@/services'
 const formCourseValidate: ObjectSchema<CourseCreateRequest> = object().shape({
     data: object({
         name: string().required('Vui lòng nhập tên đề cương!'),
+        subject: number().required('Vui lòng chọn môn học!'),
     }),
 })
 

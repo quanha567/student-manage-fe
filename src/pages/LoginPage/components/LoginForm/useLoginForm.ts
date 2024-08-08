@@ -73,7 +73,7 @@ export const useFormLogin = () => {
                 notification.error({
                     message:
                         isAxiosError(err) &&
-                        err.status === HttpStatusCode.BadRequest
+                        err.response?.status === HttpStatusCode.BadRequest
                             ? 'Tên tài khoản hoặc mật khẩu không đúng!'
                             : 'Có lỗi xảy ra vui lòng thử lại sau!',
                 })
