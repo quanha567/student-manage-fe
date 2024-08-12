@@ -32,7 +32,7 @@ export const courseService = {
             url: API_URL.courseWithId(id),
             method: 'GET',
             params: {
-                populate: '*',
+                populate: 'deep,4',
             },
         })
             .then((res) => res.data)

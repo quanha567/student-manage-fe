@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 
 import { IoMdAdd } from 'react-icons/io'
 
-import { App } from 'antd'
+import { App, Badge } from 'antd'
 
 import {
     Breadcrumb,
@@ -12,7 +12,7 @@ import {
 } from '@/components'
 import { QUERY_KEYS } from '@/constants'
 import { useDisclosure, useSearch } from '@/hooks'
-import { CourseModel } from '@/models'
+import { CourseModel, CourseType } from '@/models'
 import { queryClient } from '@/providers'
 import { useGetCourses } from '@/queries/courseQueries'
 import { subjectService } from '@/services'
@@ -23,11 +23,10 @@ import { CourseFormModal } from './components'
 
 const columns: CustomTableColumnType<Data<CourseModel>> = [
     {
-        title: 'ID',
-        dataIndex: 'id',
-        key: 'id',
-        width: 80,
-        align: 'center',
+        title: 'Mã học phần',
+        dataIndex: 'attributes',
+        key: 'name',
+        render: ({ code }: CourseModel) => code,
         sorter: true,
         display: true,
     },
@@ -36,6 +35,31 @@ const columns: CustomTableColumnType<Data<CourseModel>> = [
         dataIndex: 'attributes',
         key: 'name',
         render: ({ name }: CourseModel) => name,
+        sorter: true,
+        display: true,
+    },
+    {
+        title: 'Học kỳ',
+        dataIndex: 'attributes',
+        key: 'name',
+        render: ({ semester }: CourseModel) => semester,
+        sorter: true,
+        display: true,
+    },
+    {
+        title: 'Loại',
+        dataIndex: 'attributes',
+        key: 'name',
+        render: ({ courseType }: CourseModel) => (
+            <Badge
+                status={
+                    courseType === CourseType.REQUIRED ? 'error' : 'success'
+                }
+                text={
+                    courseType === CourseType.REQUIRED ? 'Bắt buộc' : 'Lựa chọn'
+                }
+            />
+        ),
         sorter: true,
         display: true,
     },

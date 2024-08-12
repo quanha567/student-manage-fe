@@ -7,7 +7,7 @@ import { Select, SelectProps } from 'antd'
 import FormField from '../FormField'
 
 type FormSelectProps = SelectProps & {
-    label: string
+    label?: string
     name: string
     required?: boolean
 }

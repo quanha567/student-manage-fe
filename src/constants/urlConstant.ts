@@ -56,4 +56,8 @@ export const API_URL = {
     // COURSE api url
     COURSES: 'courses',
     courseWithId: (id: number) => `courses/${String(id)}`,
+
+    // SECTION api url
+    SECTIONS: 'sections',
+    sectionWithId: (id: number) => `sections/${String(id)}`,
 }

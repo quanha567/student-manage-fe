@@ -7,7 +7,7 @@ import { Input, InputProps } from 'antd'
 import FormField from '../FormField'
 
 type FormInputProps = InputProps & {
-    label: string
+    label?: string
     name: string
     required?: boolean
 }
