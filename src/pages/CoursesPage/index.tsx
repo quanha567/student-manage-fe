@@ -15,7 +15,7 @@ import { useDisclosure, useSearch } from '@/hooks'
 import { CourseModel, CourseType } from '@/models'
 import { queryClient } from '@/providers'
 import { useGetCourses } from '@/queries/courseQueries'
-import { subjectService } from '@/services'
+import { courseService } from '@/services'
 import { Data } from '@/types'
 import { formatDateTime } from '@/utils'
 
@@ -50,16 +50,21 @@ const columns: CustomTableColumnType<Data<CourseModel>> = [
         title: 'Loại',
         dataIndex: 'attributes',
         key: 'name',
-        render: ({ courseType }: CourseModel) => (
-            <Badge
-                status={
-                    courseType === CourseType.REQUIRED ? 'error' : 'success'
-                }
-                text={
-                    courseType === CourseType.REQUIRED ? 'Bắt buộc' : 'Lựa chọn'
-                }
-            />
-        ),
+        render: ({ courseType }: CourseModel) =>
+            courseType ? (
+                <Badge
+                    status={
+                        courseType === CourseType.REQUIRED ? 'error' : 'success'
+                    }
+                    text={
+                        courseType === CourseType.REQUIRED
+                            ? 'Bắt buộc'
+                            : 'Lựa chọn'
+                    }
+                />
+            ) : (
+                '---'
+            ),
         sorter: true,
         display: true,
     },
@@ -110,10 +115,10 @@ const CoursesPage = () => {
         async (deleteIds: number[]) => {
             try {
                 const dataDeleted = await Promise.all(
-                    deleteIds.map((id) => subjectService.delete(id)),
+                    deleteIds.map((id) => courseService.delete(id)),
                 )
                 await queryClient.refetchQueries({
-                    queryKey: [QUERY_KEYS.SUBJECT_LIST],
+                    queryKey: [QUERY_KEYS.COURSE_LIST],
                 })
                 notification.success({
                     message: `Đã xóa thành công ${String(dataDeleted.length)} dòng dữ liệu!`,

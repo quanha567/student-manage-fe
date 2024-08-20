@@ -9,7 +9,7 @@ export const userService = {
             baseURL: API_URL.USER_INFO,
             method: 'GET',
             params: {
-                populate: 'deep,4',
+                populate: 'deep,5',
             },
         })
             .then((res) => res.data)

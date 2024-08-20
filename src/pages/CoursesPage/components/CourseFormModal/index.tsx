@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { FormProvider, useFieldArray } from 'react-hook-form'
+import { Control, FormProvider, useFieldArray } from 'react-hook-form'
 
 import { DeleteFilled } from '@ant-design/icons'
 import dayjs from 'dayjs'
@@ -13,15 +13,17 @@ import {
     FormInputNumber,
     FormSelect,
     FormTextArea,
+    FormTimePicker,
 } from '@/components'
 import FormField from '@/components/Forms/FormField'
-import { COURSE_TYPE_OPTIONS } from '@/constants'
-import { SectionModel } from '@/models'
+import { COURSE_TYPE_OPTIONS, DATE_TIME_FORMAT } from '@/constants'
+import { SectionModel, SectionSchedule } from '@/models'
 import {
     useClassOptions,
     useGetCourseDetail,
     useSubjectOptions,
 } from '@/queries'
+import { CourseCreateRequest } from '@/services'
 import { DisclosureType } from '@/types'
 
 import { useCourseForm } from './useCourseForm'
@@ -70,8 +72,6 @@ export const CourseFormModal = ({
         appendNewSection,
         removeSection,
         sectionList,
-        appendNewSectionSchedule,
-        removeSectionSchedule,
     } = useCourseForm(id, toggleOpen)
 
     const {
@@ -117,24 +117,31 @@ export const CourseFormModal = ({
                         (section) => ({
                             ...section.attributes,
                             id: section.id,
+                            schedules: section.attributes?.schedules?.map(
+                                (schedule) => ({
+                                    ...schedule,
+                                    startTime: schedule.startTime
+                                        ? dayjs(
+                                              schedule.startTime,
+                                              DATE_TIME_FORMAT.TIME_ONLY,
+                                          )
+                                        : undefined,
+                                    endTime: schedule.endTime
+                                        ? dayjs(
+                                              schedule.endTime,
+                                              DATE_TIME_FORMAT.TIME_ONLY,
+                                          )
+                                        : undefined,
+                                }),
+                            ),
                         }),
                     ),
                 },
             })
         } else {
-            reset({
-                data: {
-                    name: '',
-                },
-            })
+            reset()
         }
     }, [data, id, reset, isOpen])
-
-    const GetScheduleFieldArray = (sectionIndex: number) =>
-        useFieldArray({
-            control: formMethods.control,
-            name: `data.sections[${String(sectionIndex)}].schedules`,
-        })
 
     const classListColumn: TableColumnsType<SectionModel> = [
         {
@@ -146,44 +153,29 @@ export const CourseFormModal = ({
 
         {
             title: 'Số lượng sinh viên',
+            width: 200,
             render: (_row, _record, index: number) => (
                 <FormInputNumber
                     size="small"
                     className="py-1"
+                    inputMode="numeric"
                     name={`data.sections.${String(index)}.capacity`}
                 />
             ),
         },
         {
-            title: 'Thời gian',
-            render: (_row, _record, index: number) => {
-                const { append, remove, fields } = GetScheduleFieldArray(index)
-
-                return (
-                    <div>
-                        {fields.map((schedule, rowIndex) => (
-                            <div
-                                key={schedule.id}
-                                className="grid grid-cols-3 gap-1"
-                            >
-                                <FormSelect
-                                    size="small"
-                                    className="py-1"
-                                    options={dayOptions}
-                                    name={`data.sections[${String(index)}].schedules.${String(rowIndex)}.day`}
-                                />
-                            </div>
-                        ))}
-                        <Button
-                            onClick={() => append({})}
-                            size="small"
-                            className="ml-auto"
-                        >
-                            Thêm thời gian học
-                        </Button>
-                    </div>
-                )
-            },
+            title: (
+                <div className="flex">
+                    <span className="flex-1">Phòng</span>
+                    <span className="flex-1">Thứ</span>
+                    <span className="flex-1">Thời gian bắt đầu</span>
+                    <span className="flex-1">Thời gian kết thúc</span>
+                    <span className="h-1 w-10"></span>
+                </div>
+            ),
+            render: (_row, _record, index: number) => (
+                <CourseSchedule control={formMethods.control} index={index} />
+            ),
         },
         {
             title: <DeleteFilled />,
@@ -316,16 +308,33 @@ export const CourseFormModal = ({
                         renderField={() => (
                             <Table
                                 bordered
+                                rowKey="id"
                                 size="small"
                                 footer={() => (
-                                    <Button
-                                        size="small"
-                                        type="primary"
-                                        onClick={() => appendNewSection({})}
-                                        className="bg-sky-500 hover:!bg-sky-600"
-                                    >
-                                        Thêm mới
-                                    </Button>
+                                    <div>
+                                        {!sectionList.length ? (
+                                            <p className="text-red-500">
+                                                Vui lòng thêm ít nhất một lớp
+                                                học phần!
+                                            </p>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        <Button
+                                            size="small"
+                                            type="primary"
+                                            onClick={() =>
+                                                appendNewSection({
+                                                    capacity: 0,
+                                                    code: '',
+                                                    schedules: [],
+                                                })
+                                            }
+                                            className="bg-sky-500 hover:!bg-sky-600"
+                                        >
+                                            Thêm mới
+                                        </Button>
+                                    </div>
                                 )}
                                 dataSource={sectionList}
                                 columns={classListColumn}
@@ -336,5 +345,98 @@ export const CourseFormModal = ({
                 </div>
             </FormProvider>
         </Modal>
+    )
+}
+
+interface CourseScheduleProps {
+    control: Control<CourseCreateRequest>
+    index: number
+}
+
+const CourseSchedule = ({ control, index }: CourseScheduleProps) => {
+    const { append, remove, fields } = useFieldArray({
+        control,
+        name: `data.sections.${String(index)}.schedules`,
+    })
+
+    return (
+        <div className="divide-y-[1px]">
+            {fields.map((schedule: SectionSchedule, rowIndex) => (
+                <div key={schedule.id} className="flex items-start gap-1 py-2">
+                    <FormInput
+                        size="small"
+                        className="py-1"
+                        wrapperClassName="flex-1"
+                        name={`data.sections.${String(index)}.schedules.${String(rowIndex)}.room`}
+                        placeholder="Nhập tên phòng học"
+                    />
+                    <FormSelect
+                        size="small"
+                        wrapperClassName="flex-1"
+                        className="h-full w-full"
+                        style={{
+                            height: 34,
+                        }}
+                        options={dayOptions}
+                        name={`data.sections.${String(index)}.schedules.${String(rowIndex)}.day`}
+                        placeholder="Chọn thứ trong tuần"
+                    />
+
+                    <FormTimePicker
+                        variant="filled"
+                        wrapperClassName="flex-1"
+                        showSecond={false}
+                        needConfirm={false}
+                        size="small"
+                        className="w-full py-1"
+                        placeholder="Chọn thời gian bắt đầu"
+                        name={`data.sections.${String(index)}.schedules.${String(rowIndex)}.startTime`}
+                    />
+
+                    <FormTimePicker
+                        wrapperClassName="flex-1"
+                        className="w-full py-1"
+                        size="small"
+                        showSecond={false}
+                        needConfirm={false}
+                        name={`data.sections.${String(index)}.schedules.${String(rowIndex)}.endTime`}
+                        placeholder="Chọn thời gian kết thúc"
+                    />
+                    <Button
+                        danger
+                        size="small"
+                        onClick={() => remove(rowIndex)}
+                    >
+                        Xóa
+                    </Button>
+                </div>
+            ))}
+            {!fields.length ? (
+                <p className="text-red-500">
+                    Vui lòng thêm ít nhất một thời gian học cho lớp này!
+                </p>
+            ) : (
+                <></>
+            )}
+            <Button
+                onClick={() =>
+                    append(
+                        {
+                            day: undefined,
+                            room: '',
+                            startTime: '',
+                            endTime: '',
+                        },
+                        {
+                            shouldFocus: false,
+                        },
+                    )
+                }
+                size="small"
+                className="ml-auto"
+            >
+                Thêm thời gian học
+            </Button>
+        </div>
     )
 }

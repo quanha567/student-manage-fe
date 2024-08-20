@@ -8,6 +8,7 @@ export enum PAGE_PATHS {
     DEPARTMENT_LIST = '/departments',
     LOGIN = '/login',
     MY_PROFILE = '/my-profile',
+    REGISTER_COURSE = '/register-course',
     STUDENT_LIST = '/students',
     SUBJECT_LIST = '/subjects',
     SYLLABUS_LIST = '/syllabuses',
@@ -60,4 +61,8 @@ export const API_URL = {
     // SECTION api url
     SECTIONS: 'sections',
     sectionWithId: (id: number) => `sections/${String(id)}`,
+
+    // SECTION api url
+    ENROLLMENTS: 'enrollments',
+    enrollmentWithId: (id: number) => `enrollments/${String(id)}`,
 }

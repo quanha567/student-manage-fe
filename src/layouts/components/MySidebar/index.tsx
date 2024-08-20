@@ -6,7 +6,7 @@ import { AiFillProduct } from 'react-icons/ai'
 import { FaBook, FaListCheck, FaNoteSticky } from 'react-icons/fa6'
 import { GiPieChart } from 'react-icons/gi'
 import { HiRectangleGroup } from 'react-icons/hi2'
-import { IoIosArrowBack } from 'react-icons/io'
+import { IoIosAddCircle, IoIosArrowBack } from 'react-icons/io'
 import { IoDocumentText } from 'react-icons/io5'
 import { MdClass } from 'react-icons/md'
 import {
@@ -72,6 +72,11 @@ const sideBarMenus: MenuItemType[] = [
     {
         label: 'Kiểm tra',
         icon: <FaNoteSticky className="size-6" />,
+    },
+    {
+        label: 'Đăng ký học phần',
+        icon: <IoIosAddCircle className="size-6" />,
+        path: PAGE_PATHS.REGISTER_COURSE,
     },
     {
         label: 'Kết quả thi',

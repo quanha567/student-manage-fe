@@ -10,16 +10,16 @@ import { SubjectModel } from './subjectModel'
 export interface CourseModel extends BaseModel {
     classes?: ListData<ClassModel>
     code?: string
-    courseType: CourseType
-    credits: number
+    courseType?: CourseType
+    credits?: number
     endDate?: string | Dayjs
     id?: number
-    labHours: number
-    lectureHours: number
-    name: string
+    labHours?: number
+    lectureHours?: number
+    name?: string
     sections?: ListData<SectionModel>
-    semester: string
-    startDate: string | Dayjs
+    semester?: string
+    startDate?: string | Dayjs
     subject?: SingleData<SubjectModel>
 }
 

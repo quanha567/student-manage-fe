@@ -10,6 +10,7 @@ import {
     DepartmentPage,
     LoginPage,
     MyProfilePage,
+    RegisterCoursePage,
     StudentPage,
     SubjectPage,
     SyllabusPage,
@@ -60,6 +61,10 @@ export const privateRouters = createBrowserRouter([
             {
                 path: PAGE_PATHS.TEACHER_LIST,
                 element: <TeacherPage />,
+            },
+            {
+                path: PAGE_PATHS.REGISTER_COURSE,
+                element: <RegisterCoursePage />,
             },
         ],
     },

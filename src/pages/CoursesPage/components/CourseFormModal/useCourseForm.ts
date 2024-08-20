@@ -16,8 +16,8 @@ import {
 
 import { App } from 'antd'
 
-import { QUERY_KEYS } from '@/constants'
-import { CourseType } from '@/models'
+import { DATE_TIME_FORMAT, QUERY_KEYS } from '@/constants'
+import { CourseType, SectionSchedule } from '@/models'
 import { queryClient } from '@/providers'
 import { CourseCreateRequest, courseService, sectionService } from '@/services'
 
@@ -48,19 +48,58 @@ const formCourseValidate: ObjectSchema<CourseCreateRequest> = object().shape({
             .oneOf(Object.values(CourseType))
             .required('Vui lòng chọn loại học phần!'),
         semester: string().required('Vui lòng nhập học kỳ của học phần!'),
-        sections: array().of(
-            object().shape({
-                capacity: number()
-                    .required('Vui lòng nhập số lượng sinh viên!')
-                    .min(
-                        1,
-                        'Số lượng sinh viên của lớp học phải lớn hơn bằng 1!',
-                    ),
-                classroom: string().required(
-                    'Vui lòng nhập tên phòng học cho lớp!',
-                ),
-            }),
-        ),
+        sections: array()
+            .of(
+                object().shape({
+                    capacity: number()
+                        .required('Vui lòng nhập số lượng sinh viên!')
+                        .min(
+                            1,
+                            'Số lượng sinh viên của lớp học phải lớn hơn bằng 1!',
+                        ),
+                    schedules: array()
+                        .of(
+                            object().shape({
+                                room: string().required(
+                                    'Vui lòng nhập tên phòng học!',
+                                ),
+                                day: string().required(
+                                    'Vui chọn một thứ trong tuần!',
+                                ),
+                                startTime: date()
+                                    .required(
+                                        'Vui lòng chọn thời gian bắt đầu!',
+                                    )
+                                    .typeError(
+                                        'Vui lòng chọn thời gian bắt đầu!',
+                                    ),
+                                endTime: date()
+                                    .required(
+                                        'Vui lòng chọn thời gian kết thúc!',
+                                    )
+                                    .typeError(
+                                        'Vui lòng chọn thời gian kết thúc!',
+                                    )
+                                    .test(
+                                        'is-endTime-after-startTime',
+                                        'Thời gian kết thúc phải lớn hơn thời gian bắt đầu',
+                                        function (value: unknown) {
+                                            const { startTime } = this.parent
+                                            if (startTime && value) {
+                                                return value > startTime
+                                            }
+                                            return true // If no startTime or endTime, no error
+                                        },
+                                    ),
+                            }),
+                        )
+                        .min(
+                            1,
+                            'Vui lòng thêm ít nhất một thời gian học của lớp này!',
+                        ),
+                }),
+            )
+            .min(1, 'Vui lòng thêm ít nhất một lớp học phần!'),
     }),
 })
 
@@ -68,15 +107,28 @@ const formCourseDefaultValue: CourseCreateRequest = {
     data: {
         courseType: CourseType.REQUIRED,
         name: '',
-        credits: 1,
+        credits: 0,
         labHours: 0,
         lectureHours: 0,
         semester: '',
         startDate: dayjs(),
+        sections: [
+            {
+                capacity: 0,
+                schedules: [
+                    {
+                        day: undefined,
+                        room: '',
+                        startTime: '',
+                        endTime: '',
+                    },
+                ],
+            },
+        ],
     },
 }
 
-export const useCourseForm = (subjectId?: string, closeModel?: () => void) => {
+export const useCourseForm = (courseId?: string, closeModel?: () => void) => {
     const formMethods = useForm<CourseCreateRequest>({
         resolver: yupResolver(formCourseValidate),
         defaultValues: formCourseDefaultValue,
@@ -84,7 +136,12 @@ export const useCourseForm = (subjectId?: string, closeModel?: () => void) => {
 
     const { notification } = App.useApp()
 
-    const { handleSubmit, control } = formMethods
+    const {
+        handleSubmit,
+        control,
+        watch,
+        formState: { errors },
+    } = formMethods
 
     const {
         prepend: appendNewSection,
@@ -95,32 +152,75 @@ export const useCourseForm = (subjectId?: string, closeModel?: () => void) => {
         name: 'data.sections',
     })
 
-    const { prepend: appendNewSectionSchedule, remove: removeSectionSchedule } =
-        useFieldArray({
-            control,
-            name: 'data.sections.schedules',
-        })
+    const formatSchedules = (
+        schedules?: SectionSchedule[],
+    ): SectionSchedule[] =>
+        schedules?.map((schedule) => ({
+            ...schedule,
+            startTime: schedule.startTime
+                ? dayjs(schedule.startTime).format(DATE_TIME_FORMAT.TIME_ONLY)
+                : '',
+            endTime: schedule.endTime
+                ? dayjs(schedule.endTime).format(DATE_TIME_FORMAT.TIME_ONLY)
+                : '',
+        })) ?? []
 
     const handleCreateOrUpdateCourse = useCallback(
         async (data: CourseCreateRequest) => {
+            if (
+                !Array.isArray(data.data?.sections) ||
+                data.data.sections.length === 0
+            ) {
+                return
+            }
+
+            const dataSubmit: CourseCreateRequest = {
+                ...data,
+                data: {
+                    ...data.data,
+                    sections: data.data.sections
+                        .map((section) => ({
+                            ...section,
+                            schedules: formatSchedules(section.schedules),
+                            course: courseId ? Number(courseId) : undefined,
+                        }))
+                        .filter((section) => section.id),
+                },
+            }
+
             try {
-                const dataSubmit = { ...data }
-
-                if (
-                    !(
-                        Array.isArray(dataSubmit.data?.sections) &&
-                        dataSubmit.data.sections.length > 0
+                if (courseId) {
+                    // Update existing course and sections
+                    const courseUpdated = await courseService.update(
+                        Number(courseId),
+                        dataSubmit,
                     )
-                ) {
-                    notification.error({
-                        message: 'Vui lòng thêm ít nhất một lớp học phần!',
-                    })
-                    return
-                }
 
-                if (subjectId)
-                    await courseService.update(Number(subjectId), dataSubmit)
-                else {
+                    await Promise.all(
+                        data.data.sections.map((section) =>
+                            section.id
+                                ? sectionService.update(section.id, {
+                                      data: {
+                                          ...section,
+                                          course: courseUpdated.data?.id,
+                                          schedules: formatSchedules(
+                                              section.schedules,
+                                          ),
+                                      },
+                                  })
+                                : sectionService.create({
+                                      data: {
+                                          ...section,
+                                          course: courseUpdated.data?.id,
+                                          schedules: formatSchedules(
+                                              section.schedules,
+                                          ),
+                                      },
+                                  }),
+                        ),
+                    )
+                } else {
+                    // Create new course and sections
                     const courseCreated = await courseService.create({
                         data: {
                             ...dataSubmit.data,
@@ -130,11 +230,14 @@ export const useCourseForm = (subjectId?: string, closeModel?: () => void) => {
 
                     if (courseCreated.data?.id) {
                         await Promise.all(
-                            dataSubmit.data.sections.map((section) =>
+                            data.data.sections.map((section) =>
                                 sectionService.create({
                                     data: {
                                         ...section,
                                         course: courseCreated.data?.id,
+                                        schedules: formatSchedules(
+                                            section.schedules,
+                                        ),
                                     },
                                 }),
                             ),
@@ -143,15 +246,16 @@ export const useCourseForm = (subjectId?: string, closeModel?: () => void) => {
                 }
 
                 await queryClient.refetchQueries({
-                    queryKey: [QUERY_KEYS.SYLLABUS_LIST],
+                    queryKey: [QUERY_KEYS.COURSE_LIST],
                 })
+
                 notification.success({
-                    message: subjectId
-                        ? 'Cập nhật thông tin đề cương thành công'
-                        : 'Thêm đề cương mới thành công!',
+                    message: courseId
+                        ? 'Cập nhật thông tin học phần thành công'
+                        : 'Thêm học phần mới thành công!',
                 })
             } catch (err: unknown) {
-                console.log('err', err)
+                console.error('Error:', err)
                 notification.error({
                     message: 'Có lỗi xảy ra vui lòng thử lại sau!',
                 })
@@ -159,7 +263,7 @@ export const useCourseForm = (subjectId?: string, closeModel?: () => void) => {
                 closeModel?.()
             }
         },
-        [subjectId, notification, closeModel],
+        [courseId, notification, closeModel],
     )
 
     return {
@@ -168,7 +272,5 @@ export const useCourseForm = (subjectId?: string, closeModel?: () => void) => {
         appendNewSection,
         removeSection,
         sectionList,
-        appendNewSectionSchedule,
-        removeSectionSchedule,
     } as const
 }

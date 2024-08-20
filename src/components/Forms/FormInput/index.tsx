@@ -10,12 +10,14 @@ type FormInputProps = InputProps & {
     label?: string
     name: string
     required?: boolean
+    wrapperClassName?: string
 }
 
 export const FormInput = ({
     name,
     label,
     required,
+    wrapperClassName,
     ...restProps
 }: FormInputProps) => {
     const { control } = useFormContext()
@@ -23,6 +25,7 @@ export const FormInput = ({
     return (
         <FormField
             label={label}
+            className={wrapperClassName}
             required={required}
             renderField={() => (
                 <Controller

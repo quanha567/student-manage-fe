@@ -15,7 +15,7 @@ import { useDisclosure, useSearch } from '@/hooks'
 import { SyllabusModel } from '@/models'
 import { queryClient } from '@/providers'
 import { useGetSyllabuses } from '@/queries'
-import { subjectService } from '@/services'
+import { syllabusService } from '@/services'
 import { Data } from '@/types'
 import { formatDateTime } from '@/utils'
 
@@ -88,10 +88,10 @@ const SyllabusPage = () => {
         async (deleteIds: number[]) => {
             try {
                 const dataDeleted = await Promise.all(
-                    deleteIds.map((id) => subjectService.delete(id)),
+                    deleteIds.map((id) => syllabusService.delete(id)),
                 )
                 await queryClient.refetchQueries({
-                    queryKey: [QUERY_KEYS.SUBJECT_LIST],
+                    queryKey: [QUERY_KEYS.SYLLABUS_LIST],
                 })
                 notification.success({
                     message: `Đã xóa thành công ${String(dataDeleted.length)} dòng dữ liệu!`,

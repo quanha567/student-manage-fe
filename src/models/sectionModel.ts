@@ -1,13 +1,13 @@
+import { Dayjs } from 'dayjs'
+
 import { BaseModel } from './baseModel'
 import { CourseModel } from './courseModel'
 
 export interface SectionModel extends BaseModel {
     capacity?: number
-    classroom?: string
     code?: string
     course?: CourseModel
     id?: number
-    schedule?: string[]
     schedules?: SectionSchedule[]
 }
 
@@ -18,7 +18,8 @@ export interface SectionCreateRequestModel
 
 export interface SectionSchedule {
     day?: string
-    endTime?: string
+    endTime?: string | Dayjs
     id?: number
-    startTime?: string
+    room?: string
+    startTime?: string | Dayjs
 }
