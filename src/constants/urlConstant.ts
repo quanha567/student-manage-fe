@@ -9,6 +9,7 @@ export enum PAGE_PATHS {
     LOGIN = '/login',
     MY_PROFILE = '/my-profile',
     REGISTER_COURSE = '/register-course',
+    SEMESTER_LIST = '/semesters',
     STUDENT_LIST = '/students',
     SUBJECT_LIST = '/subjects',
     SYLLABUS_LIST = '/syllabuses',
@@ -65,4 +66,10 @@ export const API_URL = {
     // SECTION api url
     ENROLLMENTS: 'enrollments',
     enrollmentWithId: (id: number) => `enrollments/${String(id)}`,
+
+    // SEMESTER api url
+    SEMESTERS: 'semesters',
+    semesterWithId: (id: number) => `semesters/${String(id)}`,
+
+    SUMMARY_REPORT: 'summary-report',
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import CountUp from 'react-countup'
 
 import { AiFillProduct } from 'react-icons/ai'
@@ -7,43 +7,36 @@ import { PiChalkboardTeacherFill, PiStudentFill } from 'react-icons/pi'
 
 import { Card, Spin } from 'antd'
 
+import { useSummaryReport } from '@/queries'
+
 export const NumberReport = () => {
-    const random = (max: number) => Math.ceil(Math.random() * max)
+    const { data: summaryReport, isLoading } = useSummaryReport()
 
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-
-    const [reportData] = useState([
-        {
-            label: 'Số khoa',
-            value: random(99999),
-            icon: <AiFillProduct className="size-6" />,
-        },
-        {
-            label: 'Số lớp',
-            value: random(99999),
-            icon: <MdClass className="size-6" />,
-        },
-        {
-            label: 'Số giáo viên',
-            value: random(99999),
-            icon: <PiChalkboardTeacherFill className="size-6" />,
-        },
-        {
-            label: 'Số sinh viên',
-            value: random(99999),
-            icon: <PiStudentFill className="size-6" />,
-        },
-    ])
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setIsLoading(false)
-        }, 5000)
-
-        return () => {
-            clearInterval(timer)
-        }
-    }, [])
+    const reportData = useMemo(
+        () => [
+            {
+                label: 'Số khoa',
+                value: summaryReport?.departmentCount,
+                icon: <AiFillProduct className="size-6" />,
+            },
+            {
+                label: 'Số lớp',
+                value: summaryReport?.classCount,
+                icon: <MdClass className="size-6" />,
+            },
+            {
+                label: 'Số giáo viên',
+                value: summaryReport?.teacherCount,
+                icon: <PiChalkboardTeacherFill className="size-6" />,
+            },
+            {
+                label: 'Số sinh viên',
+                value: summaryReport?.studentCount,
+                icon: <PiStudentFill className="size-6" />,
+            },
+        ],
+        [summaryReport],
+    )
 
     return (
         <div className="grid grid-cols-4 gap-4">
@@ -55,7 +48,11 @@ export const NumberReport = () => {
                             <span>{data.label}</span>
                         </p>
                         <p className="mt-2 text-3xl font-bold text-primary">
-                            <CountUp end={data.value} duration={3} delay={5} />
+                            <CountUp
+                                delay={5}
+                                duration={3}
+                                end={Number(data.value ?? 0)}
+                            />
                         </p>
                     </Card>
                 </Spin>

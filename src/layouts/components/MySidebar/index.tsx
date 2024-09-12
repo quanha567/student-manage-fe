@@ -82,6 +82,11 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Kết quả thi',
         icon: <PiExamFill className="size-6" />,
     },
+    {
+        label: 'Học kỳ',
+        icon: <PiExamFill className="size-6" />,
+        path: PAGE_PATHS.SEMESTER_LIST,
+    },
 ]
 
 export const MySidebar = () => {

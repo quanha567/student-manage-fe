@@ -125,7 +125,7 @@ export const CourseRegisteredCard = () => {
                         key: '1',
                         label: (
                             <p className="text-lg font-medium">
-                                Môn học đã đăng ký
+                                Môn học đã đăng ký học kỳ này
                             </p>
                         ),
                         children: (

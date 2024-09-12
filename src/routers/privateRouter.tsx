@@ -11,6 +11,7 @@ import {
     LoginPage,
     MyProfilePage,
     RegisterCoursePage,
+    SemesterPage,
     StudentPage,
     SubjectPage,
     SyllabusPage,
@@ -65,6 +66,10 @@ export const privateRouters = createBrowserRouter([
             {
                 path: PAGE_PATHS.REGISTER_COURSE,
                 element: <RegisterCoursePage />,
+            },
+            {
+                path: PAGE_PATHS.SEMESTER_LIST,
+                element: <SemesterPage />,
             },
         ],
     },
