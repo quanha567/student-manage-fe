@@ -8,6 +8,7 @@ import { ColumnType } from 'antd/es/table'
 import { Breadcrumb } from '@/components'
 import { QUERY_KEYS } from '@/constants'
 import { CourseModel, CourseType } from '@/models'
+import { useSemesterOptions } from '@/queries'
 import { courseService } from '@/services'
 import { Data } from '@/types'
 
@@ -90,6 +91,14 @@ const RegisterCoursePage = () => {
             }),
     })
 
+    const {
+        isLoadingSemesterOptions,
+        loadMoreSemesterOptions,
+        semesterOptions,
+        semesterSearchText,
+        setSemesterSearchText,
+    } = useSemesterOptions()
+
     const courseSelected = useMemo(() => {
         if (Array.isArray(courseSelectedIds) && courseSelectedIds.length > 0) {
             return courses?.data?.find(
@@ -117,12 +126,11 @@ const RegisterCoursePage = () => {
                         <Select
                             className="w-full"
                             placeholder="Chọn đợt đăng ký"
-                            options={[
-                                {
-                                    label: 'Đợt đăng ký',
-                                    value: 'Đợt đăng ký',
-                                },
-                            ]}
+                            options={semesterOptions}
+                            onPopupScroll={loadMoreSemesterOptions}
+                            searchValue={semesterSearchText}
+                            onSearch={setSemesterSearchText}
+                            loading={isLoadingSemesterOptions}
                         />
                         <Table
                             rowKey="id"
