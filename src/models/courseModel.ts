@@ -5,6 +5,7 @@ import { ListData, SingleData } from '@/types'
 import { BaseModel } from './baseModel'
 import { ClassModel } from './classModel'
 import { SectionModel } from './sectionModel'
+import { SemesterModel } from './semesterModel'
 import { SubjectModel } from './subjectModel'
 
 export interface CourseModel extends BaseModel {
@@ -18,15 +19,16 @@ export interface CourseModel extends BaseModel {
     lectureHours?: number
     name?: string
     sections?: ListData<SectionModel>
-    semester?: string
+    semester?: SingleData<SemesterModel>
     startDate?: string | Dayjs
     subject?: SingleData<SubjectModel>
 }
 
 export interface CourseCreateRequestModel
-    extends Omit<CourseModel, 'subject' | 'classes' | 'sections'> {
+    extends Omit<CourseModel, 'subject' | 'classes' | 'sections' | 'semester'> {
     classes?: number[]
     sections?: SectionModel[]
+    semester?: number | null
     subject?: number
 }
 

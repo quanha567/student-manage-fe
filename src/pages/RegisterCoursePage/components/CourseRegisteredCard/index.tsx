@@ -47,7 +47,6 @@ const columns: TableColumnType<EnrollmentModel>[] = [
 
 export const CourseRegisteredCard = () => {
     const user = useAppSelector(selectCurrentUser)
-    console.log('CourseRegisteredCard  user:', user)
 
     const getListData = (value: Dayjs) => {
         const student = user.student
@@ -137,7 +136,18 @@ export const CourseRegisteredCard = () => {
                                 columns={columns}
                                 dataSource={user.student?.enrollments}
                                 pagination={false}
-                                footer={() => <div>Tổng số tín chỉ: {10}</div>}
+                                footer={() => (
+                                    <div>
+                                        Tổng số tín chỉ đã đăng ký học kỳ này:{' '}
+                                        {user.student?.enrollments?.reduce(
+                                            (prevTotal, enrollment) =>
+                                                prevTotal +
+                                                (enrollment.section?.course
+                                                    ?.credits ?? 0),
+                                            0,
+                                        ) ?? 0}
+                                    </div>
+                                )}
                             />
                         ),
                     },

@@ -42,7 +42,7 @@ const columns: CustomTableColumnType<Data<CourseModel>> = [
         title: 'Học kỳ',
         dataIndex: 'attributes',
         key: 'name',
-        render: ({ semester }: CourseModel) => semester,
+        render: ({ semester }: CourseModel) => semester?.data?.attributes?.name,
         sorter: true,
         display: true,
     },

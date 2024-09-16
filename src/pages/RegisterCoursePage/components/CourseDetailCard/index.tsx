@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 
 import moment from 'moment'
 
-import { App, Button, Card, Table } from 'antd'
+import { App, Button, Card, Empty, Table } from 'antd'
 import { ColumnType } from 'antd/es/table'
 
 import { globalLoading } from '@/components'
@@ -128,6 +128,11 @@ export const CourseDetailCard = ({
                             onClick: () =>
                                 record.id && setSectionSelected(record.id),
                         })}
+                        locale={{
+                            emptyText: (
+                                <Empty description="Chọn một môn học để xem danh sách lớp đăng ký" />
+                            ),
+                        }}
                     />
                 </div>
                 <Button

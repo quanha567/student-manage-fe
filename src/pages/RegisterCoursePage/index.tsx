@@ -2,7 +2,7 @@ import { Key, useMemo, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 
-import { Badge, Card, Select, Table, Tag } from 'antd'
+import { Badge, Card, Empty, Select, Table, Tag } from 'antd'
 import { ColumnType } from 'antd/es/table'
 
 import { Breadcrumb } from '@/components'
@@ -82,13 +82,16 @@ const courseColumns: ColumnType<Data<CourseModel>>[] = [
 
 const RegisterCoursePage = () => {
     const [courseSelectedIds, setCourseSelectedIds] = useState<Key[]>()
+    const [semesterSelectId, setSemesterSelectedId] = useState<string>()
 
     const { data: courses, isLoading: isLoadingCourses } = useQuery({
-        queryKey: [QUERY_KEYS.COURSE_LIST],
+        queryKey: [QUERY_KEYS.COURSE_LIST, semesterSelectId],
         queryFn: async () =>
             await courseService.search({
                 populate: 'deep',
+                'filters[semester][id]': semesterSelectId,
             }),
+        enabled: Boolean(semesterSelectId),
     })
 
     const {
@@ -125,12 +128,14 @@ const RegisterCoursePage = () => {
                         <p className="text-lg font-bold">Thông tin chi tiết</p>
                         <Select
                             className="w-full"
-                            placeholder="Chọn đợt đăng ký"
+                            placeholder="- Chọn đợt đăng ký -"
                             options={semesterOptions}
                             onPopupScroll={loadMoreSemesterOptions}
                             searchValue={semesterSearchText}
                             onSearch={setSemesterSearchText}
                             loading={isLoadingSemesterOptions}
+                            value={semesterSelectId}
+                            onChange={setSemesterSelectedId}
                         />
                         <Table
                             rowKey="id"
@@ -144,6 +149,11 @@ const RegisterCoursePage = () => {
                                 type: 'radio',
                                 selectedRowKeys: courseSelectedIds,
                                 onChange: setCourseSelectedIds,
+                            }}
+                            locale={{
+                                emptyText: (
+                                    <Empty description="Chọn một học kỳ để xem danh sách môn học" />
+                                ),
                             }}
                         />
                     </div>

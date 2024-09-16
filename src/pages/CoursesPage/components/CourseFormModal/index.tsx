@@ -21,6 +21,7 @@ import { SectionModel, SectionSchedule } from '@/models'
 import {
     useClassOptions,
     useGetCourseDetail,
+    useSemesterOptions,
     useSubjectOptions,
 } from '@/queries'
 import { CourseCreateRequest } from '@/services'
@@ -90,6 +91,14 @@ export const CourseFormModal = ({
     } = useSubjectOptions()
 
     const {
+        isLoadingSemesterOptions,
+        loadMoreSemesterOptions,
+        semesterOptions,
+        semesterSearchText,
+        setSemesterSearchText,
+    } = useSemesterOptions()
+
+    const {
         classOptions,
         classSearchText,
         isLoadingClassOptions,
@@ -136,6 +145,7 @@ export const CourseFormModal = ({
                             ),
                         }),
                     ),
+                    semester: data.data?.attributes?.semester?.data?.id,
                 },
             })
         } else {
@@ -270,11 +280,17 @@ export const CourseFormModal = ({
                             placeholder="Nhập số tín chỉ"
                         />
 
-                        <FormInput
+                        <FormSelect
                             required
+                            showSearch
                             label="Học kỳ"
                             name="data.semester"
+                            options={semesterOptions}
+                            searchValue={semesterSearchText}
+                            onSearch={setSemesterSearchText}
+                            loading={isLoadingSemesterOptions}
                             placeholder="Nhập tên học kỳ"
+                            onPopupScroll={loadMoreSemesterOptions}
                         />
                         <FormDatePicker
                             required

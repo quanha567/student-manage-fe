@@ -47,7 +47,7 @@ const formCourseValidate: ObjectSchema<CourseCreateRequest> = object().shape({
         courseType: mixed<CourseType>()
             .oneOf(Object.values(CourseType))
             .required('Vui lòng chọn loại học phần!'),
-        semester: string().required('Vui lòng nhập học kỳ của học phần!'),
+        semester: number().required('Vui lòng nhập học kỳ của học phần!'),
         sections: array()
             .of(
                 object().shape({
@@ -110,7 +110,7 @@ const formCourseDefaultValue: CourseCreateRequest = {
         credits: 0,
         labHours: 0,
         lectureHours: 0,
-        semester: '',
+        semester: null,
         startDate: dayjs(),
         sections: [
             {
@@ -136,12 +136,7 @@ export const useCourseForm = (courseId?: string, closeModel?: () => void) => {
 
     const { notification } = App.useApp()
 
-    const {
-        handleSubmit,
-        control,
-        watch,
-        formState: { errors },
-    } = formMethods
+    const { handleSubmit, control } = formMethods
 
     const {
         prepend: appendNewSection,
