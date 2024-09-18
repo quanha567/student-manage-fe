@@ -3,7 +3,12 @@ import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar'
 import { Link, useLocation } from 'react-router-dom'
 
 import { AiFillProduct } from 'react-icons/ai'
-import { FaBook, FaListCheck, FaNoteSticky } from 'react-icons/fa6'
+import {
+    FaBook,
+    FaCalendarDay,
+    FaListCheck,
+    FaNoteSticky,
+} from 'react-icons/fa6'
 import { GiPieChart } from 'react-icons/gi'
 import { HiRectangleGroup } from 'react-icons/hi2'
 import { IoIosAddCircle, IoIosArrowBack } from 'react-icons/io'
@@ -70,8 +75,9 @@ const sideBarMenus: MenuItemType[] = [
         icon: <FaListCheck className="size-6" />,
     },
     {
-        label: 'Kiểm tra',
+        label: 'Kiểm tra, thi',
         icon: <FaNoteSticky className="size-6" />,
+        path: PAGE_PATHS.EXAM_LIST,
     },
     {
         label: 'Đăng ký học phần',
@@ -84,7 +90,7 @@ const sideBarMenus: MenuItemType[] = [
     },
     {
         label: 'Học kỳ',
-        icon: <PiExamFill className="size-6" />,
+        icon: <FaCalendarDay className="size-6" />,
         path: PAGE_PATHS.SEMESTER_LIST,
     },
 ]

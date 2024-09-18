@@ -1,6 +1,7 @@
 export * from './classQueries'
 export * from './courseQueries'
 export * from './departmentQueries'
+export * from './examQueries'
 export * from './semesterQueries'
 export * from './statisticQueries'
 export * from './studentQueries'

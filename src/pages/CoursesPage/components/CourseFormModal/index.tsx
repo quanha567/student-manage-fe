@@ -20,6 +20,7 @@ import { COURSE_TYPE_OPTIONS, DATE_TIME_FORMAT } from '@/constants'
 import { SectionModel, SectionSchedule } from '@/models'
 import {
     useClassOptions,
+    useExamOptions,
     useGetCourseDetail,
     useSemesterOptions,
     useSubjectOptions,
@@ -106,6 +107,14 @@ export const CourseFormModal = ({
         setClassSearchText,
     } = useClassOptions()
 
+    const {
+        examOptions,
+        examSearchText,
+        isLoadingExamOptions,
+        loadMoreExamOptions,
+        setExamSearchText,
+    } = useExamOptions()
+
     useEffect(() => {
         if (id && data && isOpen) {
             reset({
@@ -120,6 +129,10 @@ export const CourseFormModal = ({
                     classes:
                         data.data?.attributes?.classes?.data
                             ?.map((classInfo) => classInfo.id)
+                            .filter(Boolean) ?? [],
+                    exams:
+                        data.data?.attributes?.exams?.data
+                            ?.map((exam) => exam.id)
                             .filter(Boolean) ?? [],
                     subject: data.data?.attributes?.subject?.data?.id,
                     sections: data.data?.attributes?.sections?.data?.map(
@@ -289,7 +302,7 @@ export const CourseFormModal = ({
                             searchValue={semesterSearchText}
                             onSearch={setSemesterSearchText}
                             loading={isLoadingSemesterOptions}
-                            placeholder="Nhập tên học kỳ"
+                            placeholder="- Chọn học kỳ -"
                             onPopupScroll={loadMoreSemesterOptions}
                         />
                         <FormDatePicker
@@ -310,14 +323,25 @@ export const CourseFormModal = ({
                             options={COURSE_TYPE_OPTIONS}
                             placeholder="- Chọn loại học phần -"
                         />
-                        <div className="col-span-2">
-                            <FormTextArea
-                                allowClear
-                                label="Mô tả"
-                                name="data.description"
-                                placeholder="Nhập mô tả học phần"
-                            />
-                        </div>
+                        <FormSelect
+                            showSearch
+                            mode="multiple"
+                            maxTagCount="responsive"
+                            label="Bài kiểm tra, bài thi"
+                            name="data.exams"
+                            options={examOptions}
+                            searchValue={examSearchText}
+                            onSearch={setExamSearchText}
+                            loading={isLoadingExamOptions}
+                            placeholder="Nhập tên bài kiểm tra, bài thi"
+                            onPopupScroll={loadMoreExamOptions}
+                        />
+                        <FormTextArea
+                            allowClear
+                            label="Mô tả"
+                            name="data.description"
+                            placeholder="Nhập mô tả học phần"
+                        />
                     </div>
                     <FormField
                         label="Danh sách lớp"
