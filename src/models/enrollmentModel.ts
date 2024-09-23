@@ -3,6 +3,7 @@ import { SectionModel } from './sectionModel'
 import { StudentModel } from './studentModel'
 
 export interface EnrollmentModel extends BaseModel {
+    id?: number
     section?: SectionModel
     status?: EnrollmentStatus
     student?: StudentModel
