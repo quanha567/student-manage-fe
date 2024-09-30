@@ -3,7 +3,7 @@ version: '4'
 services:
     student-manage-website:
         platform: linux/amd64
-        image: student-manage-website
+        image: hellosummer1705/student-manage-website:v1.0.0
         container_name: student-manage-website
         restart: always
         build:
