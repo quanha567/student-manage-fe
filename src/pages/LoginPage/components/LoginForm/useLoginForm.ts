@@ -15,8 +15,8 @@ import { setUser } from '@/redux'
 import { authService, studentService, userService } from '@/services'
 
 const formDefaultValues: LoginRequestModel = {
-    identifier: 'admin',
-    password: '123456',
+    identifier: '0000000001@teacher.vlu.edu.vn',
+    password: '000000',
 }
 
 const formLoginValidate: ObjectSchema<LoginRequestModel> = object().shape({
