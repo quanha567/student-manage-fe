@@ -57,7 +57,7 @@ export const FormSingleUpload = ({
 }: FormSingleUploadProps) => {
     const uploadId = useId()
 
-    const timer = useRef<number>()
+    const timer = useRef<NodeJS.Timeout>()
 
     const prevProgress = useRef<number>(0)
 
@@ -134,6 +134,7 @@ export const FormSingleUpload = ({
                 fileUploadRef.current.value = ''
                 setCurrentProgress(0)
                 prevProgress.current = 0
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 clearInterval(timer.current)
             }
         }, 15)

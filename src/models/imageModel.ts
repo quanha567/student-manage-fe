@@ -1,6 +1,8 @@
 import { Data } from '@/types'
 
 export interface ImageModel {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [x: string]: any
     data?: Data<ImageData> | Data<ImageData[]>
 }
 

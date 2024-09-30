@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useMemo } from 'react'
 
 import { Avatar, Image, ImageProps } from 'antd'

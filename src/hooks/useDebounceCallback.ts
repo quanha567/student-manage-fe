@@ -5,18 +5,19 @@ export const useDebounce = (
     delay: number,
 ) => {
     const callbackRef = React.useRef(callback)
-    const timer = useRef<number>()
+    const timer = useRef<NodeJS.Timeout>()
 
     React.useLayoutEffect(() => {
         callbackRef.current = callback
     })
 
-    const naiveDebounce = useCallback(
+    const nativeDebounce = useCallback(
         (
             func: (...args: unknown[]) => void,
             delayMs: number,
             ...args: unknown[]
         ) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             clearTimeout(timer.current)
             timer.current = setTimeout(() => {
                 func(...args)
@@ -28,8 +29,8 @@ export const useDebounce = (
     return React.useMemo(
         () =>
             (...args: unknown[]) => {
-                naiveDebounce(callbackRef.current, delay, ...args)
+                nativeDebounce(callbackRef.current, delay, ...args)
             },
-        [delay, naiveDebounce],
+        [delay, nativeDebounce],
     )
 }
