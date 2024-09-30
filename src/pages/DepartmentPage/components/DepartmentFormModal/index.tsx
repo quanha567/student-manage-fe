@@ -4,7 +4,7 @@ import { FormProvider } from 'react-hook-form'
 import { Modal } from 'antd'
 
 import { FormInput, FormSelect, FormSingleUpload } from '@/components'
-import { useClassOptions, useGetDepartmentDetail } from '@/hooks'
+import { useClassOptions, useGetDepartmentDetail } from '@/queries'
 import { DisclosureType } from '@/types'
 import { getPreviewUrl } from '@/utils'
 

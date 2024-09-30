@@ -19,7 +19,7 @@ export const AdminLayout = () => {
                             </div>
                         }
                     >
-                        <div className="mx-auto max-w-screen-xl pb-16">
+                        <div className="mx-auto max-w-screen-2xl pb-16">
                             <Outlet />
                         </div>
                     </Suspense>

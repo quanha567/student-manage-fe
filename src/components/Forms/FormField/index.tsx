@@ -16,7 +16,7 @@ const FormField = (props: FormFieldProps) => {
         props
 
     return (
-        <div className={className ?? 'space-y-2'}>
+        <div className={className ?? (label ? 'space-y-2' : '')}>
             <label
                 htmlFor={id}
                 className="flex w-max items-center text-[15px] font-bold"

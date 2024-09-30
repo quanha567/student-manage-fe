@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-import { LOCAL_STORAGES } from '@/constants'
+import { globalLoading } from '@/components'
 import { UserModel } from '@/models'
 import { userService } from '@/services'
 
@@ -16,20 +16,15 @@ const initialState: UserState = {
 
 export const getUserInfo = createAsyncThunk(
     'users/getUserInfo',
-    async (_, { dispatch, getState }) => {
-        const isAuthenticated = localStorage.getItem(
-            LOCAL_STORAGES.ACCESS_TOKEN,
-        )
-        const userInfo: UserModel | null = (getState() as RootState).userStore
-            .user
-
-        if (!isAuthenticated || (userInfo && Object.values(userInfo).length))
-            return
+    async (_, { dispatch }) => {
+        globalLoading.current?.show()
 
         try {
             dispatch(setUser(await userService.getInfo()))
         } catch (err) {
             console.log(err)
+        } finally {
+            globalLoading.current?.close()
         }
     },
 )

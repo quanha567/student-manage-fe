@@ -1,6 +1,12 @@
 import { Dayjs } from 'dayjs'
 
-import { BaseModel, ClassModel, ImageModel, UserModel } from '@/models'
+import {
+    BaseModel,
+    ClassModel,
+    EnrollmentModel,
+    ImageModel,
+    UserModel,
+} from '@/models'
 import { SingleData } from '@/types'
 
 export interface StudentModel extends BaseModel {
@@ -9,13 +15,14 @@ export interface StudentModel extends BaseModel {
     class?: SingleData<ClassModel>
     dateOfBirth?: string | Dayjs
     email?: string
-    enrollments?: unknown
+    enrollments?: EnrollmentModel[]
     examResults?: unknown
     fullName?: string
     gender?: Gender
     id?: number
     note?: string
     phoneNumber?: string
+    studentCode?: string
     studentId?: string
     user?: UserModel
 }

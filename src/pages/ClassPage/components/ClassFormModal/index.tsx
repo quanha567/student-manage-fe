@@ -4,7 +4,7 @@ import { FormProvider } from 'react-hook-form'
 import { Modal } from 'antd'
 
 import { FormInput } from '@/components'
-import { useGetClassDetail } from '@/hooks'
+import { useGetClassDetail } from '@/queries'
 import { DisclosureType } from '@/types'
 
 import { useClassForm } from './useClassForm'

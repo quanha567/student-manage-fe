@@ -7,15 +7,17 @@ import { Select, SelectProps } from 'antd'
 import FormField from '../FormField'
 
 type FormSelectProps = SelectProps & {
-    label: string
+    label?: string
     name: string
     required?: boolean
+    wrapperClassName?: string
 }
 
 export const FormSelect = ({
     name,
     label,
     required,
+    wrapperClassName,
     ...restProps
 }: FormSelectProps) => {
     const { control } = useFormContext()
@@ -23,6 +25,7 @@ export const FormSelect = ({
     return (
         <FormField
             label={label}
+            className={wrapperClassName}
             required={required}
             renderField={() => (
                 <Controller
@@ -37,7 +40,6 @@ export const FormSelect = ({
                                 maxTagTextLength={20}
                                 maxTagCount="responsive"
                                 variant="filled"
-                                {...restProps}
                                 status={error ? 'error' : ''}
                                 className={twMerge(
                                     'h-full w-full',
@@ -46,6 +48,7 @@ export const FormSelect = ({
                                 style={{
                                     height: 46,
                                 }}
+                                {...restProps}
                             />
                             <span className="pl-2 text-xs text-red-500">
                                 {error?.message}

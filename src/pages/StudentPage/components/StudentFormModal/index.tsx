@@ -13,7 +13,7 @@ import {
     FormTextArea,
 } from '@/components'
 import { GENDER_OPTIONS } from '@/constants'
-import { useClassOptions, useGetStudentDetail } from '@/hooks'
+import { useClassOptions, useGetStudentDetail } from '@/queries'
 import { DisclosureType } from '@/types'
 import { getPreviewUrl } from '@/utils'
 
@@ -55,10 +55,11 @@ export const ClassFormModal = ({
                     dateOfBirth: data.data?.attributes?.dateOfBirth
                         ? dayjs(data.data.attributes.dateOfBirth)
                         : undefined,
+                    class: undefined,
                 },
             })
         } else {
-            reset()
+            reset({})
         }
     }, [data, studentId, reset, isOpen])
 
@@ -112,13 +113,16 @@ export const ClassFormModal = ({
                         name="data.fullName"
                         placeholder="Nhập họ và tên"
                     />
-                    <FormInput
-                        required
-                        label="Email"
-                        name="data.email"
-                        type="email"
-                        placeholder="example@gmail.com"
-                    />
+                    {studentId && (
+                        <FormInput
+                            required
+                            disabled
+                            label="Email"
+                            name="data.email"
+                            type="email"
+                            placeholder="example@gmail.com"
+                        />
+                    )}
                     <FormInput
                         label="Số điện thoại"
                         name="data.phoneNumber"

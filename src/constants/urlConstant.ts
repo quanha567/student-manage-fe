@@ -3,11 +3,18 @@ import { createApiURL } from '@/utils'
 
 export enum PAGE_PATHS {
     CLASS_LIST = '/classes',
+    COURSES_LIST = '/courses',
     DASHBOARD = '/',
     DEPARTMENT_LIST = '/departments',
+    EXAM_LIST = '/exams',
     LOGIN = '/login',
     MY_PROFILE = '/my-profile',
+    REGISTER_COURSE = '/register-course',
+    SEMESTER_LIST = '/semesters',
     STUDENT_LIST = '/students',
+    SUBJECT_LIST = '/subjects',
+    SYLLABUS_LIST = '/syllabuses',
+    TEACHER_LIST = '/teachers',
 }
 
 export const API_URL = {
@@ -34,6 +41,40 @@ export const API_URL = {
     STUDENTS: 'students',
     studentWithId: (id: number) => `students/${String(id)}`,
 
+    // Student api url
+    TEACHERS: 'teachers',
+    teacherWithId: (id: number) => `teachers/${String(id)}`,
+
     // Upload api url
     UPLOAD: '/upload',
+
+    // subject api url
+    SUBJECTS: 'subjects',
+    subjectWithId: (id: number) => `subjects/${String(id)}`,
+
+    // syllabus api url
+    SYLLABUS: 'syllabuses',
+    syllabusWithId: (id: number) => `syllabuses/${String(id)}`,
+
+    // COURSE api url
+    COURSES: 'courses',
+    courseWithId: (id: number) => `courses/${String(id)}`,
+
+    // SECTION api url
+    SECTIONS: 'sections',
+    sectionWithId: (id: number) => `sections/${String(id)}`,
+
+    // SECTION api url
+    ENROLLMENTS: 'enrollments',
+    enrollmentWithId: (id: number) => `enrollments/${String(id)}`,
+
+    // SEMESTER api url
+    SEMESTERS: 'semesters',
+    semesterWithId: (id: number) => `semesters/${String(id)}`,
+
+    // SEMESTER api url
+    EXAMS: 'exams',
+    examWithId: (id: number) => `exams/${String(id)}`,
+
+    SUMMARY_REPORT: 'summary-report',
 }

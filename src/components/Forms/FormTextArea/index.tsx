@@ -50,6 +50,7 @@ export const FormTextArea = ({
                             <TextArea
                                 size={size}
                                 status={error ? 'error' : ''}
+                                variant="filled"
                                 {...field}
                                 {...restProps}
                             />

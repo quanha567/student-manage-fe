@@ -1,11 +1,16 @@
 import { ReactNode } from 'react'
 
+import dayjs from 'dayjs'
+
 import { App, ConfigProvider } from 'antd'
 import viVN from 'antd/locale/vi_VN'
 
+import 'dayjs/locale/vi'
 interface ThemeConfigProviderProps {
     children: ReactNode
 }
+
+dayjs.locale('vi')
 
 export const ThemeConfigProvider = ({ children }: ThemeConfigProviderProps) => {
     return (

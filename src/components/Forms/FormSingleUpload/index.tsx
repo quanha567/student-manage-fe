@@ -26,7 +26,7 @@ import { ImagePreview, Progress } from '@/components'
 import FormField from '../FormField'
 
 interface FormSingleUploadProps {
-    acceptType?: string[]
+    acceptType?: string[] | string
     className?: string
     isCircle?: boolean
     isCompact?: boolean
@@ -177,7 +177,11 @@ export const FormSingleUpload = ({
 
         const targetFile = e.dataTransfer.files[0]
 
-        if (acceptType.includes(targetFile.type)) {
+        if (
+            acceptType === targetFile.type ||
+            acceptType === '*' ||
+            acceptType.includes(targetFile.type)
+        ) {
             uploadFile(e.dataTransfer.files[0])
         } else {
             notification.warning({
@@ -320,7 +324,11 @@ export const FormSingleUpload = ({
                                         ref={fileUploadRef}
                                         className="hidden"
                                         onChange={handleUploadFile}
-                                        accept={acceptType.join(', ')}
+                                        accept={
+                                            typeof acceptType === 'string'
+                                                ? acceptType
+                                                : acceptType.join(', ')
+                                        }
                                     />
                                 </div>
                                 <span className="text-danger text-xs">

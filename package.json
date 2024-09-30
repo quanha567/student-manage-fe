@@ -5,8 +5,13 @@
     "type": "module",
     "homepage": "https://quanha567.github.io/student-manage-fe",
     "scripts": {
+<<<<<<< HEAD
         "dev": "vite",
         "build": "vite build",
+=======
+        "dev": "vite --host",
+        "build": "tsc -b && vite build",
+>>>>>>> 5694710c8ac274fd9390f79911373484cbd35e66
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "lint:fix": "eslint . --fix",
         "format": "prettier . --write",

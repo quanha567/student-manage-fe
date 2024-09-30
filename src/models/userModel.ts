@@ -1,4 +1,4 @@
-import { BaseModel, RoleModel, StudentModel } from '@/models'
+import { BaseModel, RoleModel, StudentModel, TeacherModel } from '@/models'
 
 export interface UserModel extends BaseModel {
     blocked?: boolean
@@ -8,6 +8,7 @@ export interface UserModel extends BaseModel {
     provider?: string
     role?: RoleModel
     student?: StudentModel
+    teacher?: TeacherModel
     userName?: string
 }
 

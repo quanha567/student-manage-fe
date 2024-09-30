@@ -44,7 +44,7 @@ export const FormDatePicker = ({
                                 {...props}
                                 className="py-2.5"
                             />
-                            <span className="text-danger text-xs">
+                            <span className="text-xs text-red-500">
                                 {error?.message}
                             </span>
                         </div>

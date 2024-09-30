@@ -5,11 +5,18 @@ import { PAGE_PATHS } from '@/constants'
 import { AuthGuard } from '@/guards'
 import {
     ClassPage,
+    CoursesPage,
     DashboardPage,
     DepartmentPage,
+    ExamPage,
     LoginPage,
     MyProfilePage,
+    RegisterCoursePage,
+    SemesterPage,
     StudentPage,
+    SubjectPage,
+    SyllabusPage,
+    TeacherPage,
 } from '@/pages'
 
 export const privateRouters = createBrowserRouter([
@@ -40,6 +47,34 @@ export const privateRouters = createBrowserRouter([
             {
                 path: PAGE_PATHS.MY_PROFILE,
                 element: <MyProfilePage />,
+            },
+            {
+                path: PAGE_PATHS.SUBJECT_LIST,
+                element: <SubjectPage />,
+            },
+            {
+                path: PAGE_PATHS.SYLLABUS_LIST,
+                element: <SyllabusPage />,
+            },
+            {
+                path: PAGE_PATHS.COURSES_LIST,
+                element: <CoursesPage />,
+            },
+            {
+                path: PAGE_PATHS.TEACHER_LIST,
+                element: <TeacherPage />,
+            },
+            {
+                path: PAGE_PATHS.REGISTER_COURSE,
+                element: <RegisterCoursePage />,
+            },
+            {
+                path: PAGE_PATHS.SEMESTER_LIST,
+                element: <SemesterPage />,
+            },
+            {
+                path: PAGE_PATHS.EXAM_LIST,
+                element: <ExamPage />,
             },
         ],
     },
