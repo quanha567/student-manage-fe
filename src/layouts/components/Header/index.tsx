@@ -35,7 +35,7 @@ export const Header = () => {
                     className="size-10 cursor-pointer object-contain"
                 />
                 <span className="text-xl font-black">
-                    Trường Đại học Văn Lang
+                    Trường Đại học Tài Nguyên và Môi Trường
                 </span>
             </div>
             <div>
