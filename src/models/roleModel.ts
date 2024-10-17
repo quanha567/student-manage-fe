@@ -13,3 +13,9 @@ export enum UserRole {
     STUDENT = 'student',
     TEACHER = 'teacher',
 }
+
+export enum Role {
+    ADMIN = 'ADMIN',
+    STUDENT = 'STUDENT',
+    TEACHER = 'TEACHER',
+}

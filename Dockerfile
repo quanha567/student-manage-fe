@@ -31,7 +31,7 @@ FROM nginx:1.25.4-alpine as production
 ENV NODE_ENV production
 
 # Copy built assets from builder
-COPY --from=builder /pages/dist /usr/share/nginx/dynasty-dasboard
+COPY --from=builder /pages/dist /usr/share/nginx/student-manage-website
 
 # Add your nginx.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
