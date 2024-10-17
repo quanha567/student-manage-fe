@@ -87,6 +87,7 @@ const SubjectPage = () => {
         data,
         isLoading: isLoadingSubjects,
         isPlaceholderData: isPlaceholderSubjects,
+        refetch,
     } = useGetSubjects({
         pageIndex: Number(pageIndex),
         pageSize: Number(pageSize),
@@ -161,7 +162,12 @@ const SubjectPage = () => {
                 }}
                 onDelete={handleDeleteSubject}
             />
-            <SubjectFormModal id={id} isOpen={isOpen} toggleOpen={toggleOpen} />
+            <SubjectFormModal
+                id={id}
+                isOpen={isOpen}
+                toggleOpen={toggleOpen}
+                onRefetch={refetch}
+            />
         </div>
     )
 }

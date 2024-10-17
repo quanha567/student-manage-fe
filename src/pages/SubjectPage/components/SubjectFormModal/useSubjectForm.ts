@@ -2,13 +2,16 @@ import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { yupResolver } from '@hookform/resolvers/yup'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { ObjectSchema, object, string } from 'yup'
 
 import { App } from 'antd'
 
-import { QUERY_KEYS } from '@/constants'
-import { queryClient } from '@/providers'
-import { SubjectCreateRequest, subjectService } from '@/services'
+import {
+    SubjectCreateRequest,
+    SubjectListResponse,
+    subjectService,
+} from '@/services'
 
 const formSubjectValidate: ObjectSchema<SubjectCreateRequest> = object().shape({
     data: object({
@@ -16,7 +19,13 @@ const formSubjectValidate: ObjectSchema<SubjectCreateRequest> = object().shape({
     }),
 })
 
-export const useSubjectForm = (subjectId?: string, closeModel?: () => void) => {
+export const useSubjectForm = (
+    subjectId?: string,
+    closeModel?: () => void,
+    refetchData?: (
+        options?: RefetchOptions,
+    ) => Promise<QueryObserverResult<SubjectListResponse>>,
+) => {
     const formMethods = useForm<SubjectCreateRequest>({
         resolver: yupResolver(formSubjectValidate),
     })
@@ -34,9 +43,7 @@ export const useSubjectForm = (subjectId?: string, closeModel?: () => void) => {
                     await subjectService.update(Number(subjectId), dataSubmit)
                 else await subjectService.create(dataSubmit)
 
-                await queryClient.refetchQueries({
-                    queryKey: [QUERY_KEYS.SUBJECT_LIST],
-                })
+                await refetchData?.()
                 notification.success({
                     message: subjectId
                         ? 'Cập nhật thông tin môn học thành công'
@@ -51,7 +58,7 @@ export const useSubjectForm = (subjectId?: string, closeModel?: () => void) => {
                 closeModel?.()
             }
         },
-        [subjectId, notification, closeModel],
+        [subjectId, refetchData, notification, closeModel],
     )
 
     return {

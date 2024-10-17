@@ -106,6 +106,7 @@ const StudentPage = () => {
     const { notification } = App.useApp()
 
     const [params] = useSearch()
+
     const {
         pageSize = 10,
         pageIndex = 1,
@@ -114,13 +115,14 @@ const StudentPage = () => {
         searchText = '',
     } = params
 
-    const { data, isLoading, isPlaceholderData, isFetching } = useGetStudents({
-        pageIndex: Number(pageIndex),
-        pageSize: Number(pageSize),
-        asc: String(asc),
-        searchText: String(searchText),
-        sortBy: String(sortBy),
-    })
+    const { data, isLoading, isPlaceholderData, isFetching, refetch } =
+        useGetStudents({
+            pageIndex: Number(pageIndex),
+            pageSize: Number(pageSize),
+            asc: String(asc),
+            searchText: String(searchText),
+            sortBy: String(sortBy),
+        })
 
     const handleDelete = useCallback(
         async (deleteIds: number[]) => {
@@ -187,7 +189,12 @@ const StudentPage = () => {
                 }}
                 onDelete={handleDelete}
             />
-            <ClassFormModal id={id} isOpen={isOpen} toggleOpen={toggleOpen} />
+            <ClassFormModal
+                id={id}
+                isOpen={isOpen}
+                toggleOpen={toggleOpen}
+                onRefetch={refetch}
+            />
         </div>
     )
 }

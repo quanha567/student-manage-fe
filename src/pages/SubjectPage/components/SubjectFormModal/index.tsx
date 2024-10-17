@@ -1,22 +1,30 @@
 import { useEffect } from 'react'
 import { FormProvider } from 'react-hook-form'
 
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+
 import { Modal } from 'antd'
 
 import { FormInput, FormSelect, FormTextArea } from '@/components'
 import { useGetSubjectDetail, useSyllabusOptions } from '@/queries'
+import { SubjectListResponse } from '@/services'
 import { DisclosureType } from '@/types'
 
 import { useSubjectForm } from './useSubjectForm'
 
-type SubjectFormModalProps = DisclosureType
+type SubjectFormModalProps = DisclosureType & {
+    onRefetch: (
+        options?: RefetchOptions,
+    ) => Promise<QueryObserverResult<SubjectListResponse>>
+}
 
 export const SubjectFormModal = ({
     isOpen,
     toggleOpen,
     id,
+    onRefetch,
 }: SubjectFormModalProps) => {
-    const { createOrUpdate, formMethods } = useSubjectForm(id, toggleOpen)
+    const { createOrUpdate, formMethods } = useSubjectForm(id, toggleOpen, onRefetch)
 
     const {
         reset,

@@ -5,5 +5,6 @@ export enum DATE_TIME_FORMAT {
     FULL_DATE_TIME = 'DD/MM/YYYY HH:mm:ss',
     HOUR_AND_MINUTE = 'HH:mm',
     SHORT_DATE_TIME = 'HH:mm, DD/MM/YYYY',
+    SHORT_TIME = 'HH:mm:ss',
     TIME_ONLY = 'HH:mm:ss.SSS',
 }

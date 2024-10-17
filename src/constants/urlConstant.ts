@@ -8,6 +8,7 @@ export enum PAGE_PATHS {
     DEPARTMENT_LIST = '/departments',
     EXAM_LIST = '/exams',
     LOGIN = '/login',
+    MANAGE_POINT = '/manage-point',
     MY_PROFILE = '/my-profile',
     REGISTER_COURSE = '/register-course',
     SEMESTER_LIST = '/semesters',

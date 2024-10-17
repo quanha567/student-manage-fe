@@ -9,8 +9,8 @@ import { FormDatePicker, FormInput, FormSelect } from '@/components'
 import { DATE_TIME_FORMAT } from '@/constants'
 import {
     useClassOptions,
-    useCourseOptions,
     useGetSemesterDetail,
+    useSubjectOptions,
 } from '@/queries'
 import { DisclosureType } from '@/types'
 
@@ -46,7 +46,7 @@ export const SemesterFormModal = ({
         isLoadingCourseOptions,
         loadMoreCourseOptions,
         setCourseSearchText,
-    } = useCourseOptions()
+    } = useSubjectOptions()
 
     useEffect(() => {
         if (id && data && isOpen) {

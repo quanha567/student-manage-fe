@@ -2,15 +2,20 @@ import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { yupResolver } from '@hookform/resolvers/yup'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { HttpStatusCode, isAxiosError } from 'axios'
 import { isDayjs } from 'dayjs'
 import { ObjectSchema, number, object, string } from 'yup'
 
 import { App } from 'antd'
 
-import { DATE_TIME_FORMAT, QUERY_KEYS } from '@/constants'
-import { queryClient } from '@/providers'
-import { StudentCreateRequest, fileService, studentService } from '@/services'
+import { DATE_TIME_FORMAT } from '@/constants'
+import {
+    StudentCreateRequest,
+    StudentListResponse,
+    fileService,
+    studentService,
+} from '@/services'
 
 const formStudentValidate: ObjectSchema<StudentCreateRequest> = object().shape({
     data: object({
@@ -19,7 +24,13 @@ const formStudentValidate: ObjectSchema<StudentCreateRequest> = object().shape({
     }),
 })
 
-export const useStudentForm = (studentId?: string, closeModel?: () => void) => {
+export const useStudentForm = (
+    studentId?: string,
+    closeModel?: () => void,
+    refetchData?: (
+        options?: RefetchOptions,
+    ) => Promise<QueryObserverResult<StudentListResponse>>,
+) => {
     const formMethods = useForm<StudentCreateRequest>({
         resolver: yupResolver(formStudentValidate),
     })
@@ -65,9 +76,7 @@ export const useStudentForm = (studentId?: string, closeModel?: () => void) => {
                     await studentService.update(Number(studentId), dataSubmit)
                 else await studentService.create(dataSubmit)
 
-                await queryClient.refetchQueries({
-                    queryKey: [QUERY_KEYS.STUDENT_LIST],
-                })
+                await refetchData?.()
                 notification.success({
                     message: studentId
                         ? 'Cập nhật thông tin sinh viên thành công'

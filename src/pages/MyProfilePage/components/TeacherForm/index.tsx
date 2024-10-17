@@ -9,6 +9,7 @@ export const TeacherForm = () => {
             <FormInput
                 label="Khoa"
                 name="class.department.departmentName"
+                value="Công nghệ thông tin"
                 readOnly
             />
             <FormInput label="Lớp giảng dạy" name="class.className" readOnly />

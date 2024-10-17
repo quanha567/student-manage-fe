@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Control, FormProvider, useFieldArray } from 'react-hook-form'
 
 import { DeleteFilled } from '@ant-design/icons'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 
 import { Button, Modal, Table, TableColumnsType } from 'antd'
@@ -24,13 +25,18 @@ import {
     useGetCourseDetail,
     useSemesterOptions,
     useSubjectOptions,
+    useTeacherOptions,
 } from '@/queries'
-import { CourseCreateRequest } from '@/services'
+import { CourseCreateRequest, CourseListResponse } from '@/services'
 import { DisclosureType } from '@/types'
 
 import { useCourseForm } from './useCourseForm'
 
-type CourseFormModalProps = DisclosureType
+type CourseFormModalProps = DisclosureType & {
+    onRefetch: (
+        options?: RefetchOptions,
+    ) => Promise<QueryObserverResult<CourseListResponse>>
+}
 
 const dayOptions: DefaultOptionType[] = [
     {
@@ -67,6 +73,7 @@ export const CourseFormModal = ({
     isOpen,
     toggleOpen,
     id,
+    onRefetch,
 }: CourseFormModalProps) => {
     const {
         createOrUpdate,
@@ -115,6 +122,14 @@ export const CourseFormModal = ({
         setExamSearchText,
     } = useExamOptions()
 
+    const {
+        isLoadingTeacherOptions,
+        loadMoreTeacherOptions,
+        setTeacherSearchText,
+        teacherOptions,
+        teacherSearchText,
+    } = useTeacherOptions()
+
     useEffect(() => {
         if (id && data && isOpen) {
             reset({
@@ -139,19 +154,20 @@ export const CourseFormModal = ({
                         (section) => ({
                             ...section.attributes,
                             id: section.id,
+                            teacher: section.attributes?.teacher?.data?.id,
                             schedules: section.attributes?.schedules?.map(
                                 (schedule) => ({
                                     ...schedule,
                                     startTime: schedule.startTime
                                         ? dayjs(
                                               schedule.startTime,
-                                              DATE_TIME_FORMAT.TIME_ONLY,
+                                              DATE_TIME_FORMAT.SHORT_TIME,
                                           )
                                         : undefined,
                                     endTime: schedule.endTime
                                         ? dayjs(
                                               schedule.endTime,
-                                              DATE_TIME_FORMAT.TIME_ONLY,
+                                              DATE_TIME_FORMAT.SHORT_TIME,
                                           )
                                         : undefined,
                                 }),
@@ -173,17 +189,28 @@ export const CourseFormModal = ({
             width: 50,
             align: 'center',
         },
-
         {
-            title: 'Số lượng sinh viên',
+            title: 'Số lượng sinh viên / GV',
             width: 200,
             render: (_row, _record, index: number) => (
-                <FormInputNumber
-                    size="small"
-                    className="py-1"
-                    inputMode="numeric"
-                    name={`data.sections.${String(index)}.capacity`}
-                />
+                <div className="space-y-2">
+                    <FormInputNumber
+                        size="small"
+                        className="py-1"
+                        inputMode="numeric"
+                        name={`data.sections.${String(index)}.capacity`}
+                    />
+                    <FormSelect
+                        size="small"
+                        name={`data.sections.${String(index)}.teacher`}
+                        placeholder="Chọn giảng viên..."
+                        loading={isLoadingTeacherOptions}
+                        options={teacherOptions}
+                        onPopupScroll={loadMoreTeacherOptions}
+                        searchValue={teacherSearchText}
+                        onSearch={setTeacherSearchText}
+                    />
+                </div>
             ),
         },
         {

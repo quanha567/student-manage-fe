@@ -17,6 +17,7 @@ export const ClassFormModal = ({
     id: classId,
 }: ClassFormModalProps) => {
     const { createOrUpdate, formMethods } = useClassForm(classId, toggleOpen)
+
     const {
         reset,
         formState: { isDirty },
@@ -45,7 +46,7 @@ export const ClassFormModal = ({
             centered
             open={isOpen}
             onCancel={() => {
-                toggleOpen()
+                toggleOpen('')
             }}
             maskClosable
             closable

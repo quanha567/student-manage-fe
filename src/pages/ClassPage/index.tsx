@@ -33,37 +33,13 @@ const columns: CustomTableColumnType<Data<ClassModel>> = [
         sorter: true,
         display: true,
     },
-    // {
-    //     title: 'Hình ảnh',
-    //     dataIndex: 'attributes',
-    //     key: 'avatar',
-    //     width: 80,
-    //     render: ({ avatar }: ClassModel) =>
-    //         typeof avatar !== 'string' ? (
-    //             <CustomImage
-    //                 src={avatar}
-    //                 className="aspect-square object-cover"
-    //                 size="thumbnail"
-    //             />
-    //         ) : (
-    //             <></>
-    //         ),
-    //     display: true,
-    // },
+
     {
         title: `Tên ${PageName}`,
         dataIndex: 'attributes',
         key: 'className',
         render: ({ className }: ClassModel) => className,
         sorter: true,
-        display: true,
-    },
-    {
-        title: 'Khoa',
-        dataIndex: 'attributes',
-        key: 'departmentName',
-        render: ({ department }: ClassModel) =>
-            department?.data?.attributes?.departmentName ?? '___',
         display: true,
     },
     {

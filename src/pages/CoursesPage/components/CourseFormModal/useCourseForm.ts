@@ -57,6 +57,9 @@ const formCourseValidate: ObjectSchema<CourseCreateRequest> = object().shape({
                             1,
                             'Số lượng sinh viên của lớp học phải lớn hơn bằng 1!',
                         ),
+                    teacher: number()
+                        .required('Vui lòng chọn giảng viên cho lớp này!')
+                        .typeError('Vui lòng chọn giảng viên cho lớp này!'),
                     schedules: array()
                         .of(
                             object().shape({

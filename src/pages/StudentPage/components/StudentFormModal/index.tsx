@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { FormProvider } from 'react-hook-form'
 
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 
 import { Modal } from 'antd'
@@ -14,21 +15,28 @@ import {
 } from '@/components'
 import { GENDER_OPTIONS } from '@/constants'
 import { useClassOptions, useGetStudentDetail } from '@/queries'
+import { StudentListResponse } from '@/services'
 import { DisclosureType } from '@/types'
 import { getPreviewUrl } from '@/utils'
 
 import { useStudentForm } from './useStudentForm'
 
-type ClassFormModalProps = DisclosureType
+type ClassFormModalProps = DisclosureType & {
+    onRefetch: (
+        options?: RefetchOptions,
+    ) => Promise<QueryObserverResult<StudentListResponse>>
+}
 
 export const ClassFormModal = ({
     isOpen,
     toggleOpen,
     id: studentId,
+    onRefetch,
 }: ClassFormModalProps) => {
     const { createOrUpdate, formMethods } = useStudentForm(
         studentId,
         toggleOpen,
+        onRefetch,
     )
     const {
         reset,

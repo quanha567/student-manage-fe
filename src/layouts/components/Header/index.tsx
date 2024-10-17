@@ -2,7 +2,6 @@ import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { FaChevronRight, FaUser } from 'react-icons/fa6'
-import { IoMdSettings } from 'react-icons/io'
 import { IoLogOut } from 'react-icons/io5'
 
 import { Popover } from 'antd'
@@ -10,12 +9,15 @@ import { Popover } from 'antd'
 import { LogoImage } from '@/assets'
 import { CustomImage } from '@/components'
 import { LOCAL_STORAGES, PAGE_PATHS } from '@/constants'
-import { useAppSelector } from '@/hooks'
+import { useAppSelector, useRole } from '@/hooks'
 import { selectCurrentUser } from '@/redux/slices'
 
 export const Header = () => {
-    const { student, role } = useAppSelector(selectCurrentUser)
     const navigate = useNavigate()
+
+    const { student, role, teacher, email } = useAppSelector(selectCurrentUser)
+
+    const { isAdminRole } = useRole()
 
     const handleLogout = useCallback(() => {
         localStorage.setItem(LOCAL_STORAGES.ACCESS_TOKEN, '')
@@ -46,7 +48,7 @@ export const Header = () => {
                         <div className="flex w-72 flex-col items-center">
                             <div className="flex w-full items-center gap-4 rounded-lg p-2 drop-shadow">
                                 <CustomImage
-                                    src={student?.avatar}
+                                    src={student?.avatar ?? teacher?.avatar}
                                     alt={student?.fullName}
                                     className="aspect-square object-cover"
                                     containerClass="overflow-hidden rounded-full"
@@ -55,34 +57,33 @@ export const Header = () => {
                                     preview={false}
                                 />
                                 <div>
-                                    <p className="text-base font-bold">
-                                        {student?.fullName}
+                                    <p className="line-clamp-1 text-base font-bold">
+                                        {student?.fullName ??
+                                            teacher?.fullName ??
+                                            'Admin'}
                                     </p>
-                                    <p>{student?.email}</p>
+                                    <p className="line-clamp-1">
+                                        {student?.email ??
+                                            teacher?.email ??
+                                            email}
+                                    </p>
                                 </div>
                             </div>
                             <div className="mt-2 w-full">
-                                <div
-                                    onClick={viewMyProfile}
-                                    className="flex cursor-pointer items-center gap-2 rounded-lg p-2 text-base transition-all hover:bg-zinc-100"
-                                >
-                                    <div className="flex size-10 items-center justify-center rounded-full bg-zinc-200">
-                                        <FaUser className="size-5" />
+                                {!isAdminRole && (
+                                    <div
+                                        onClick={viewMyProfile}
+                                        className="flex cursor-pointer items-center gap-2 rounded-lg p-2 text-base transition-all hover:bg-zinc-100"
+                                    >
+                                        <div className="flex size-10 items-center justify-center rounded-full bg-zinc-200">
+                                            <FaUser className="size-5" />
+                                        </div>
+                                        <span className="flex-1 font-bold">
+                                            Hồ sơ của tôi
+                                        </span>
+                                        <FaChevronRight />
                                     </div>
-                                    <span className="flex-1 font-bold">
-                                        Tài khoản
-                                    </span>
-                                    <FaChevronRight />
-                                </div>{' '}
-                                <div className="flex cursor-pointer items-center gap-2 rounded-lg p-2 text-base transition-all hover:bg-zinc-100">
-                                    <div className="flex size-10 items-center justify-center rounded-full bg-zinc-200">
-                                        <IoMdSettings className="size-6" />
-                                    </div>
-                                    <span className="flex-1 font-bold">
-                                        Cài đặt
-                                    </span>
-                                    <FaChevronRight />
-                                </div>
+                                )}
                                 <div
                                     onClick={handleLogout}
                                     className="flex cursor-pointer items-center gap-2 rounded-lg p-2 text-base transition-all hover:bg-zinc-100"
@@ -98,8 +99,8 @@ export const Header = () => {
                 >
                     <div className="flex cursor-pointer flex-row-reverse items-center gap-1 rounded-lg px-3 py-1 hover:bg-zinc-100">
                         <CustomImage
-                            src={student?.avatar}
-                            alt={student?.fullName}
+                            src={student?.avatar ?? teacher?.avatar}
+                            alt={student?.fullName ?? teacher?.fullName}
                             className="aspect-square object-cover"
                             containerClass="overflow-hidden rounded-full"
                             size="thumbnail"
@@ -108,7 +109,7 @@ export const Header = () => {
                         />
                         <div className="flex flex-col items-end">
                             <p className="font-bold leading-none">
-                                {student?.fullName}
+                                {student?.fullName ?? teacher?.fullName}
                             </p>
                             <p className="mt-0.5 leading-none">
                                 {role?.name ??

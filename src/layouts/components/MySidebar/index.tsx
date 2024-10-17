@@ -2,12 +2,12 @@ import { ReactNode, useMemo, useState } from 'react'
 import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar'
 import { Link, useLocation } from 'react-router-dom'
 
-import { AiFillProduct } from 'react-icons/ai'
 import {
     FaBook,
     FaCalendarDay,
     FaListCheck,
     FaNoteSticky,
+    FaUser,
 } from 'react-icons/fa6'
 import { GiPieChart } from 'react-icons/gi'
 import { HiRectangleGroup } from 'react-icons/hi2'
@@ -39,6 +39,13 @@ const sideBarMenus: MenuItemType[] = [
         path: PAGE_PATHS.DASHBOARD,
         role: [Role.ADMIN],
     },
+
+    {
+        label: 'Hồ sơ của tôi',
+        icon: <FaUser className="size-6" />,
+        path: PAGE_PATHS.MY_PROFILE,
+        role: [Role.TEACHER],
+    },
     {
         label: 'Lớp học',
         icon: <MdClass className="size-6" />,
@@ -46,7 +53,7 @@ const sideBarMenus: MenuItemType[] = [
         role: [Role.ADMIN],
     },
     {
-        label: 'Giáo viên',
+        label: 'Giảng viên',
         icon: <PiChalkboardTeacherFill className="size-6" />,
         path: PAGE_PATHS.TEACHER_LIST,
         role: [Role.ADMIN],
@@ -61,7 +68,7 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Môn học',
         icon: <FaBook className="size-5" />,
         path: PAGE_PATHS.SUBJECT_LIST,
-        role: [Role.ADMIN],
+        role: [Role.ADMIN, Role.TEACHER],
     },
     {
         label: 'Đề cương',
@@ -76,6 +83,12 @@ const sideBarMenus: MenuItemType[] = [
         role: [Role.ADMIN],
     },
     {
+        label: 'Học kỳ',
+        icon: <FaCalendarDay className="size-6" />,
+        path: PAGE_PATHS.SEMESTER_LIST,
+        role: [Role.ADMIN],
+    },
+    {
         label: 'Ghi danh',
         icon: <FaListCheck className="size-6" />,
         role: [Role.ADMIN],
@@ -84,29 +97,26 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Kiểm tra, thi',
         icon: <FaNoteSticky className="size-6" />,
         path: PAGE_PATHS.EXAM_LIST,
-        role: [Role.ADMIN],
+        role: [Role.ADMIN, Role.TEACHER],
     },
     {
         label: 'Đăng ký học phần',
         icon: <IoIosAddCircle className="size-6" />,
         path: PAGE_PATHS.REGISTER_COURSE,
-        role: [Role.STUDENT],
-    },
-    {
-        label: 'Kết quả thi',
-        icon: <PiExamFill className="size-6" />,
         role: [Role.ADMIN],
     },
     {
-        label: 'Học kỳ',
-        icon: <FaCalendarDay className="size-6" />,
-        path: PAGE_PATHS.SEMESTER_LIST,
+        label: 'Quản lý điểm',
+        icon: <PiExamFill className="size-6" />,
+        path: PAGE_PATHS.MANAGE_POINT,
         role: [Role.ADMIN],
     },
 ]
 
 export const MySidebar = () => {
     const { pathname } = useLocation()
+
+    const [isCollapseSidebar, setIsCollapseSidebar] = useState<boolean>(false)
 
     const { isAdminRole, isStudentRole, isTeacherRole } = useRole()
 
@@ -129,8 +139,6 @@ export const MySidebar = () => {
                 return []
         }
     }, [isAdminRole, isStudentRole, isTeacherRole])
-
-    const [isCollapseSidebar, setIsCollapseSidebar] = useState<boolean>(false)
 
     const toggleCollapse = () => setIsCollapseSidebar(!isCollapseSidebar)
 

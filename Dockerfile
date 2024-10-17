@@ -1,43 +1,13 @@
-# Specify the base image
-FROM node:18-alpine as builder
+FROM node:20-alpine as build
 
-ENV NODE_ENV staging
-ENV GENERATE_SOURCEMAP=false
-ENV NODE_OPTIONS=--max-old-space-size=16384
-
-# Set the working directory to /app
-WORKDIR /pages
-
-# Copy the package.json and package-lock.json files to the container
-COPY package.json ./
-COPY yarn.lock .
-
-# Install dependencies
-# RUN yarn install --production
-
-RUN yarn install --frozen-lockfile
-
-# RUN yarn install serve
-RUN yarn cache clean
-
-# Copy the rest of the application code to the container
+WORKDIR /app
+COPY package*.json ./
+RUN yarn install
 COPY . .
-
-# build app
 RUN yarn build
 
-# Bundle static assets with nginx
-FROM nginx:1.25.4-alpine as production
-ENV NODE_ENV production
-
-# Copy built assets from builder
-COPY --from=builder /pages/dist /usr/share/nginx/student-manage-website
-
-# Add your nginx.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port
+FROM nginx:stable-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 1311
-
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]

@@ -103,13 +103,14 @@ const CoursesPage = () => {
         searchText = '',
     } = params
 
-    const { data, isLoading, isPlaceholderData, isFetching } = useGetCourses({
-        pageIndex: Number(pageIndex),
-        pageSize: Number(pageSize),
-        asc: String(asc),
-        searchText: String(searchText),
-        sortBy: String(sortBy),
-    })
+    const { data, isLoading, isPlaceholderData, isFetching, refetch } =
+        useGetCourses({
+            pageIndex: Number(pageIndex),
+            pageSize: Number(pageSize),
+            asc: String(asc),
+            searchText: String(searchText),
+            sortBy: String(sortBy),
+        })
 
     const handleDeleteCourse = useCallback(
         async (deleteIds: number[]) => {

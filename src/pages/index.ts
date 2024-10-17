@@ -13,3 +13,6 @@ export const TeacherPage = lazy(() => import('./TeacherPage'))
 export const RegisterCoursePage = lazy(() => import('./RegisterCoursePage'))
 export const SemesterPage = lazy(() => import('./SemesterPage'))
 export const ExamPage = lazy(() => import('./ExamPage'))
+export const ManageStudentPointPage = lazy(
+    () => import('./ManageStudentPointPage'),
+)
