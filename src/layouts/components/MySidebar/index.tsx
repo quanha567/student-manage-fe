@@ -44,7 +44,7 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Hồ sơ của tôi',
         icon: <FaUser className="size-6" />,
         path: PAGE_PATHS.MY_PROFILE,
-        role: [Role.TEACHER],
+        role: [Role.TEACHER, Role.STUDENT],
     },
     {
         label: 'Lớp học',
@@ -88,11 +88,11 @@ const sideBarMenus: MenuItemType[] = [
         path: PAGE_PATHS.SEMESTER_LIST,
         role: [Role.ADMIN],
     },
-    {
-        label: 'Ghi danh',
-        icon: <FaListCheck className="size-6" />,
-        role: [Role.ADMIN],
-    },
+    // {
+    //     label: 'Ghi danh',
+    //     icon: <FaListCheck className="size-6" />,
+    //     role: [Role.ADMIN],
+    // },
     {
         label: 'Kiểm tra, thi',
         icon: <FaNoteSticky className="size-6" />,
@@ -103,13 +103,18 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Đăng ký học phần',
         icon: <IoIosAddCircle className="size-6" />,
         path: PAGE_PATHS.REGISTER_COURSE,
-        role: [Role.ADMIN],
+        role: [Role.STUDENT],
     },
     {
         label: 'Quản lý điểm',
         icon: <PiExamFill className="size-6" />,
         path: PAGE_PATHS.MANAGE_POINT,
         role: [Role.ADMIN],
+    },
+    {
+        label: 'Kết quả học tập',
+        icon: <PiExamFill className="size-6" />,
+        role: [Role.STUDENT],
     },
 ]
 
