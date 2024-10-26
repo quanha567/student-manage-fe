@@ -10,13 +10,13 @@ import { App } from 'antd'
 
 import { LOCAL_STORAGES, PAGE_PATHS } from '@/constants'
 import { useAppDispatch } from '@/hooks'
-import { LoginRequestModel } from '@/models'
+import { LoginRequestModel, UserRole } from '@/models'
 import { setUser } from '@/redux'
-import { authService, studentService, userService } from '@/services'
+import { authService, userService } from '@/services'
 
 const formDefaultValues: LoginRequestModel = {
-    identifier: '0000000001@teacher.vlu.edu.vn',
-    password: '000000',
+    identifier: 'admin',
+    password: '123456',
 }
 
 const formLoginValidate: ObjectSchema<LoginRequestModel> = object().shape({
@@ -49,23 +49,17 @@ export const useFormLogin = () => {
 
                 localStorage.setItem(LOCAL_STORAGES.ACCESS_TOKEN, jwt)
 
-                let userInfo = await userService.getInfo()
-                if (userInfo.student?.id) {
-                    const studentInfo = await studentService.get(
-                        userInfo.student.id,
-                    )
-
-                    userInfo = {
-                        ...userInfo,
-                        student: studentInfo.data?.attributes,
-                    }
-                }
+                const userInfo = await userService.getInfo()
 
                 dispatch(setUser(userInfo))
-                navigate(PAGE_PATHS.DASHBOARD)
+
+                if (userInfo.role?.type === UserRole.AUTHENTICATED)
+                    navigate(PAGE_PATHS.DASHBOARD)
+                else navigate(PAGE_PATHS.MY_PROFILE)
+
                 notification.success({
                     message: 'Đăng nhập thành công!',
-                    description: `Xin chào ${userInfo.student?.fullName ?? ''}! Chào mừng bạn trở lại.`,
+                    description: `Xin chào ${userInfo.student?.fullName ?? userInfo.teacher?.fullName ?? 'Admin'}! Chào mừng bạn trở lại.`,
                 })
             } catch (err: unknown) {
                 console.log('err', err)

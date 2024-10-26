@@ -2,13 +2,7 @@ import { ReactNode, useMemo, useState } from 'react'
 import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar'
 import { Link, useLocation } from 'react-router-dom'
 
-import {
-    FaBook,
-    FaCalendarDay,
-    FaListCheck,
-    FaNoteSticky,
-    FaUser,
-} from 'react-icons/fa6'
+import { FaBook, FaCalendarDay, FaNoteSticky, FaUser } from 'react-icons/fa6'
 import { GiPieChart } from 'react-icons/gi'
 import { HiAcademicCap, HiRectangleGroup } from 'react-icons/hi2'
 import { IoIosAddCircle, IoIosArrowBack } from 'react-icons/io'
@@ -44,7 +38,7 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Hồ sơ của tôi',
         icon: <FaUser className="size-6" />,
         path: PAGE_PATHS.MY_PROFILE,
-        role: [Role.TEACHER],
+        role: [Role.TEACHER, Role.STUDENT],
     },
     {
         label: 'Lớp học',
@@ -95,11 +89,6 @@ const sideBarMenus: MenuItemType[] = [
         role: [Role.ADMIN],
     },
     {
-        label: 'Ghi danh',
-        icon: <FaListCheck className="size-6" />,
-        role: [Role.ADMIN],
-    },
-    {
         label: 'Kiểm tra, thi',
         icon: <FaNoteSticky className="size-6" />,
         path: PAGE_PATHS.EXAM_LIST,
@@ -109,13 +98,18 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Đăng ký học phần',
         icon: <IoIosAddCircle className="size-6" />,
         path: PAGE_PATHS.REGISTER_COURSE,
-        role: [Role.ADMIN],
+        role: [Role.STUDENT],
     },
     {
         label: 'Quản lý điểm',
         icon: <PiExamFill className="size-6" />,
         path: PAGE_PATHS.MANAGE_POINT,
         role: [Role.ADMIN],
+    },
+    {
+        label: 'Kết quả học tập',
+        icon: <PiExamFill className="size-6" />,
+        role: [Role.STUDENT],
     },
 ]
 
