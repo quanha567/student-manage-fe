@@ -1,3 +1,4 @@
+export * from './academicYearQueries'
 export * from './classQueries'
 export * from './courseQueries'
 export * from './departmentQueries'

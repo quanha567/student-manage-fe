@@ -4,6 +4,7 @@ import App from '@/App'
 import { PAGE_PATHS } from '@/constants'
 import { AuthGuard } from '@/guards'
 import {
+    AcademicYearPage,
     ClassPage,
     CoursesPage,
     DashboardPage,
@@ -80,6 +81,10 @@ export const privateRouters = createBrowserRouter([
             {
                 path: PAGE_PATHS.MANAGE_POINT,
                 element: <ManageStudentPointPage />,
+            },
+            {
+                path: PAGE_PATHS.ACADEMIC_YEAR,
+                element: <AcademicYearPage />,
             },
         ],
     },

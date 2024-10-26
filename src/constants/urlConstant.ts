@@ -2,6 +2,7 @@ import { ENV_CONFIGS } from '@/configs'
 import { createApiURL } from '@/utils'
 
 export enum PAGE_PATHS {
+    ACADEMIC_YEAR = '/academic_year',
     CLASS_LIST = '/classes',
     COURSES_LIST = '/courses',
     DASHBOARD = '/',
@@ -40,6 +41,8 @@ export const API_URL = {
     // Student api url
     STUDENT_LOGIN: createApiURL('students/login'),
     STUDENTS: 'students',
+    STUDENT_DOWNLOAD_FILE: createApiURL('students/download-example'),
+    STUDENT_IMPORT_FILE: createApiURL('students/import'),
     studentWithId: (id: number) => `students/${String(id)}`,
 
     // Student api url
@@ -76,6 +79,10 @@ export const API_URL = {
     // SEMESTER api url
     EXAMS: 'exams',
     examWithId: (id: number) => `exams/${String(id)}`,
+
+    // SEMESTER api url
+    ACADEMIC_YEAR: 'academic-years',
+    academicYearWithId: (id: number) => `academic-years/${String(id)}`,
 
     SUMMARY_REPORT: 'summary-report',
 }

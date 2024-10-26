@@ -1,7 +1,9 @@
-import { useCallback } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import { HiMiniPhoto } from 'react-icons/hi2'
 import { IoMdAdd } from 'react-icons/io'
+import { PiMicrosoftExcelLogoFill } from 'react-icons/pi'
+import { FaDownload } from 'react-icons/fa'
 
 import { App } from 'antd'
 
@@ -11,6 +13,7 @@ import {
     CustomImage,
     CustomTable,
     CustomTableColumnType,
+    globalLoading,
 } from '@/components'
 import { GENDERS, QUERY_KEYS } from '@/constants'
 import { useDisclosure, useSearch } from '@/hooks'
@@ -107,6 +110,8 @@ const StudentPage = () => {
 
     const [params] = useSearch()
 
+    const fileUploadInputRef = useRef<HTMLInputElement>(null)
+
     const {
         pageSize = 10,
         pageIndex = 1,
@@ -146,6 +151,55 @@ const StudentPage = () => {
         [notification],
     )
 
+    const handleDownloadExampleFile = async () => {
+        try {
+            globalLoading.current?.show()
+            await studentService.downloadExampleFile()
+            notification.success({
+                message: 'Tải file danh sách sinh viên mẫu thành công!',
+            })
+        } catch (err) {
+            console.log('handleDownloadExampleFile  err:', err)
+            notification.error({
+                message: 'Có lỗi xảy ra vui lòng thử lại sau!',
+            })
+        } finally {
+            globalLoading.current?.close()
+        }
+    }
+
+    const handleImportFile = async (file: File | null) => {
+        if (!file) return
+
+        try {
+            globalLoading.current?.show()
+            const formData = new FormData()
+
+            formData.append('files', file)
+
+            await studentService.importFile(formData)
+            await refetch()
+            notification.success({
+                message: 'Thêm danh sách sinh viên thành công!',
+            })
+        } catch (err) {
+            console.log('handleDownloadExampleFile  err:', err)
+            notification.error({
+                message: 'Có lỗi xảy ra vui lòng thử lại sau!',
+            })
+        } finally {
+            globalLoading.current?.close()
+        }
+    }
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            void handleImportFile(event.target.files[0])
+            event.target.files = null
+            event.target.value = ''
+        }
+    }
+
     return (
         <div>
             <Breadcrumb
@@ -156,14 +210,39 @@ const StudentPage = () => {
                     },
                 ]}
                 renderRight={
-                    <Button
-                        onClick={() => toggleOpen()}
-                        className="ml-auto flex items-center"
-                    >
-                        <IoMdAdd />
-                        Thêm
-                    </Button>
+                    <div className="flex items-center gap-2">
+                        <Button
+                            onClick={() => toggleOpen()}
+                            className="ml-auto flex items-center"
+                        >
+                            <IoMdAdd />
+                            Thêm
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                fileUploadInputRef.current?.click()
+                            }}
+                            className="ml-auto flex items-center"
+                        >
+                            <PiMicrosoftExcelLogoFill />
+                            Thêm từ Excel
+                        </Button>
+                        <Button
+                            onClick={handleDownloadExampleFile}
+                            className="ml-auto flex items-center"
+                        >
+                            <FaDownload />
+                            Tải file dữ liệu mẫu
+                        </Button>
+                    </div>
                 }
+            />
+            <input
+                ref={fileUploadInputRef}
+                type="file"
+                accept=".xlsx"
+                className="hidden"
+                onChange={handleFileChange}
             />
             <CustomTable
                 isPagination

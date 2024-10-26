@@ -1,13 +1,11 @@
-import { DepartmentChart, NumberReport } from './components'
+import { DepartmentChart, NumberReport, SexChart } from './components'
 
 const DashboardPage = () => {
     return (
         <div className="">
             <NumberReport />
-            <div className="mt-4 grid grid-cols-2 gap-4">
-                <DepartmentChart />
-                <DepartmentChart />
-                <DepartmentChart />
+            <div className="mt-4 grid gap-4 xl:grid-cols-2">
+                <SexChart />
                 <DepartmentChart />
             </div>
         </div>

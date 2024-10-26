@@ -16,3 +16,4 @@ export const ExamPage = lazy(() => import('./ExamPage'))
 export const ManageStudentPointPage = lazy(
     () => import('./ManageStudentPointPage'),
 )
+export const AcademicYearPage = lazy(() => import('./AcademicYearPage'))

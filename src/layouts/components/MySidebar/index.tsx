@@ -10,7 +10,7 @@ import {
     FaUser,
 } from 'react-icons/fa6'
 import { GiPieChart } from 'react-icons/gi'
-import { HiRectangleGroup } from 'react-icons/hi2'
+import { HiAcademicCap, HiRectangleGroup } from 'react-icons/hi2'
 import { IoIosAddCircle, IoIosArrowBack } from 'react-icons/io'
 import { IoDocumentText } from 'react-icons/io5'
 import { MdClass } from 'react-icons/md'
@@ -86,6 +86,12 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Học kỳ',
         icon: <FaCalendarDay className="size-6" />,
         path: PAGE_PATHS.SEMESTER_LIST,
+        role: [Role.ADMIN],
+    },
+    {
+        label: 'Niên khóa',
+        icon: <HiAcademicCap className="size-6" />,
+        path: PAGE_PATHS.ACADEMIC_YEAR,
         role: [Role.ADMIN],
     },
     {

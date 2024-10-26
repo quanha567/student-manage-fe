@@ -14,7 +14,11 @@ import {
     FormTextArea,
 } from '@/components'
 import { GENDER_OPTIONS } from '@/constants'
-import { useClassOptions, useGetStudentDetail } from '@/queries'
+import {
+    useAcademicYearOptions,
+    useClassOptions,
+    useGetStudentDetail,
+} from '@/queries'
 import { StudentListResponse } from '@/services'
 import { DisclosureType } from '@/types'
 import { getPreviewUrl } from '@/utils'
@@ -53,6 +57,14 @@ export const ClassFormModal = ({
         setClassSearchText,
     } = useClassOptions()
 
+    const {
+        academicYearOptions,
+        academicYearSearchText,
+        isLoadingAcademicYearOptions,
+        loadMoreAcademicYearOptions,
+        setAcademicYearSearchText,
+    } = useAcademicYearOptions()
+
     useEffect(() => {
         if (studentId && data && isOpen) {
             reset({
@@ -60,6 +72,7 @@ export const ClassFormModal = ({
                     ...data.data?.attributes,
                     avatar: getPreviewUrl(data.data?.attributes?.avatar),
                     classId: data.data?.attributes?.class?.data?.id,
+                    academicYear: data.data?.attributes?.academicYear?.data?.id,
                     dateOfBirth: data.data?.attributes?.dateOfBirth
                         ? dayjs(data.data.attributes.dateOfBirth)
                         : undefined,
@@ -141,6 +154,16 @@ export const ClassFormModal = ({
                         name="data.gender"
                         options={GENDER_OPTIONS}
                         placeholder="- Chọn giới tính -"
+                    />
+                    <FormSelect
+                        label="Niên khóa"
+                        name="data.academicYear"
+                        options={academicYearOptions}
+                        loading={isLoadingAcademicYearOptions}
+                        onSearch={setAcademicYearSearchText}
+                        searchValue={academicYearSearchText}
+                        onPopupScroll={loadMoreAcademicYearOptions}
+                        placeholder="- Chọn niên khóa -"
                     />
                     <FormDatePicker
                         label="Ngày sinh"

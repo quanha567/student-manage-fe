@@ -1,3 +1,4 @@
+export * from './academicYearModel'
 export * from './authModel'
 export * from './baseModel'
 export * from './classModel'

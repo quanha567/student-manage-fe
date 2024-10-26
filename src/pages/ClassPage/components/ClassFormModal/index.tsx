@@ -9,14 +9,21 @@ import { DisclosureType } from '@/types'
 
 import { useClassForm } from './useClassForm'
 
-type ClassFormModalProps = DisclosureType
+type ClassFormModalProps = DisclosureType & {
+    onRefetch: () => Promise<any>
+}
 
 export const ClassFormModal = ({
     isOpen,
     toggleOpen,
     id: classId,
+    onRefetch,
 }: ClassFormModalProps) => {
-    const { createOrUpdate, formMethods } = useClassForm(classId, toggleOpen)
+    const { createOrUpdate, formMethods } = useClassForm(
+        classId,
+        toggleOpen,
+        onRefetch,
+    )
 
     const {
         reset,

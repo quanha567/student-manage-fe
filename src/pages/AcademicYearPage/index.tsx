@@ -11,17 +11,17 @@ import {
     CustomTableColumnType,
 } from '@/components'
 import { useDisclosure, useSearch } from '@/hooks'
-import { ClassModel, DepartmentModel } from '@/models'
-import { useGetClasses } from '@/queries'
-import { classService } from '@/services'
+import { AcademicYearModel } from '@/models'
+import { useGetAcademicYears } from '@/queries'
+import { academicYearService } from '@/services'
 import { Data } from '@/types'
 import { formatDateTime } from '@/utils'
 
-import { ClassFormModal } from './components'
+import { AcademicYearFormModal } from './components'
 
-const PageName = 'lớp học'
+const PageName = 'Niên khóa'
 
-const columns: CustomTableColumnType<Data<ClassModel>> = [
+const columns: CustomTableColumnType<Data<AcademicYearModel>> = [
     {
         title: 'ID',
         dataIndex: 'id',
@@ -31,12 +31,11 @@ const columns: CustomTableColumnType<Data<ClassModel>> = [
         sorter: true,
         display: true,
     },
-
     {
         title: `Tên ${PageName}`,
         dataIndex: 'attributes',
-        key: 'className',
-        render: ({ className }: ClassModel) => className,
+        key: 'name',
+        render: ({ name }: AcademicYearModel) => name,
         sorter: true,
         display: true,
     },
@@ -44,7 +43,7 @@ const columns: CustomTableColumnType<Data<ClassModel>> = [
         title: 'Thời gian tạo',
         dataIndex: 'attributes',
         key: 'createdAt',
-        render: ({ createdAt }: ClassModel) =>
+        render: ({ createdAt }: AcademicYearModel) =>
             createdAt ? formatDateTime(createdAt) : '___',
         sorter: true,
         display: true,
@@ -53,14 +52,14 @@ const columns: CustomTableColumnType<Data<ClassModel>> = [
         title: 'Thời gian cập nhật',
         dataIndex: 'attributes',
         key: 'updatedAt',
-        render: ({ updatedAt }: ClassModel) =>
+        render: ({ updatedAt }: AcademicYearModel) =>
             updatedAt ? formatDateTime(updatedAt) : '___',
         sorter: true,
         display: true,
     },
 ]
 
-const ClassPage = () => {
+const AcademicYearPage = () => {
     const { isOpen, toggleOpen, id } = useDisclosure()
 
     const { notification } = App.useApp()
@@ -75,11 +74,11 @@ const ClassPage = () => {
     } = params
 
     const {
-        data: classs,
-        isLoading: isLoadingDepartments,
-        isPlaceholderData: isPlaceholderDepartments,
-        refetch,
-    } = useGetClasses({
+        data: academicYears,
+        isLoading: isLoadingAcademicYears,
+        isPlaceholderData: isPlaceholderAcademicYears,
+        refetch: refetchAcademicYears,
+    } = useGetAcademicYears({
         pageIndex: Number(pageIndex),
         pageSize: Number(pageSize),
         asc: String(asc),
@@ -87,20 +86,20 @@ const ClassPage = () => {
         sortBy: String(sortBy),
     })
 
-    const handleDeleteDepartment = useCallback(
-        async (deleteIds?: number[]) => {
-            if (!deleteIds || deleteIds.length === 0) return
+    const handleDeleteAcademicYear = useCallback(
+        async (deleteIds: number[]) => {
+            const firstId = deleteIds[0]
+            if (!firstId) return
 
             try {
-                await Promise.all(
-                    deleteIds.map((id) => classService.delete(id)),
-                )
-                await await refetch()
+                const academicYearDeleted =
+                    await academicYearService.delete(firstId)
+                await refetchAcademicYears()
                 notification.success({
-                    message: `Xóa dữ liệu thành công!`,
+                    message: `Xóa ${PageName} ${academicYearDeleted.data?.attributes?.name ?? ''} thành công!`,
                 })
             } catch (err: unknown) {
-                console.log('Department delete', err)
+                console.log('AcademicYear delete', err)
             }
         },
         [notification],
@@ -130,9 +129,9 @@ const ClassPage = () => {
                 isPagination
                 tableName={PageName}
                 columns={columns}
-                dataSource={classs?.data}
-                loading={isLoadingDepartments || isPlaceholderDepartments}
-                totalElement={classs?.meta?.pagination?.total}
+                dataSource={academicYears?.data}
+                loading={isLoadingAcademicYears || isPlaceholderAcademicYears}
+                totalElement={academicYears?.meta?.pagination?.total}
                 bordered
                 searchInputProps={{
                     isDisplay: true,
@@ -141,23 +140,23 @@ const ClassPage = () => {
                 actionButtons={{
                     editProps: {
                         isDisplay: true,
-                        onClick: (record: Data<DepartmentModel>) =>
+                        onClick: (record: Data<AcademicYearModel>) =>
                             record.id && toggleOpen(String(record.id)),
                     },
                     deleteProps: {
                         isDisplay: true,
                     },
                 }}
-                onDelete={handleDeleteDepartment}
+                onDelete={handleDeleteAcademicYear}
             />
-            <ClassFormModal
+            <AcademicYearFormModal
                 id={id}
                 isOpen={isOpen}
                 toggleOpen={toggleOpen}
-                onRefetch={refetch}
+                onRefetch={refetchAcademicYears}
             />
         </div>
     )
 }
 
-export default ClassPage
+export default AcademicYearPage

@@ -9,7 +9,10 @@ import {
 } from '@/models'
 import { SingleData } from '@/types'
 
+import { AcademicYearModel } from './academicYearModel'
+
 export interface StudentModel extends BaseModel {
+    academicYear?: SingleData<AcademicYearModel>
     address?: string
     avatar?: ImageModel
     class?: SingleData<ClassModel>

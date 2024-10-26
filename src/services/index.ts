@@ -1,3 +1,4 @@
+export * from './academicYearService'
 export * from './authService'
 export * from './classService'
 export * from './courseService'
