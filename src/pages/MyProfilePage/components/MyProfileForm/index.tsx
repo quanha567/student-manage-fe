@@ -17,7 +17,6 @@ import { TeacherForm } from '../TeacherForm'
 export const MyProfileForm = () => {
     const user = useAppSelector(selectCurrentUser)
     const isStudent = user.role?.type === UserRole.STUDENT
-    const isTeacher = user.role?.type === UserRole.TEACHER
 
     const formMethods = useForm<StudentModel | TeacherModel>()
 
