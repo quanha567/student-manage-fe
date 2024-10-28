@@ -13,6 +13,7 @@ import {
     LoginPage,
     ManageStudentPointPage,
     MyProfilePage,
+    MyScorePage,
     RegisterCoursePage,
     SemesterPage,
     StudentPage,
@@ -85,6 +86,10 @@ export const privateRouters = createBrowserRouter([
             {
                 path: PAGE_PATHS.ACADEMIC_YEAR,
                 element: <AcademicYearPage />,
+            },
+            {
+                path: PAGE_PATHS.MY_SCORE,
+                element: <MyScorePage />,
             },
         ],
     },

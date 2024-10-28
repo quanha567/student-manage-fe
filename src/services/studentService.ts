@@ -1,3 +1,5 @@
+import fileDownload from 'js-file-download'
+
 import { API_URL } from '@/constants'
 import { StudentModel, StudentRequestModel } from '@/models'
 import {
@@ -7,7 +9,7 @@ import {
     SearchParams,
     SingleMetaData,
 } from '@/types'
-import fileDownload from 'js-file-download'
+
 import { axiosService } from './axiosService'
 
 type StudentCreateResponse = CreateResponse<StudentModel>
@@ -85,6 +87,16 @@ export const studentService = {
                 fileDownload(res.data, 'student-import-example.xlsx')
                 return res.data
             })
+            .catch((err: unknown) => {
+                throw err
+            })
+    },
+    getMyScore: (id: number): Promise<Blob> => {
+        return axiosService()<Blob>({
+            url: API_URL.getMyScore(id),
+            method: 'GET',
+        })
+            .then((res) => res.data)
             .catch((err: unknown) => {
                 throw err
             })

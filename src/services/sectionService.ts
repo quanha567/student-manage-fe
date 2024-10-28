@@ -1,5 +1,9 @@
 import { API_URL } from '@/constants'
-import { SectionCreateRequestModel, SectionModel } from '@/models'
+import {
+    SectionCreateRequestModel,
+    SectionModel,
+    SectionPointResponse,
+} from '@/models'
 import {
     CreateRequest,
     CreateResponse,
@@ -32,7 +36,7 @@ export const sectionService = {
             url: API_URL.sectionWithId(id),
             method: 'GET',
             params: {
-                populate: '*',
+                populate: 'deep',
             },
         })
             .then((res) => res.data)
@@ -69,6 +73,30 @@ export const sectionService = {
         return axiosService()<SectionDetailResponse>({
             url: API_URL.sectionWithId(id),
             method: 'DELETE',
+        })
+            .then((res) => res.data)
+            .catch((err: unknown) => {
+                throw err
+            })
+    },
+    getSectionDetail: (id: number): Promise<SectionPointResponse> => {
+        return axiosService()<SectionPointResponse>({
+            url: API_URL.sectionDetail(id),
+            method: 'GET',
+        })
+            .then((res) => res.data)
+            .catch((err: unknown) => {
+                throw err
+            })
+    },
+    importScore: (
+        data: SectionPointResponse,
+        id: number,
+    ): Promise<SectionCreateResponse> => {
+        return axiosService()<SectionCreateResponse>({
+            url: API_URL.importScore(id),
+            method: 'POST',
+            data,
         })
             .then((res) => res.data)
             .catch((err: unknown) => {

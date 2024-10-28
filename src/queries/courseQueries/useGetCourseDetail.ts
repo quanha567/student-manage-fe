@@ -7,6 +7,11 @@ export const useGetCourseDetail = (id?: number) => {
     return useQuery<CourseDetailResponse, Error, CourseDetailResponse>({
         queryKey: [QUERY_KEYS.COURSE, id],
         enabled: Boolean(id),
-        queryFn: () => courseService.get(Number(id)),
+        queryFn: async () => {
+            if (id) {
+                return await courseService.get(Number(id))
+            }
+            return null
+        },
     })
 }

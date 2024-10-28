@@ -11,6 +11,7 @@ export enum PAGE_PATHS {
     LOGIN = '/login',
     MANAGE_POINT = '/manage-point',
     MY_PROFILE = '/my-profile',
+    MY_SCORE = '/my-score',
     REGISTER_COURSE = '/register-course',
     SEMESTER_LIST = '/semesters',
     STUDENT_LIST = '/students',
@@ -44,6 +45,7 @@ export const API_URL = {
     STUDENT_DOWNLOAD_FILE: createApiURL('students/download-example'),
     STUDENT_IMPORT_FILE: createApiURL('students/import'),
     studentWithId: (id: number) => `students/${String(id)}`,
+    getMyScore: (id: number) => `students/my-score/${String(id)}`,
 
     // Student api url
     TEACHERS: 'teachers',
@@ -67,6 +69,8 @@ export const API_URL = {
     // SECTION api url
     SECTIONS: 'sections',
     sectionWithId: (id: number) => `sections/${String(id)}`,
+    sectionDetail: (id: number) => `sections/get-point-detail/${String(id)}`,
+    importScore: (id: number) => `sections/input-point/${String(id)}`,
 
     // SECTION api url
     ENROLLMENTS: 'enrollments',

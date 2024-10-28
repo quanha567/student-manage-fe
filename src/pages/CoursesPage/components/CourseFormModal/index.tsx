@@ -165,7 +165,10 @@ export const CourseFormModal = ({
                                           )
                                         : undefined,
                                     endTime: schedule.endTime
-                                        ? dayjs(DATE_TIME_FORMAT.SHORT_TIME)
+                                        ? dayjs(
+                                              schedule.endTime,
+                                              DATE_TIME_FORMAT.SHORT_TIME,
+                                          )
                                         : undefined,
                                 }),
                             ),

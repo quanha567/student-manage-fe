@@ -4,6 +4,8 @@ import { SingleData } from '@/types'
 
 import { BaseModel } from './baseModel'
 import { CourseModel } from './courseModel'
+import { ExamModel } from './examModel'
+import { StudentModel } from './studentModel'
 import { TeacherModel } from './teacherModel'
 export interface SectionModel extends BaseModel {
     capacity?: number
@@ -26,4 +28,11 @@ export interface SectionSchedule {
     id?: number
     room?: string
     startTime?: string | Dayjs
+}
+
+type SectionPointData = StudentModel & Record<string, number | null>
+
+export interface SectionPointResponse {
+    data?: SectionPointData
+    exams?: ExamModel[]
 }

@@ -7,9 +7,7 @@ import { FaQuestion } from 'react-icons/fa6'
 
 import {
     App,
-    Badge,
     Button,
-    Calendar,
     CalendarProps,
     Card,
     Modal,
@@ -20,7 +18,6 @@ import {
 } from 'antd'
 import { TableColumnType } from 'antd/lib'
 
-import { ENROLLMENTS_STATUSES } from '@/constants'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { EnrollmentModel, EnrollmentStatus } from '@/models'
 import { getUserInfo, selectCurrentUser } from '@/redux'
@@ -146,19 +143,6 @@ export const CourseRegisteredCard = () => {
             render: ({ section }: EnrollmentModel) => section?.course?.credits,
         },
         {
-            key: 'status',
-            title: 'Trạng thái',
-            render: ({ status }: EnrollmentModel) =>
-                status ? (
-                    <Badge
-                        color={ENROLLMENTS_STATUSES[status].color}
-                        text={ENROLLMENTS_STATUSES[status].label}
-                    />
-                ) : (
-                    '---'
-                ),
-        },
-        {
             title: 'Hành động',
             key: 'status',
             align: 'center',
@@ -218,13 +202,6 @@ export const CourseRegisteredCard = () => {
                                     )}
                                 />
                             ),
-                        },
-                        {
-                            key: '2',
-                            label: (
-                                <p className="text-lg font-medium">Lịch học</p>
-                            ),
-                            children: <Calendar cellRender={cellRender} />,
                         },
                     ]}
                 />

@@ -11,6 +11,7 @@ export interface ExamModel extends BaseModel {
     examDate?: string
     examName?: string
     examResult?: ListData<ExamResultModel>
+    id?: number
     type?: ExamType
 }
 

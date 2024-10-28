@@ -104,12 +104,13 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Quản lý điểm',
         icon: <PiExamFill className="size-6" />,
         path: PAGE_PATHS.MANAGE_POINT,
-        role: [Role.ADMIN],
+        role: [Role.ADMIN, Role.TEACHER],
     },
     {
         label: 'Kết quả học tập',
         icon: <PiExamFill className="size-6" />,
         role: [Role.STUDENT],
+        path: PAGE_PATHS.MY_SCORE,
     },
 ]
 
