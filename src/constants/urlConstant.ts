@@ -85,4 +85,6 @@ export const API_URL = {
     academicYearWithId: (id: number) => `academic-years/${String(id)}`,
 
     SUMMARY_REPORT: 'summary-report',
+    GENDER_REPORT: 'gender-report',
+    NUMBER_STUDENT_REPORT: 'number-student-report',
 }

@@ -4,3 +4,10 @@ export interface SummaryReportResponse {
     studentCount?: number
     teacherCount?: number
 }
+
+export interface ChartReportResponse {
+    backgroundColor?: string[]
+    borderColor?: string[]
+    data?: number[]
+    labels?: string[]
+}

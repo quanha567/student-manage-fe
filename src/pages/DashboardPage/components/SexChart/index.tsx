@@ -1,33 +1,28 @@
-import { useEffect, useState } from 'react'
 import { Doughnut } from 'react-chartjs-2'
+
+import { useQuery } from '@tanstack/react-query'
 
 import { Card, Spin } from 'antd'
 
+import { QUERY_KEYS } from '@/constants'
+import { statisticService } from '@/services'
+
 export const SexChart = () => {
-    const random = (max: number) => Math.ceil(Math.random() * max)
-
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setIsLoading(false)
-        }, random(5000))
-
-        return () => {
-            clearInterval(timer)
-        }
-    }, [])
+    const { isLoading, data } = useQuery({
+        queryKey: [QUERY_KEYS.GENDER_REPORT],
+        queryFn: statisticService.genderReport,
+    })
 
     return (
         <Spin spinning={isLoading}>
             <Card>
                 <Doughnut
                     data={{
-                        labels: ['Nam', 'Nữ', 'Khác'],
+                        labels: data?.labels ?? [],
                         datasets: [
                             {
                                 label: 'Tỉ lệ',
-                                data: [3, 5, 2],
+                                data: data?.data ?? [],
                                 backgroundColor: [
                                     'rgb(255, 99, 132, 0.2)',
                                     'rgb(54, 162, 235, 0.2)',
