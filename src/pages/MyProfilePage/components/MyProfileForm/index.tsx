@@ -42,8 +42,8 @@ export const MyProfileForm = () => {
             <Card>
                 <div className="mx-auto mb-6 w-fit">
                     <CustomImage
-                        src={user.student?.avatar}
-                        alt={user.student?.fullName}
+                        src={user.student?.avatar ?? user.teacher?.avatar}
+                        alt={user.student?.fullName ?? user.teacher?.fullName}
                         className="aspect-square object-cover"
                         containerClass="overflow-hidden rounded-full"
                         size="thumbnail"

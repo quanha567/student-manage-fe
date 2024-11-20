@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { App, Button, Card, Empty, Select, Table } from 'antd'
 
-import { Breadcrumb, FormInputNumber } from '@/components'
+import { Breadcrumb, FormInput, FormInputNumber } from '@/components'
 import FormField from '@/components/Forms/FormField'
 import { QUERY_KEYS } from '@/constants'
 import { useAppSelector, useRole } from '@/hooks'
@@ -104,22 +104,89 @@ const ManageStudentPointPage = () => {
                     align: 'center',
                 },
                 {
+                    title: 'Mã sinh viên',
+                    dataIndex: 'studentCode',
+                },
+                {
                     title: 'Họ và tên',
                     dataIndex: 'fullName',
                 },
-                ...columns.map((column) => ({
-                    ...column,
-                    dataIndex: String(column.id),
-                    render: (_id: unknown, _record: unknown, index: number) => (
-                        <FormInputNumber
+                {
+                    title: 'Điểm QT',
+                    align: 'center',
+                    children: [
+                        {
+                            title: '40%',
+                            align: 'center',
+                            render: (_row, _record, index: number) => (
+                                <FormInput
+                                    name={`processScore.${String(index)}`}
+                                    size="small"
+                                    className="py-1"
+                                />
+                            ),
+                        },
+                    ],
+                },
+                {
+                    title: 'Điểm thi KT HP',
+                    align: 'center',
+                    children: [
+                        {
+                            title: '60%',
+                            align: 'center',
+                            render: (_row, _record, index: number) => (
+                                <FormInput
+                                    name={`finalScore.${String(index)}`}
+                                    size="small"
+                                    className="py-1"
+                                />
+                            ),
+                        },
+                    ],
+                },
+                {
+                    title: 'Điểm Tổng Kết',
+                    align: 'center',
+                    children: [
+                        {
+                            title: 'Hệ 10',
+                            align: 'center',
+                            render: (_row, _record, index: number) => (
+                                <FormInput
+                                    name={`finalScore10.${String(index)}`}
+                                    size="small"
+                                    className="py-1"
+                                    disabled
+                                />
+                            ),
+                        },
+                        {
+                            title: 'Hệ 4',
+                            align: 'center',
+                            render: (_row, _record, index: number) => (
+                                <FormInput
+                                    disabled
+                                    name={`finalScore4.${String(index)}`}
+                                    size="small"
+                                    className="py-1"
+                                />
+                            ),
+                        },
+                    ],
+                },
+                {
+                    title: 'Ghi chú',
+                    align: 'center',
+                    dataIndex: 'note',
+                    render: (_row, _record, index: number) => (
+                        <FormInput
+                            name={`note.${String(index)}`}
                             size="small"
-                            name={`data.${index}.${index}-${column?.id}`}
-                            min={0}
-                            max={10}
-                            placeholder="Nhập điểm số"
+                            className="py-1"
                         />
                     ),
-                })),
+                },
             ]
 
             return columns
@@ -186,7 +253,7 @@ const ManageStudentPointPage = () => {
                         }
                         locale={{
                             emptyText: (
-                                <Empty description="Chọn một lớp để nhập điểm" />
+                                <Empty description="Không có dữ liệu nào" />
                             ),
                         }}
                         size="small"

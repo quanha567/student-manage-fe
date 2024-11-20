@@ -21,6 +21,7 @@ const formStudentValidate: ObjectSchema<StudentCreateRequest> = object().shape({
     data: object({
         fullName: string().required('Vui lòng nhập tên học sinh!'),
         classId: number().required('Vui lòng chọn lớp học!'),
+        status: string().required('Vui lòng chọn trạng thái học tập!'),
     }),
 })
 

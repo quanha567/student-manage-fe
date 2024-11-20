@@ -289,18 +289,6 @@ export const CourseFormModal = ({
                             onSearch={setClassSearchText}
                             onPopupScroll={loadMoreClassOptions}
                         />
-                        <FormSelect
-                            showSearch
-                            required
-                            name="data.subject"
-                            label="Môn học"
-                            placeholder="- Chọn môn học -"
-                            loading={isLoadingSubjectOptions}
-                            options={subjectOptions}
-                            searchValue={subjectSearchText}
-                            onSearch={setSubjectSearchText}
-                            onPopupScroll={loadMoreSubjectOptions}
-                        />
                         <FormInputNumber
                             required
                             label="Số tín chỉ"
