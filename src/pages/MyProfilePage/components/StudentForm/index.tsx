@@ -9,9 +9,9 @@ const FACULTY = 'Khoa Hệ thống thông tin và Viễn thám'
 const EDUCATION_SYSTEM = 'DHCQ'
 
 const Row = ({ label, value }: { label: string; value?: string }) => (
-    <div className="flex flex-1 divide-x-[1px]">
+    <div className="flex flex-1 items-center divide-x-[1px]">
         <div className="w-40 px-2 py-1 font-bold">{label}</div>
-        <div className="flex-1 px-2 py-1 font-medium">{value ?? '___'}</div>
+        <div className="flex-1 px-3 py-2 font-medium">{value ?? '___'}</div>
     </div>
 )
 
@@ -20,7 +20,7 @@ export const StudentForm = () => {
     const { student } = user
 
     return (
-        <div className="divide-y-[1px] border border-zinc-200">
+        <div className="divide-y-[1px] border border-zinc-300">
             <Row label="Mã sinh viên" value={student?.studentCode} />
             <div className="flex divide-x-[1px]">
                 <Row label="Họ tên" value={student?.fullName} />
