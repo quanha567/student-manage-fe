@@ -1,5 +1,8 @@
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 
+import { ExportOutlined } from '@ant-design/icons'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 import { IoMdAdd } from 'react-icons/io'
 
 import { App } from 'antd'
@@ -31,7 +34,6 @@ const columns: CustomTableColumnType<Data<ClassModel>> = [
         sorter: true,
         display: true,
     },
-
     {
         title: `Tên ${PageName}`,
         dataIndex: 'attributes',
@@ -62,8 +64,8 @@ const columns: CustomTableColumnType<Data<ClassModel>> = [
 
 const ClassPage = () => {
     const { isOpen, toggleOpen, id } = useDisclosure()
-
     const { notification } = App.useApp()
+    const studentListRef = useRef<HTMLDivElement>(null)
 
     const [params] = useSearch()
     const {
@@ -95,7 +97,7 @@ const ClassPage = () => {
                 await Promise.all(
                     deleteIds.map((id) => classService.delete(id)),
                 )
-                await await refetch()
+                await refetch()
                 notification.success({
                     message: `Xóa dữ liệu thành công!`,
                 })
@@ -106,57 +108,576 @@ const ClassPage = () => {
         [notification],
     )
 
-    return (
-        <div>
-            <Breadcrumb
-                pageName={`Danh sách ${PageName}`}
-                items={[
-                    {
-                        title: `Danh sách ${PageName}`,
-                    },
-                ]}
-                renderRight={
-                    <Button
-                        onClick={() => toggleOpen()}
-                        className="ml-auto flex items-center"
-                    >
-                        <IoMdAdd />
-                        Thêm
-                    </Button>
-                }
-            />
+    const students = classs?.data?.[0]?.attributes?.students
 
-            <CustomTable
-                isPagination
-                tableName={PageName}
-                columns={columns}
-                dataSource={classs?.data}
-                loading={isLoadingDepartments || isPlaceholderDepartments}
-                totalElement={classs?.meta?.pagination?.total}
-                bordered
-                searchInputProps={{
-                    isDisplay: true,
-                    placeholder: `Tìm kiếm tên ${PageName}...`,
-                }}
-                actionButtons={{
-                    editProps: {
+    const handleGeneratePdf = async () => {
+        if (!studentListRef.current) {
+            notification.error({
+                message: 'Không thể xuất PDF! Vui lòng thử lại.',
+            })
+            return
+        }
+
+        try {
+            // Define A4 size in pixels (at 96 DPI)
+            const A4_WIDTH = 210 // mm
+            const A4_HEIGHT = 297 // mm
+
+            const pdf = new jsPDF('p', 'mm', [A4_WIDTH, A4_HEIGHT])
+
+            // Render the HTML content to a canvas
+            const canvas = await html2canvas(studentListRef.current, {
+                scale: 2, // Improve quality
+                useCORS: true,
+                backgroundColor: '#ffffff', // Ensure a solid background
+                width: pdf.internal.pageSize.getWidth() * 4, // Adjust for higher resolution
+            })
+
+            const imgData = canvas.toDataURL('image/png')
+
+            // Scale the image to fit A4 size
+            const pageWidth = pdf.internal.pageSize.getWidth()
+            const pageHeight = pdf.internal.pageSize.getHeight()
+
+            const imgWidth = pageWidth
+            const imgHeight = (canvas.height / canvas.width) * imgWidth
+
+            // Check if content overflows the page
+            if (imgHeight > pageHeight) {
+                const pages = Math.ceil(imgHeight / pageHeight)
+                for (let i = 0; i < pages; i++) {
+                    const positionY = -i * pageHeight
+
+                    pdf.addImage(
+                        imgData,
+                        'PNG',
+                        0,
+                        positionY,
+                        imgWidth,
+                        imgHeight,
+                    )
+
+                    if (i < pages - 1) {
+                        pdf.addPage()
+                    }
+                }
+            } else {
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight)
+            }
+
+            pdf.save(`Danh-sach-hoc-sinh-${new Date().toISOString()}.pdf`)
+
+            notification.success({
+                message: 'Xuất PDF thành công!',
+            })
+        } catch (error) {
+            console.error('Error exporting PDF:', error)
+            notification.error({
+                message: 'Có lỗi xảy ra khi xuất PDF!',
+            })
+        }
+    }
+
+    return (
+        <>
+            <div>
+                <Breadcrumb
+                    pageName={`Danh sách ${PageName}`}
+                    items={[
+                        {
+                            title: `Danh sách ${PageName}`,
+                        },
+                    ]}
+                    renderRight={
+                        <Button
+                            onClick={() => toggleOpen()}
+                            className="ml-auto flex items-center"
+                        >
+                            <IoMdAdd />
+                            Thêm
+                        </Button>
+                    }
+                />
+
+                <CustomTable
+                    isPagination
+                    tableName={PageName}
+                    columns={columns}
+                    dataSource={classs?.data}
+                    loading={isLoadingDepartments || isPlaceholderDepartments}
+                    totalElement={classs?.meta?.pagination?.total}
+                    bordered
+                    searchInputProps={{
                         isDisplay: true,
-                        onClick: (record: Data<DepartmentModel>) =>
-                            record.id && toggleOpen(String(record.id)),
-                    },
-                    deleteProps: {
-                        isDisplay: true,
-                    },
-                }}
-                onDelete={handleDeleteDepartment}
-            />
-            <ClassFormModal
-                id={id}
-                isOpen={isOpen}
-                toggleOpen={toggleOpen}
-                onRefetch={refetch}
-            />
-        </div>
+                        placeholder: `Tìm kiếm tên ${PageName}...`,
+                    }}
+                    actionButtons={{
+                        editProps: {
+                            isDisplay: true,
+                            onClick: (record: Data<DepartmentModel>) =>
+                                record.id && toggleOpen(String(record.id)),
+                        },
+                        deleteProps: {
+                            isDisplay: true,
+                        },
+                        extraProps: {
+                            Icon: <ExportOutlined />,
+                            isDisplay: true,
+                            title: 'Xuất danh sách lớp',
+                            onClick: handleGeneratePdf,
+                        },
+                    }}
+                    onDelete={handleDeleteDepartment}
+                />
+                <ClassFormModal
+                    id={id}
+                    isOpen={isOpen}
+                    toggleOpen={toggleOpen}
+                    onRefetch={refetch}
+                />
+            </div>
+            <div ref={studentListRef} className="a4">
+                <div className="grid grid-cols-2 gap-4 text-[15px]">
+                    <div>
+                        <p className="text-center font-medium">
+                            BỘ TÀI NGUYÊN VÀ MÔI TRƯỜNG
+                        </p>
+                        <p className="text-center font-bold">
+                            TRƯỜNG ĐẠI HỌC TÀI NGUYÊN VÀ MÔI TRƯỜNG TP.HỒ CHÍ
+                            MINH
+                        </p>
+                        <p className="text-center font-bold">KHOA HTTT & VT</p>
+                    </div>
+                    <div>
+                        <p className="text-center font-bold">
+                            CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                        </p>
+                        <p className="text-center font-bold underline">
+                            Độc lập - Tự do - Hạnh phúc
+                        </p>
+                    </div>
+                </div>
+                <p className="mt-4 text-center text-2xl font-bold">
+                    DANH SÁCH HỌC SINH
+                </p>
+                <p className="text-base font-bold">LỚP: Cd20CT01</p>
+                <p className="text-base font-bold">
+                    GIẢNG VIÊN: THS Pham trong huynh
+                </p>
+
+                <table
+                    className="mt-4 w-full border-collapse border border-black text-base"
+                    style={{
+                        border: '1px solid black',
+                        padding: '8px 8px',
+                        borderCollapse: 'collapse',
+                    }}
+                >
+                    <thead>
+                        <tr className="text-center font-bold">
+                            <th
+                                style={{
+                                    border: '1px solid black',
+                                    padding: '8px 8px',
+                                }}
+                                className="border border-black px-2 py-1"
+                            >
+                                STT
+                            </th>
+                            <th
+                                style={{
+                                    border: '1px solid black',
+                                    padding: '8px 8px',
+                                }}
+                                className="border border-black px-2 py-1"
+                            >
+                                MASV
+                            </th>
+                            <th
+                                style={{
+                                    border: '1px solid black',
+                                    padding: '8px 8px',
+                                }}
+                                className="border border-black px-2 py-1"
+                            >
+                                HỌ VÀ TÊN
+                            </th>
+                            <th
+                                style={{
+                                    border: '1px solid black',
+                                    padding: '8px 8px',
+                                }}
+                                className="border border-black px-2 py-1"
+                            >
+                                GHI CHÚ
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {students?.data?.map((student, index) => (
+                            <tr key={student.id} className="text-center">
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {index + 1}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.studentCode}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.fullName}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.note}
+                                </td>
+                            </tr>
+                        ))}{' '}
+                        {students?.data?.map((student, index) => (
+                            <tr key={student.id} className="text-center">
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {index + 1}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.studentCode}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.fullName}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.note}
+                                </td>
+                            </tr>
+                        ))}{' '}
+                        {students?.data?.map((student, index) => (
+                            <tr key={student.id} className="text-center">
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {index + 1}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.studentCode}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.fullName}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.note}
+                                </td>
+                            </tr>
+                        ))}{' '}
+                        {students?.data?.map((student, index) => (
+                            <tr key={student.id} className="text-center">
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {index + 1}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.studentCode}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.fullName}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.note}
+                                </td>
+                            </tr>
+                        ))}{' '}
+                        {students?.data?.map((student, index) => (
+                            <tr key={student.id} className="text-center">
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {index + 1}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.studentCode}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.fullName}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.note}
+                                </td>
+                            </tr>
+                        ))}{' '}
+                        {students?.data?.map((student, index) => (
+                            <tr key={student.id} className="text-center">
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {index + 1}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.studentCode}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.fullName}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.note}
+                                </td>
+                            </tr>
+                        ))}{' '}
+                        {students?.data?.map((student, index) => (
+                            <tr key={student.id} className="text-center">
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {index + 1}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.studentCode}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.fullName}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.note}
+                                </td>
+                            </tr>
+                        ))}{' '}
+                        {students?.data?.map((student, index) => (
+                            <tr key={student.id} className="text-center">
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {index + 1}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.studentCode}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.fullName}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.note}
+                                </td>
+                            </tr>
+                        ))}{' '}
+                        {students?.data?.map((student, index) => (
+                            <tr key={student.id} className="text-center">
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {index + 1}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.studentCode}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.fullName}
+                                </td>
+                                <td
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px 8px',
+                                    }}
+                                    className="border border-black px-2 py-1"
+                                >
+                                    {student.attributes?.note}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </>
     )
 }
 

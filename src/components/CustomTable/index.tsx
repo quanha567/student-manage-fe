@@ -43,8 +43,10 @@ interface TableOptionType {
 }
 
 interface ActionButtonProps<T> {
+    Icon?: ReactNode
     isDisplay?: boolean
     onClick?: (data: T) => void
+    title?: string
 }
 
 const tableSizeOptions: TableOptionType[] = [
@@ -65,6 +67,7 @@ const tableSizeOptions: TableOptionType[] = [
 interface ActionButton<T> {
     deleteProps?: ActionButtonProps<T>
     editProps?: ActionButtonProps<T>
+    extraProps?: ActionButtonProps<T>
 }
 
 interface SearchParamsType {
@@ -141,7 +144,7 @@ export const CustomTable = <T extends AnyObject>({
         ).length
 
         if (numberOfButtonAction) {
-            const { editProps, deleteProps } = actionButtons
+            const { editProps, deleteProps, extraProps } = actionButtons
 
             columnFilter = [
                 ...columnFilter,
@@ -151,6 +154,20 @@ export const CustomTable = <T extends AnyObject>({
                     align: 'center',
                     render: (_, record: T) => (
                         <Radio.Group value="" size={tableSize}>
+                            {extraProps?.isDisplay && (
+                                <Tooltip title={extraProps.title} color="green">
+                                    <Radio.Button
+                                        value={2}
+                                        onClick={() => {
+                                            if (extraProps.onClick)
+                                                extraProps.onClick(record)
+                                        }}
+                                        className="text-green-500 hover:text-green-500"
+                                    >
+                                        {extraProps.Icon}
+                                    </Radio.Button>
+                                </Tooltip>
+                            )}
                             {editProps?.isDisplay && (
                                 <Tooltip title="Chỉnh sửa" color="blue">
                                     <Radio.Button

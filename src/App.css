@@ -83,3 +83,10 @@ html {
 .form-upload-container:hover .form-upload-action {
     display: flex;
 }
+
+.a4 {
+    width: 210mm;
+    height: 297mm;
+    padding: 20mm 0 20mm 15mm;
+    box-sizing: border-box;
+}
