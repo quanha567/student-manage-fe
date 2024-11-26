@@ -157,7 +157,7 @@ export const CustomTable = <T extends AnyObject>({
                             {extraProps?.isDisplay && (
                                 <Tooltip title={extraProps.title} color="green">
                                     <Radio.Button
-                                        value={2}
+                                        value={0}
                                         onClick={() => {
                                             if (extraProps.onClick)
                                                 extraProps.onClick(record)
@@ -171,7 +171,7 @@ export const CustomTable = <T extends AnyObject>({
                             {editProps?.isDisplay && (
                                 <Tooltip title="Chỉnh sửa" color="blue">
                                     <Radio.Button
-                                        value={2}
+                                        value={1}
                                         onClick={() => {
                                             if (editProps.onClick)
                                                 editProps.onClick(record)
