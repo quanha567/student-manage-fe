@@ -276,7 +276,8 @@ const ClassPage = () => {
                         LỚP: {classExport?.className}
                     </p>
                     <p className="text-base font-bold">
-                        GIẢNG VIÊN: ThS. Phạm Trọng Huynh
+                        GIẢNG VIÊN:{' '}
+                        {classExport?.teacher?.data?.attributes?.fullName}
                     </p>
 
                     <table

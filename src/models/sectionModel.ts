@@ -5,6 +5,7 @@ import { SingleData } from '@/types'
 import { BaseModel } from './baseModel'
 import { CourseModel } from './courseModel'
 import { ExamModel } from './examModel'
+import { RoomModel } from './roomModel'
 import { StudentModel } from './studentModel'
 import { TeacherModel } from './teacherModel'
 export interface SectionModel extends BaseModel {
@@ -26,7 +27,7 @@ export interface SectionSchedule {
     day?: string
     endTime?: string | Dayjs
     id?: number
-    room?: string
+    room?: SingleData<RoomModel>
     startTime?: string | Dayjs
 }
 

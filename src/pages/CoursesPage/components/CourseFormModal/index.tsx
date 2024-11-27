@@ -23,6 +23,7 @@ import {
     useClassOptions,
     useExamOptions,
     useGetCourseDetail,
+    useRoomOptions,
     useSemesterOptions,
     useSubjectOptions,
     useTeacherOptions,
@@ -89,14 +90,6 @@ export const CourseFormModal = ({
     } = formMethods
 
     const { data, isLoading } = useGetCourseDetail(Number(id))
-
-    const {
-        isLoadingSubjectOptions,
-        loadMoreSubjectOptions,
-        setSubjectSearchText,
-        subjectOptions,
-        subjectSearchText,
-    } = useSubjectOptions()
 
     const {
         isLoadingSemesterOptions,
@@ -170,6 +163,9 @@ export const CourseFormModal = ({
                                               DATE_TIME_FORMAT.SHORT_TIME,
                                           )
                                         : undefined,
+                                    room:
+                                        schedule?.room?.data?.attributes
+                                            ?.name ?? '',
                                 }),
                             ),
                         }),
@@ -414,16 +410,28 @@ const CourseSchedule = ({ control, index }: CourseScheduleProps) => {
         name: `data.sections.${String(index)}.schedules`,
     })
 
+    const {
+        isLoadingRoomOptions,
+        loadMoreRoomOptions,
+        roomOptions,
+        roomSearchText,
+        setRoomSearchText,
+    } = useRoomOptions()
+
     return (
         <div className="divide-y-[1px]">
             {fields.map((schedule: SectionSchedule, rowIndex) => (
                 <div key={schedule.id} className="flex items-start gap-1 py-2">
-                    <FormInput
+                    <FormSelect
                         size="small"
-                        className="py-1"
+                        className="w-full py-1"
                         wrapperClassName="flex-1"
+                        options={roomOptions}
+                        onPopupScroll={loadMoreRoomOptions}
+                        searchValue={roomSearchText}
+                        onSearch={setRoomSearchText}
                         name={`data.sections.${String(index)}.schedules.${String(rowIndex)}.room`}
-                        placeholder="Nhập tên phòng học"
+                        placeholder="- Chọn phòng học -"
                     />
                     <FormSelect
                         size="small"

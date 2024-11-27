@@ -13,6 +13,7 @@ export enum PAGE_PATHS {
     MY_PROFILE = '/my-profile',
     MY_SCORE = '/my-score',
     REGISTER_COURSE = '/register-course',
+    ROOM = '/rooms',
     SEMESTER_LIST = '/semesters',
     STUDENT_LIST = '/students',
     SUBJECT_LIST = '/subjects',
@@ -38,6 +39,10 @@ export const API_URL = {
     // Department Api url
     CLASSES: '/classes',
     classWithId: (id: number) => `/classes/${String(id)}`,
+
+    // ROOM Api url
+    ROOMS: '/rooms',
+    roomWithId: (id: number) => `/rooms/${String(id)}`,
 
     // Student api url
     STUDENT_LOGIN: createApiURL('students/login'),

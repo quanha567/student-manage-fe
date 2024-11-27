@@ -15,6 +15,7 @@ import {
     MyProfilePage,
     MyScorePage,
     RegisterCoursePage,
+    RoomPage,
     SemesterPage,
     StudentPage,
     SubjectPage,
@@ -90,6 +91,10 @@ export const privateRouters = createBrowserRouter([
             {
                 path: PAGE_PATHS.MY_SCORE,
                 element: <MyScorePage />,
+            },
+            {
+                path: PAGE_PATHS.ROOM,
+                element: <RoomPage />,
             },
         ],
     },

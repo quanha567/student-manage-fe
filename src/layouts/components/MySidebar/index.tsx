@@ -2,7 +2,12 @@ import { ReactNode, useMemo, useState } from 'react'
 import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar'
 import { Link, useLocation } from 'react-router-dom'
 
-import { FaCalendarDay, FaNoteSticky, FaUser } from 'react-icons/fa6'
+import {
+    FaCalendarDay,
+    FaNoteSticky,
+    FaUser,
+    FaWarehouse,
+} from 'react-icons/fa6'
 import { GiPieChart } from 'react-icons/gi'
 import { HiAcademicCap, HiRectangleGroup } from 'react-icons/hi2'
 import { IoIosAddCircle, IoIosArrowBack } from 'react-icons/io'
@@ -80,6 +85,12 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Niên khóa',
         icon: <HiAcademicCap className="size-6" />,
         path: PAGE_PATHS.ACADEMIC_YEAR,
+        role: [Role.ADMIN],
+    },
+    {
+        label: 'Phòng học',
+        icon: <FaWarehouse className="size-6" />,
+        path: PAGE_PATHS.ROOM,
         role: [Role.ADMIN],
     },
     {

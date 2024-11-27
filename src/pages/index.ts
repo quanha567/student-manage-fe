@@ -18,3 +18,4 @@ export const ManageStudentPointPage = lazy(
 )
 export const AcademicYearPage = lazy(() => import('./AcademicYearPage'))
 export const MyScorePage = lazy(() => import('./MyScorePage'))
+export const RoomPage = lazy(() => import('./RoomPage'))
