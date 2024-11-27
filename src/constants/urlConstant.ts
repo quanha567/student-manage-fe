@@ -50,7 +50,7 @@ export const API_URL = {
     STUDENT_DOWNLOAD_FILE: createApiURL('students/download-example'),
     STUDENT_IMPORT_FILE: createApiURL('students/import'),
     studentWithId: (id: number) => `students/${String(id)}`,
-    getMyScore: (id: number) => `students/my-score/${String(id)}`,
+    getMyScore: (id: number) => `/students/${String(id)}/semesters`,
 
     // Student api url
     TEACHERS: 'teachers',
@@ -74,8 +74,8 @@ export const API_URL = {
     // SECTION api url
     SECTIONS: 'sections',
     sectionWithId: (id: number) => `sections/${String(id)}`,
-    sectionDetail: (id: number) => `sections/get-point-detail/${String(id)}`,
-    importScore: (id: number) => `sections/input-point/${String(id)}`,
+    sectionDetail: (id: number) => `exam-results/section/${String(id)}`,
+    importScore: (id: number) => `/sections/${String(id)}/input-scores`,
 
     // SECTION api url
     ENROLLMENTS: 'enrollments',

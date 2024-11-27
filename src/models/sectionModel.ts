@@ -34,6 +34,23 @@ export interface SectionSchedule {
 type SectionPointData = StudentModel & Record<string, number | null>
 
 export interface SectionPointResponse {
-    data?: SectionPointData
-    exams?: ExamModel[]
+    totalStudents: number
+    passedStudents: number
+    failedStudents: number
+    passPercentage: string
+    failPercentage: string
+    studentScores: StudentScore[]
+}
+
+export interface StudentScore {
+    studentId: string
+    studentName: string
+    studentCode: string
+    scoreQT: number
+    scoreGK: number
+    scoreTH: number
+    scoreCK: number
+    finalScore: string
+    grade: string
+    note: string
 }
