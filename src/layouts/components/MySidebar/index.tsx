@@ -104,7 +104,7 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Thời khóa biểu',
         icon: <FaCalendarAlt className="size-6" />,
         path: PAGE_PATHS.TIME_TABLE,
-        role: [Role.STUDENT],
+        role: [Role.STUDENT, Role.TEACHER],
     },
     {
         label: 'Đăng ký học phần',

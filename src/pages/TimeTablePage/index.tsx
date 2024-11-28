@@ -2,23 +2,24 @@ import { Card, Empty, Select, Spin } from 'antd'
 
 import React, { useEffect, useState } from 'react'
 
-import { ClassSession, TimetableModel } from '../../models/timetableModel'
+import { TimetableModel } from '../../models/timetableModel'
 
 import { DATE_TIME_FORMAT, QUERY_KEYS } from '@/constants'
-import { useAppSelector } from '@/hooks'
+import { useAppSelector, useRole } from '@/hooks'
 import { useSemesterOptions } from '@/queries'
 import { selectCurrentUser } from '@/redux'
-import { studentService } from '@/services'
+import { studentService, teacherService } from '@/services'
 import { useQuery } from '@tanstack/react-query'
 
-import './styles.css'
-import { formatDateTime } from '@/utils'
 import moment from 'moment'
+import './styles.css'
 
 const TimeTablePage: React.FC = () => {
     const [semester, setSemester] = useState<string | null>(null)
 
     const user = useAppSelector(selectCurrentUser)
+
+    const { isStudentRole } = useRole()
 
     const {
         isLoadingSemesterOptions,
@@ -32,11 +33,16 @@ const TimeTablePage: React.FC = () => {
         {
             queryKey: [QUERY_KEYS.MY_TIMETABLE, semester, user.student?.id],
             queryFn: () =>
-                studentService.getTimetable(
-                    String(semester),
-                    Number(user.student?.id),
-                ),
-            enabled: !!semester && !!user.student?.id,
+                isStudentRole
+                    ? studentService.getTimetable(
+                          String(semester),
+                          Number(user.student?.id),
+                      )
+                    : teacherService.getTimetable(
+                          String(semester),
+                          Number(user.teacher?.id),
+                      ),
+            enabled: !!semester && (!!user.student?.id || !!user.teacher?.id),
         },
     )
 
@@ -183,7 +189,7 @@ const TimeTablePage: React.FC = () => {
                                         })
                                     ) : (
                                         <td colSpan={7}>
-                                            <Empty description="Không có lịch học nào trong học kỳ này" />
+                                            <Empty description="Không có thời khóa biểu nào trong học kỳ này" />
                                         </td>
                                     )}
                                 </tr>

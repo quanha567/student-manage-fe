@@ -9,6 +9,7 @@ import {
 } from '@/types'
 
 import { axiosService } from './axiosService'
+import { TimetableModel } from '@/models/timetableModel'
 
 type TeacherCreateResponse = CreateResponse<TeacherModel>
 export type TeacherListResponse = ListResponse<TeacherModel>
@@ -69,6 +70,19 @@ export const teacherService = {
         return axiosService()<TeacherDetailResponse>({
             url: API_URL.teacherWithId(id),
             method: 'DELETE',
+        })
+            .then((res) => res.data)
+            .catch((err: unknown) => {
+                throw err
+            })
+    },
+    getTimetable: (
+        semester: string,
+        teacherId: number,
+    ): Promise<TimetableModel[]> => {
+        return axiosService()<TimetableModel[]>({
+            url: `teachers/${String(teacherId)}/schedule/${semester}`,
+            method: 'GET',
         })
             .then((res) => res.data)
             .catch((err: unknown) => {
