@@ -22,7 +22,6 @@ const ManageStudentPointPage = () => {
 
     const user = useAppSelector(selectCurrentUser)
 
-    const [listExport, setListExport] = useState(null)
     const scoreListRef = useRef<HTMLDivElement>(null)
 
     const formMethods = useForm()
@@ -291,8 +290,6 @@ const ManageStudentPointPage = () => {
             notification.error({
                 message: 'Có lỗi xảy ra khi xuất PDF!',
             })
-        } finally {
-            setListExport(null)
         }
     }
 

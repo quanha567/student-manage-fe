@@ -131,20 +131,6 @@ export const SemesterFormModal = ({
                         allowClear
                         showSearch
                         mode="multiple"
-                        label="Môn học"
-                        name="data.courses"
-                        maxTagCount="responsive"
-                        options={courseOptions}
-                        searchValue={courseSearchText}
-                        onSearch={setCourseSearchText}
-                        loading={isLoadingCourseOptions}
-                        placeholder="- Chọn môn học -"
-                        onPopupScroll={loadMoreCourseOptions}
-                    />
-                    <FormSelect
-                        allowClear
-                        showSearch
-                        mode="multiple"
                         label="Lớp học"
                         name="data.classes"
                         maxTagCount="responsive"

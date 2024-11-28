@@ -19,6 +19,8 @@ export enum PAGE_PATHS {
     SUBJECT_LIST = '/subjects',
     SYLLABUS_LIST = '/syllabuses',
     TEACHER_LIST = '/teachers',
+    TIME_TABLE = '/time-table',
+    UP_COMING_EXAM = '/up-coming-exam',
 }
 
 export const API_URL = {
@@ -87,6 +89,7 @@ export const API_URL = {
 
     // SEMESTER api url
     EXAMS: 'exams',
+    upcomingExams: 'exams/upcoming',
     examWithId: (id: number) => `exams/${String(id)}`,
 
     // SEMESTER api url

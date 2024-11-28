@@ -24,7 +24,6 @@ import { CourseCreateRequest, courseService, sectionService } from '@/services'
 const formCourseValidate: ObjectSchema<CourseCreateRequest> = object().shape({
     data: object({
         name: string().required('Vui lòng nhập tên học phần!'),
-        subject: number().required('Vui lòng chọn môn học!'),
         classes: array()
             .of(number())
             .required('Vui lòng chọn ít nhất một lớp đăng ký!'),
@@ -139,7 +138,11 @@ export const useCourseForm = (courseId?: string, closeModel?: () => void) => {
 
     const { notification } = App.useApp()
 
-    const { handleSubmit, control } = formMethods
+    const {
+        handleSubmit,
+        control,
+        formState: { errors },
+    } = formMethods
 
     const {
         prepend: appendNewSection,
@@ -165,6 +168,7 @@ export const useCourseForm = (courseId?: string, closeModel?: () => void) => {
 
     const handleCreateOrUpdateCourse = useCallback(
         async (data: CourseCreateRequest) => {
+            console.log('data:', data)
             if (
                 !Array.isArray(data.data?.sections) ||
                 data.data.sections.length === 0

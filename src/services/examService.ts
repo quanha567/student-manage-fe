@@ -1,5 +1,9 @@
 import { API_URL } from '@/constants'
-import { ExamCreateRequestModel, ExamModel } from '@/models'
+import {
+    ExamCreateRequestModel,
+    ExamModel,
+    UpcomingExamListResponse,
+} from '@/models'
 import {
     CreateRequest,
     CreateResponse,
@@ -69,6 +73,18 @@ export const examService = {
         return axiosService()<ExamDetailResponse>({
             url: API_URL.examWithId(id),
             method: 'DELETE',
+        })
+            .then((res) => res.data)
+            .catch((err: unknown) => {
+                throw err
+            })
+    },
+    getUpcomingExams: (
+        studentId: string,
+    ): Promise<UpcomingExamListResponse> => {
+        return axiosService()<UpcomingExamListResponse>({
+            url: `${API_URL.upcomingExams}/${studentId}`,
+            method: 'GET',
         })
             .then((res) => res.data)
             .catch((err: unknown) => {

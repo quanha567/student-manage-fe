@@ -91,7 +91,7 @@ export const studentService = {
                 throw err
             })
     },
-    getMyScore: (id: number): Promise<Blob> => {
+    getMyScore: (id: number): Promise<unknown> => {
         return axiosService()<Blob>({
             url: API_URL.getMyScore(id),
             method: 'GET',

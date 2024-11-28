@@ -45,7 +45,6 @@ export const useTeacherOptions = () => {
                 value: data.id,
             })) as DefaultOptionType[]
     }, [teachers])
-    console.log('teacherOptions  teacherOptions:', teachers)
 
     const loadMoreTeacherOptions = useCallback(
         async (e: React.UIEvent<HTMLDivElement>) => {

@@ -16,12 +16,7 @@ export const TeacherForm = () => {
             <FormInput label="Giới tính" name="gender" readOnly />
             <FormInput label="Ngày sinh" name="dateOfBirth" readOnly />
             <FormTextArea label="Địa chỉ" name="address" rows={2} readOnly />
-            <FormTextArea
-                label="Ghi chú sinh viên"
-                name="note"
-                rows={2}
-                readOnly
-            />
+            <FormTextArea label="Ghi chú" name="note" rows={2} readOnly />
         </div>
     )
 }

@@ -28,3 +28,11 @@ export interface ExamCreateRequestModel {
     examName: string
     type: ExamType
 }
+
+export interface UpcomingExamListResponse {
+    exams?: ExamModel[]
+}
+
+export interface ExamDetailResponse extends Omit<ExamModel, 'course'> {
+    course?: CourseModel
+}

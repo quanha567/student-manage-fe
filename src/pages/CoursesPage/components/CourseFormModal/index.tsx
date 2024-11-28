@@ -163,9 +163,7 @@ export const CourseFormModal = ({
                                               DATE_TIME_FORMAT.SHORT_TIME,
                                           )
                                         : undefined,
-                                    room:
-                                        schedule?.room?.data?.attributes
-                                            ?.name ?? '',
+                                    room: schedule?.room?.data?.id ?? '',
                                 }),
                             ),
                         }),

@@ -16,7 +16,7 @@ import { authService, userService } from '@/services'
 
 const formDefaultValues: LoginRequestModel = {
     identifier: 'admin',
-    password: '123456',
+    password: '111111',
 }
 
 const formLoginValidate: ObjectSchema<LoginRequestModel> = object().shape({

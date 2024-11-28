@@ -5,7 +5,7 @@ import { UserStatus } from '@/models'
 import { selectCurrentUser } from '@/redux'
 import { formatDateTime } from '@/utils'
 
-const FACULTY = 'Khoa Hệ thống thông tin và Viễn thám'
+const FACULTY = 'Khoa công nghệ thông tin'
 const EDUCATION_SYSTEM = 'DHCQ'
 
 const Row = ({ label, value }: { label: string; value?: string }) => (

@@ -21,6 +21,8 @@ import {
     SubjectPage,
     SyllabusPage,
     TeacherPage,
+    TimeTablePage,
+    UpComingExamPage,
 } from '@/pages'
 
 export const privateRouters = createBrowserRouter([
@@ -95,6 +97,14 @@ export const privateRouters = createBrowserRouter([
             {
                 path: PAGE_PATHS.ROOM,
                 element: <RoomPage />,
+            },
+            {
+                path: PAGE_PATHS.TIME_TABLE,
+                element: <TimeTablePage />,
+            },
+            {
+                path: PAGE_PATHS.UP_COMING_EXAM,
+                element: <UpComingExamPage />,
             },
         ],
     },

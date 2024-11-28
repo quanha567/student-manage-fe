@@ -22,6 +22,7 @@ import {
 import { PAGE_PATHS } from '@/constants'
 import { useRole } from '@/hooks'
 import { Role } from '@/models'
+import { FaCalendarAlt } from 'react-icons/fa'
 
 interface MenuItemType {
     children?: MenuItemType[]
@@ -67,7 +68,7 @@ const sideBarMenus: MenuItemType[] = [
         label: 'Đề cương',
         icon: <IoDocumentText className="size-6" />,
         path: PAGE_PATHS.SYLLABUS_LIST,
-        role: [Role.ADMIN, Role.TEACHER],
+        role: [Role.ADMIN, Role.TEACHER, Role.STUDENT],
     },
     {
         label: 'Học phần',
@@ -100,6 +101,12 @@ const sideBarMenus: MenuItemType[] = [
         role: [Role.ADMIN, Role.TEACHER],
     },
     {
+        label: 'Thời khóa biểu',
+        icon: <FaCalendarAlt className="size-6" />,
+        path: PAGE_PATHS.TIME_TABLE,
+        role: [Role.STUDENT],
+    },
+    {
         label: 'Đăng ký học phần',
         icon: <IoIosAddCircle className="size-6" />,
         path: PAGE_PATHS.REGISTER_COURSE,
@@ -110,6 +117,12 @@ const sideBarMenus: MenuItemType[] = [
         icon: <PiExamFill className="size-6" />,
         path: PAGE_PATHS.MANAGE_POINT,
         role: [Role.ADMIN, Role.TEACHER],
+    },
+    {
+        label: 'Lịch kiểm tra',
+        icon: <FaNoteSticky className="size-6" />,
+        path: PAGE_PATHS.UP_COMING_EXAM,
+        role: [Role.STUDENT],
     },
     {
         label: 'Kết quả học tập',

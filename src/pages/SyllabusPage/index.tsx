@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 import { IoMdAdd } from 'react-icons/io'
 
 import { App } from 'antd'
+import { ImageData } from '@/models'
 
 import {
     Breadcrumb,
@@ -11,7 +12,7 @@ import {
     CustomTableColumnType,
 } from '@/components'
 import { QUERY_KEYS } from '@/constants'
-import { useDisclosure, useSearch } from '@/hooks'
+import { useDisclosure, useRole, useSearch } from '@/hooks'
 import { SyllabusModel } from '@/models'
 import { queryClient } from '@/providers'
 import { useGetSyllabuses } from '@/queries'
@@ -20,6 +21,34 @@ import { Data } from '@/types'
 import { formatDateTime } from '@/utils'
 
 import { SyllabusFormModal } from './components'
+import { ENV_CONFIGS } from '@/configs'
+
+const handlePreviewFile = (file: ImageData) => {
+    console.log('handlePreviewFile  file:', file)
+    let linkPreview = ''
+
+    if (file.formats) {
+        // Check for the 'large' format first
+        if (file.formats.large?.url) {
+            linkPreview = file.formats.large.url
+        }
+        // Check for other formats if 'large' is not available
+        if (file.formats.medium?.url) {
+            linkPreview = file.formats.medium.url
+        }
+        if (file.formats.small?.url) {
+            linkPreview = file.formats.small.url
+        }
+        if (file.formats.thumbnail?.url) {
+            linkPreview = file.formats.thumbnail.url
+        }
+    }
+    // Return the main image URL if no formats are available
+    if (file.url) linkPreview = file.url
+
+    if (linkPreview)
+        window.open(`${ENV_CONFIGS.BASE_URL}${linkPreview}`, '_blank')
+}
 
 const columns: CustomTableColumnType<Data<SyllabusModel>> = [
     {
@@ -39,7 +68,25 @@ const columns: CustomTableColumnType<Data<SyllabusModel>> = [
         sorter: true,
         display: true,
     },
-
+    {
+        title: 'Đề cương',
+        dataIndex: 'attributes',
+        key: 'name',
+        render: ({ files }: SyllabusModel) => (
+            <ul className="list-inside list-disc">
+                {files?.data?.map((file, index) => (
+                    <li
+                        key={index}
+                        onClick={() => handlePreviewFile(file?.attributes)}
+                        className="cursor-pointer font-bold hover:text-sky-500 hover:underline"
+                    >
+                        {file?.attributes?.name}
+                    </li>
+                ))}
+            </ul>
+        ),
+        display: true,
+    },
     {
         title: 'Thời gian tạo',
         dataIndex: 'attributes',
@@ -64,6 +111,8 @@ const SyllabusPage = () => {
     const { isOpen, toggleOpen, id } = useDisclosure()
 
     const { notification } = App.useApp()
+
+    const { isStudentRole } = useRole()
 
     const [params] = useSearch()
     const {
@@ -116,13 +165,17 @@ const SyllabusPage = () => {
                     },
                 ]}
                 renderRight={
-                    <Button
-                        onClick={() => toggleOpen()}
-                        className="ml-auto flex items-center"
-                    >
-                        <IoMdAdd />
-                        Thêm
-                    </Button>
+                    isStudentRole ? (
+                        <></>
+                    ) : (
+                        <Button
+                            onClick={() => toggleOpen()}
+                            className="ml-auto flex items-center"
+                        >
+                            <IoMdAdd />
+                            Thêm
+                        </Button>
+                    )
                 }
             />
 
@@ -140,12 +193,12 @@ const SyllabusPage = () => {
                 }}
                 actionButtons={{
                     editProps: {
-                        isDisplay: true,
+                        isDisplay: !isStudentRole,
                         onClick: (record: Data<SyllabusModel>) =>
                             record.id && toggleOpen(String(record.id)),
                     },
                     deleteProps: {
-                        isDisplay: true,
+                        isDisplay: !isStudentRole,
                     },
                 }}
                 onDelete={handleDeleteSyllabus}
