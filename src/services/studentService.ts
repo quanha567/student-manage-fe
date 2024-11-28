@@ -11,6 +11,7 @@ import {
 } from '@/types'
 
 import { axiosService } from './axiosService'
+import { TimetableModel } from '@/models/timetableModel'
 
 type StudentCreateResponse = CreateResponse<StudentModel>
 export type StudentListResponse = ListResponse<StudentModel>
@@ -109,6 +110,19 @@ export const studentService = {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
+        })
+            .then((res) => res.data)
+            .catch((err: unknown) => {
+                throw err
+            })
+    },
+    getTimetable: (
+        semester: string,
+        studentId: number,
+    ): Promise<TimetableModel[]> => {
+        return axiosService()<TimetableModel[]>({
+            url: `students/${String(studentId)}/schedule/${semester}`,
+            method: 'GET',
         })
             .then((res) => res.data)
             .catch((err: unknown) => {
